@@ -1,0 +1,8 @@
+{
+    "dataSource": "commits",
+    "prefix": "",
+    "onlyMilestones": false,
+    "groupBy": false,
+    "changelogFilename": "CHANGELOG.md",
+    "ignoreCommitsWith": "TMP"
+}
