@@ -4,5 +4,5 @@
     "onlyMilestones": false,
     "groupBy": false,
     "changelogFilename": "CHANGELOG.md",
-    "ignoreCommitsWith": "TMP"
+    "ignoreCommitsWith": "DI"
 }

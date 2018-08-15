@@ -73,7 +73,7 @@ git checkout master
 git checkout -b hotfix-iss12 # Where 12 is a reference to a github issue
 # Write fix
 git add --all 
-git commit -m "Fixed #12 - ImportStudyData throws uncaught error" 
+git commit -m "Fix #12 - ImportStudyData throws uncaught error" 
 # In the line above 12 is, again, a reference to a github issue and 
 # ImportStudyData ... is the title of that issue
 git push origin hotfix-iss12
@@ -107,9 +107,9 @@ to
 however, we don't want all commit messages in the release notes and
 changelog. Therefore, all commits that are temporary, representing work in
 progress, and are made just to make sure important changes are "saved", should
-be commited with a commit message that starts with the string "TMP". Our `gren`
-configuration file will then make sure that those commits are omitted from the
-release notes and changelog.
+be commited with a commit message that starts with the string "DI", meaning
+"Don't include". Our `gren` configuration file will then make sure that those
+commits are omitted from the release notes and changelog.
 
 For example:
 ```shell
