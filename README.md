@@ -19,7 +19,7 @@ library("bengaltiger")
 
 ## Contributing
 1. Read this document.
-2. Fork the `develop` branch.
+2. Fork.
 3. Contribute. New functions should be contributed as standalone files.
 
 ## Versioning
