@@ -82,7 +82,7 @@ git push origin hotfix-iss12
 
 ### `fix-*`
 Branched from `develop`. Merged into `develop`. Used for less critical
-bugs. See [`hotfix-*`](#`hotfix-*`) for workflow.
+bugs. See [`hotfix-*`](#hotfix-) for workflow.
 
 ### `feature-*`
 Branched from `develop`. Merged into `develop`. Used to add new features, such
