@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.0.4.9000 (15/08/2018)
+- [Modify contributing statement](https://github.com/martingerdin/bengaltiger/commit/df172c6a6dbd68f358b2f4b4b62aefc3a7c0cbdd) - @Martin Gerdin Wärnberg
+
+---
+
 ## v0.0.3.9000 (15/08/2018)
 - [Modify ignoreCommitsWith value](https://github.com/martingerdin/bengaltiger/commit/1386f60bcb291d124b589b9594ebb0f10fbc60ef) - @Martin Gerdin Wärnberg
 
