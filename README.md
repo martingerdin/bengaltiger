@@ -107,7 +107,7 @@ to
 however, we don't want all commit messages in the release notes and
 changelog. Therefore, all commits that are temporary, representing work in
 progress, and are made just to make sure important changes are "saved", should
-be commited with a commit message that starts with the string "DI", meaning
+be commited with a commit message that starts with the string "--di--", meaning
 "Don't include". Our `gren` configuration file will then make sure that those
 commits are omitted from the release notes and changelog.
 
