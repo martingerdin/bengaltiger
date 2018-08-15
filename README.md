@@ -73,7 +73,7 @@ git checkout master
 git checkout -b hotfix-iss12 # Where 12 is a reference to a github issue
 # Write fix
 git add --all 
-git commit -m "Fixed #12 - ImportStudyData throws uncaught error" 
+git commit -m "Fix #12 - ImportStudyData throws uncaught error" 
 # In the line above 12 is, again, a reference to a github issue and 
 # ImportStudyData ... is the title of that issue
 git push origin hotfix-iss12
