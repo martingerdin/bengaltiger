@@ -63,7 +63,7 @@ Main release branch. Stable version.
 Branched from `master`. Merged into master to bump version and form a new
 release when stable.
 
-### `hotfix-\*`
+### `hotfix-*`
 Branched from `master`. Merged into `master` and `develop`. Used only to fix
 critical bugs. A hotfix should result in a patch release.
 
@@ -80,11 +80,11 @@ git push origin hotfix-iss12
 # Create pull request
 ```
 
-### `fix-\*`
+### `fix-*`
 Branched from `develop`. Merged into `develop`. Used for less critical
-bugs. See [`hotfix-\*`](#`hotfix-\*`) for workflow.
+bugs. See [`hotfix-*`](#`hotfix-*`) for workflow.
 
-### `feature-\*`
+### `feature-*`
 Branched from `develop`. Merged into `develop`. Used to add new features, such
 as new functions.
 
