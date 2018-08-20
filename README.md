@@ -117,15 +117,15 @@ git checkout develop
 git checkout -b feature-add-ApplyExclusionCriteria
 ## You work on the new feature but are not done at the time when you make your
 ## first commit. We call this a "temporary" commit. Such a commit should be 
-## marked with "TMP" in the commit message.
+## marked with "--di--" in the commit message.
 git add ApplyExclusionCriteria.R 
-git commit -m "TMP Draft ApplyExclusionCriteria"
+git commit -m "--di-- Draft ApplyExclusionCriteria"
 ## You continue to work on your new feature and after some additional temporary 
-## commits the feature is finalised. You therefore omit TMP from your commit 
+## commits the feature is finalised. You therefore omit --di-- from your commit 
 ## message
 git add ApplyExclusionCriteria.R 
 git commit -m "Add ApplyExclusionCriteria"
-## Now, only the commit message without TMP will be included in release notes 
+## Now, only the commit message without --di-- will be included in release notes 
 ## and the changelog.
 ```
 
@@ -162,7 +162,7 @@ git checkout develop
 git checkout -b feature-add-ApplyExclusionCriteria
 # Work on feature
 git add ApplyExclusionCriteria.R
-git commit -m "TMP Write function template"
+git commit -m "--di-- Write function template"
 # Continue work on featue
 git add ApplyExclusionCriteria.R
 git commit -m "Add ApplyExclusionCriteria"
