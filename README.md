@@ -94,14 +94,14 @@ For example:
 ```shell
 git checkout develop
 hub create -m "ApplyExclusionCriteria" -l=function
-git checkout -b add-ApplyExclusionCriteria
+git checkout -b feature-add-ApplyExclusionCriteria
 # Work on feature
 git add --all
 git commit -m "Close #12 - Add ApplyExclusionCriteria" # Where 12 is the issue 
                                                        # number
 git checkout develop
-git merge --no-ff add-ApplyExclusionCriteria -m "Merge add-ApplyExclusionCriteria into develop"
-git branch -d add-ApplyExclusionCriteria
+git merge --no-ff feature-add-ApplyExclusionCriteria -m "Merge feature-add-ApplyExclusionCriteria into develop"
+git branch -d feature-add-ApplyExclusionCriteria
 ```
 
 ## Issues
@@ -125,7 +125,7 @@ title should just be the function name:
 ```shell
 hub create -m "ApplyExclusionCriteria" -l=function
 git checkout develop
-git checkout -b feature-add-ApplyExclusionCriteria
+git checkout -b feature-feature-add-ApplyExclusionCriteria
 ```
 
 ### Commit messages
@@ -175,7 +175,7 @@ git branch -d fix-iss18
 ```shell
 git checkout develop
 hub create -m "ApplyExclusionCriteria" -l=function
-git checkout -b feature-add-ApplyExclusionCriteria
+git checkout -b feature-feature-add-ApplyExclusionCriteria
 # Work on feature
 git add ApplyExclusionCriteria.R
 git commit -m "Write function template"
