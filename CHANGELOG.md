@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.0.5.9000 (20/08/2018)
+- [Fix #2 - Commit messages and complete workflow examples include wrong don't include flag](https://github.com/martingerdin/bengaltiger/commit/a1ab365f090fd2f20ea7b456ea393c4c9b18be41) - @Martin Gerdin Wärnberg
+
+---
+
 ## v0.0.4.9000 (15/08/2018)
 - [Modify contributing statement](https://github.com/martingerdin/bengaltiger/commit/df172c6a6dbd68f358b2f4b4b62aefc3a7c0cbdd) - @Martin Gerdin Wärnberg
 
