@@ -71,7 +71,7 @@ For example:
 ```shell
 git checkout master
 # Create issue if one does not exist.
-hub create -m "Fix ImportStudyData throws uncaught error" -l=bug
+hub create -m "Fix ImportStudyData throws uncaught error" -l bug
 git checkout -b hotfix-iss12 # Where 12 is a reference to the github issue 
 # Write fix
 git add --all 
@@ -93,7 +93,7 @@ as new functions. A feature should come from a github issue.
 For example:
 ```shell
 git checkout develop
-hub create -m "ApplyExclusionCriteria" -l=function
+hub create -m "ApplyExclusionCriteria" -l function
 git checkout -b feature-add-ApplyExclusionCriteria
 # Work on feature
 git add --all
@@ -123,7 +123,7 @@ When you create an issue to reflect that you're working on a new function the
 title should just be the function name:
 
 ```shell
-hub create -m "ApplyExclusionCriteria" -l=function
+hub create -m "ApplyExclusionCriteria" -l function
 git checkout develop
 git checkout -b feature-feature-add-ApplyExclusionCriteria
 ```
@@ -174,7 +174,7 @@ git branch -d fix-iss18
 ### Complete workflow example
 ```shell
 git checkout develop
-hub create -m "ApplyExclusionCriteria" -l=function
+hub create -m "ApplyExclusionCriteria" -l function
 git checkout -b feature-feature-add-ApplyExclusionCriteria
 # Work on feature
 git add ApplyExclusionCriteria.R
