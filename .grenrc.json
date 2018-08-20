@@ -1,8 +1,12 @@
 {
-    "dataSource": "commits",
+    "dataSource": "issues",
     "prefix": "",
     "onlyMilestones": false,
     "groupBy": false,
-    "changelogFilename": "CHANGELOG.md",
-    "ignoreCommitsWith": "--di--"
+    "changelogFilename": "CHANGELOG.md"
+    "groupBy": {
+	"Enhancements:": ["enhancement"],
+	"Bug Fixes:": ["bug"],
+	"New Functions": ["function"]
+    }
 }
