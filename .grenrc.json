@@ -3,7 +3,7 @@
     "prefix": "",
     "onlyMilestones": false,
     "groupBy": false,
-    "changelogFilename": "CHANGELOG.md"
+    "changelogFilename": "CHANGELOG.md",
     "groupBy": {
 	"Enhancements:": ["enhancement"],
 	"Bug Fixes:": ["bug"],
