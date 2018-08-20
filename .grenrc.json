@@ -2,7 +2,6 @@
     "dataSource": "issues",
     "prefix": "",
     "onlyMilestones": false,
-    "groupBy": false,
     "changelogFilename": "CHANGELOG.md",
     "groupBy": {
 	"Enhancements:": ["enhancement"],
