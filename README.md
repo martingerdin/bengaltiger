@@ -65,12 +65,14 @@ release when stable.
 
 ### `hotfix-*`
 Branched from `master`. Merged into `master` and `develop`. Used only to fix
-critical bugs. A hotfix should result in a patch release.
+critical bugs. A hotfix must fix a github issue and result in a patch release.
 
 For example:
 ```shell
 git checkout master
-git checkout -b hotfix-iss12 # Where 12 is a reference to a github issue
+# Create issue if one does not exist.
+hub create -m "Fix ImportStudyData throws uncaught error" -l=bug
+git checkout -b hotfix-iss12 # Where 12 is a reference to the github issue 
 # Write fix
 git add --all 
 git commit -m "Fix #12 - ImportStudyData throws uncaught error" 
@@ -81,17 +83,54 @@ git push origin hotfix-iss12
 ```
 
 ### `fix-*`
-Branched from `develop`. Merged into `develop`. Used for less critical
-bugs. See [`hotfix-*`](#hotfix-) for workflow.
+Branched from `develop`. Merged into `develop`. Used for less critical bugs. A
+fix must fix a github issue. See [`hotfix-*`](#hotfix-) for workflow.
 
 ### `feature-*`
 Branched from `develop`. Merged into `develop`. Used to add new features, such
-as new functions.
+as new functions. A feature should come from a github issue.
+
+For example:
+```shell
+git checkout develop
+hub create -m "ApplyExclusionCriteria" -l=function
+git checkout -b feature-add-ApplyExclusionCriteria
+# Work on feature
+git add --all
+git commit -m "Close #12 - Add ApplyExclusionCriteria" # Where 12 is the issue 
+                                                       # number
+git checkout develop
+git merge --no-ff feature-add-ApplyExclusionCriteria -m "Merge feature-add-ApplyExclusionCriteria into develop"
+git branch -d feature-add-ApplyExclusionCriteria
+```
+
+## Issues
+We use github [issues](https://github.com/martingerdin/bengaltiger/issues) to
+track bugs, new features and produce release notes and changelogs using
+`gren`. To make sure `gren` produces beautiful release notes and changelogs for
+us, follow these advice:
+
+> 1. Start the title with a verb (e.g. Change header styles)
+> 2. Use the imperative mood in the title (e.g. Fix, not Fixed or Fixes header styles)
+> 3. Use labels wisely and assign one label per issue
+
+Bugs should be labelled `bug`, enhancements should be labelled `enhancement`,
+and new functions should be labelled `function`. 
+
+EXCEPTION 
+
+When you create an issue to reflect that you're working on a new function the
+title should just be the function name:
+
+```shell
+hub create -m "ApplyExclusionCriteria" -l=function
+git checkout develop
+git checkout -b feature-feature-add-ApplyExclusionCriteria
+```
 
 ### Commit messages
-Should be written in sentence case, be informative, and make sense. To make sure
-that `gren` produces beautiful relase notes and changelogs for us, follow the
-advice below:
+Should be written in sentence case, be informative, and make sense. Please
+follow `gren`'s advice:
 
 > 1. Start the subject line with a verb (e.g. Change header styles)
 > 2. Use the imperative mood in the subject line (e.g. Fix, not Fixed or Fixes header styles)
@@ -103,31 +142,7 @@ advice below:
 
 Further, we encourage you
 to
-["Commit Often, Perfect Later"](https://sethrobertson.github.io/GitBestPractices/),
-however, we don't want all commit messages in the release notes and
-changelog. Therefore, all commits that are temporary, representing work in
-progress, and are made just to make sure important changes are "saved", should
-be commited with a commit message that starts with the string "--di--", meaning
-"Don't include". Our `gren` configuration file will then make sure that those
-commits are omitted from the release notes and changelog.
-
-For example:
-```shell
-git checkout develop
-git checkout -b feature-add-ApplyExclusionCriteria
-## You work on the new feature but are not done at the time when you make your
-## first commit. We call this a "temporary" commit. Such a commit should be 
-## marked with "--di--" in the commit message.
-git add ApplyExclusionCriteria.R 
-git commit -m "--di-- Draft ApplyExclusionCriteria"
-## You continue to work on your new feature and after some additional temporary 
-## commits the feature is finalised. You therefore omit --di-- from your commit 
-## message
-git add ApplyExclusionCriteria.R 
-git commit -m "Add ApplyExclusionCriteria"
-## Now, only the commit message without --di-- will be included in release notes 
-## and the changelog.
-```
+["Commit Often, Perfect Later"](https://sethrobertson.github.io/GitBestPractices/).
 
 ### Tagging
 Tags should only be used to mark new master releases. Master releases should be
@@ -159,13 +174,14 @@ git branch -d fix-iss18
 ### Complete workflow example
 ```shell
 git checkout develop
-git checkout -b feature-add-ApplyExclusionCriteria
+hub create -m "ApplyExclusionCriteria" -l=function
+git checkout -b feature-feature-add-ApplyExclusionCriteria
 # Work on feature
 git add ApplyExclusionCriteria.R
-git commit -m "--di-- Write function template"
+git commit -m "Write function template"
 # Continue work on featue
 git add ApplyExclusionCriteria.R
-git commit -m "Add ApplyExclusionCriteria"
+git commit -m "Close #12 - Add ApplyExclusionCriteria"
 git checkout develop
 git merge --no-ff -m "Add ApplyExclusionCriteria function"
 # If new feature should be merged with master and result in new release

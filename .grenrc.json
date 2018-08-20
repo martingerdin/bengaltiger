@@ -4,4 +4,9 @@
     "onlyMilestones": false,
     "groupBy": false,
     "changelogFilename": "CHANGELOG.md"
+    "groupBy": {
+	"Enhancements:": ["enhancement"],
+	"Bug Fixes:": ["bug"],
+	"New Functions": ["function"]
+    }
 }
