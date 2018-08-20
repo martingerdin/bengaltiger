@@ -12,8 +12,8 @@
     {
 	"template": {
             "commit": "- [{{message}}]({{url}}) - @{{author}}",
-            "issue": "- {{labels}} {{name}} [{{text}}]({{url}})",
-            "label": "[**{{label}}**]",
+            "issue": "- [{{text}}]({{url}}) {{name}} ",
+            "label": "",
             "noLabel": "closed",
             "group": "\n#### {{heading}}\n",
             "changelogTitle": "# Changelog\n\n",
