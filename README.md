@@ -8,9 +8,7 @@ India cohort. Very much work in progress at this stage.
 ## Installation
 ```r
 install.packages("devtools")
-install.packages("RMySQL")
 library("devtools")
-library("RMySQL")
 install_github("martingerdin/bengaltiger")
 ```
 
