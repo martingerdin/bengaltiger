@@ -6,6 +6,7 @@ Description: Streamlines data analysis and manuscript writing for medical
   research, primarily on the Towards Improved Trauma Care Outcomes (TITCO) in
   India cohort.
 Depends: R (>= 3.3.0)
+Imports: RMySQL
 License: LICENCE.md
 Encoding: UTF-8
 LazyData: true
