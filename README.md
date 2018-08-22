@@ -188,12 +188,16 @@ git merge --no-ff -m "Add ApplyExclusionCriteria function"
 git checkout master
 # Change version number in DESCRIPTION, increment MINOR as new feature was added
 git merge --no-ff -m "Add ApplyExclusionCriteria function"
+git push #! Important note, see below
 git tag -a v1.1.0 -m "Version 1.1.0"
-git push
 git push --tags
 gren release 
 gren changelog --override
 ```
+
+It's important that commits that closes issues are pushed before a commit is
+tagged and `gren` is used to release a new version. If this is not done, then
+the release notes and changelog will lag one version behind the repository.
 
 ## Code style guide
 We use [Google's R Style Guide](https://google.github.io/styleguide/Rguide.xml)
