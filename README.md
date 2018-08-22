@@ -218,7 +218,7 @@ Additional notes:
 - `@param` definitions, i.e. "A character vector of length 1. Path to study
   data. No default." in the example above, have four parts, A. B. C. D. C is
   optional. A defines the parameter value and should ideally be enforced by
-  adequate error handling (e.g. `if(!is.character(path) | length(path) > 1)
+  adequate error handling (e.g. `if(!is.character(path) | isLength1(path))
   stop("path has to be a character vector of length 1")`). B is a plain text
   description of the parameter. C may be a continuation of B or any other text
   that one may want to include. D is a description of the default value, if
