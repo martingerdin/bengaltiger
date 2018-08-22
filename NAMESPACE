@@ -2,3 +2,4 @@
 
 export(CreateStudyTemplate)
 export(ImportStudyData)
+export(IsLength1)
