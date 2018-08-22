@@ -76,7 +76,7 @@ CreateStudyTemplate <- function(study.name = "My bengaltiger study",
     full.file.name <- paste0(file.name, ".R")
     if (!dir.exists(path))
         dir.create(path)
-    full.path <- paste(path, "/", full.file.name)
+    full.path <- paste0(path, "/", full.file.name)
     write(file.content, full.path)
     ## Open file
     if (open)
