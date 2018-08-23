@@ -188,12 +188,16 @@ git merge --no-ff -m "Add ApplyExclusionCriteria function"
 git checkout master
 # Change version number in DESCRIPTION, increment MINOR as new feature was added
 git merge --no-ff -m "Add ApplyExclusionCriteria function"
+git push #! Important note, see below
 git tag -a v1.1.0 -m "Version 1.1.0"
-git push
 git push --tags
 gren release 
 gren changelog --override
 ```
+
+It's important that commits that closes issues are pushed before a commit is
+tagged and `gren` is used to release a new version. If this is not done, then
+the release notes and changelog will lag one version behind the repository.
 
 ## Code style guide
 We use [Google's R Style Guide](https://google.github.io/styleguide/Rguide.xml)
@@ -218,7 +222,7 @@ Additional notes:
 - `@param` definitions, i.e. "A character vector of length 1. Path to study
   data. No default." in the example above, have four parts, A. B. C. D. C is
   optional. A defines the parameter value and should ideally be enforced by
-  adequate error handling (e.g. `if(!is.character(path) | length(path) > 1)
+  adequate error handling (e.g. `if(!is.character(path) | isLength1(path))
   stop("path has to be a character vector of length 1")`). B is a plain text
   description of the parameter. C may be a continuation of B or any other text
   that one may want to include. D is a description of the default value, if
