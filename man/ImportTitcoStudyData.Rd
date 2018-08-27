@@ -2,7 +2,7 @@
 % Please edit documentation in R/ImportTitcoStudyData.R
 \name{ImportTitcoStudyData}
 \alias{ImportTitcoStudyData}
-\title{Import study data from mysql. To be updated with global variables from configurationfile.}
+\title{Import titco study data from mysql server}
 \usage{
 ImportTitcoStudyData(mysql.server.name = "127.0.0.1",
   mysql.server.port = 3307, mysql.database = "TITCO",
@@ -10,16 +10,18 @@ ImportTitcoStudyData(mysql.server.name = "127.0.0.1",
   mysql.titco.table = "titco")
 }
 \arguments{
-\item{mysql.server.name}{Character vector of length 1. The hostname or IP of the mysqlserver, for localuse use localhost.}
+\item{mysql.server.name}{Character vector of length 1. The hostname or IP of the mysql-server, defaults to 127.0.0.1.}
 
-\item{mysql.server.port}{Integer. The port of mysql-server, default is 3306.}
+\item{mysql.server.port}{Integer. The port of mysql-server, defaults is 3307.}
 
-\item{mysql.database}{Character vector of length 1. The name of the database, TITCO for titco access}
+\item{mysql.database}{Character vector of length 1. The name of the database, defaults to TITCO}
 
-\item{mysql.username}{Character vector of length 1. The username for the database, use titco or ntdb.}
+\item{mysql.username}{Character vector of length 1. The username for the database, defaults to titco.}
 
-\item{mysql.password}{Character vector of length 1. Password for db access.}
+\item{mysql.password}{Character vector of length 1. Password for db access, defaults to mangrovetitco}
+
+\item{mysql.titco.table}{Character vector of length 1. The mysql table name, defaults to titco. To use the smaller sample data set, set this to titco_sample}
 }
 \description{
-Imports the study data from a mysql server
+Imports the titco study data from a mysql server, if no arguments are set, defaults to mangrove SSH tunnel-configuration.
 }
