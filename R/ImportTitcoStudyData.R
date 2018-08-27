@@ -14,5 +14,6 @@ ImportTitcoStudyData <- function(mysql.server.name = "127.0.0.1", mysql.server.p
   mydb <- dbConnect(MySQL(), user=mysql.username, password=mysql.password, dbname=mysql.database, host=mysql.server.name, port=mysql.server.port)
   ## Select all data from database
   study.data <- dbGetQuery(mydb, sprintf("select * from %s", mysql.titco.table))
+  dbDisconnect(mydb) ## Disconnect from database
   return(study.data)
 }
