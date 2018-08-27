@@ -1,13 +1,12 @@
 Package: bengaltiger
 Title: bengaltiger
 Version: 0.0.0.9000
-Authors@R: person("Martin", "Gerdin Wärnberg", email = "martingerdin@gmail.com", role = c("aut", "cre"))
 Description: Streamlines data analysis and manuscript writing for medical
   research, primarily on the Towards Improved Trauma Care Outcomes (TITCO) in
   India cohort.
 Depends: R (>= 3.3.0)
-Imports: RMySQL
+Imports: RMySQL, DBI
 License: LICENCE.md
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
