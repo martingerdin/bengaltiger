@@ -34,22 +34,30 @@ CreateStudySample <- function(study.data, inclusion.criteria,
     if (!is.logical(override) | !IsLength1(override))
         stop("override has to be a logical vector of length 1")
     ## Create full file name
-    full.file.name <- paste0("exclusions", file.format)
+    full.file.name <- paste0("exclusions.", file.format)
     ## Use inclusion criteria to select sample from study data
     study.sample <- study.data
     for (i in seq_along(inclusion.criteria)) {
-        criterion.function <- inclusion.criteria[i]
+        ## Select the function to select a subset of patients from the inclusion
+        ## criteria function list
+        criterion.function <- inclusion.criteria[[i]]
         exclusion.list <- criterion.function(study.sample)
         study.sample <- exclusion.list$subsample
+        ## Save exclusions to disk, but first check if the file already
+        ## exists
         if (save.to.disk) {
-            if (file.exists(full.file.name) & !override) 
-                stop(paste0(full.file.name, " already exists. The function has stopped. If you still want to run the function please delete the file or run this function again setting override to TRUE"))
-            write(exclusion.list$exclusion.text, "exclusions.rmd")
+            if (file.exists(full.file.name)){
+                if (!override)
+                    stop(paste0(full.file.name, " already exists. The function has stopped. If you still want to run the function please delete the file or run this function again setting override to TRUE"))
+                file.remove(full.file.name)
+            }
+            write(exclusion.list$exclusion.text, "exclusions.rmd", append = TRUE)
             if (file.format == "docx"){
-                rmarkdown::render("exclusions.rmd", output_format = "docx")
+                rmarkdown::render("exclusions.rmd", output_format = "word_document")
                 file.remove("exclusions.rmd")
             }
         }
     }
+    ## Return the new study sample
     return(study.sample)
 }
