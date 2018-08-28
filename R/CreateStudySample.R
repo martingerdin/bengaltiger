@@ -38,9 +38,18 @@ CreateStudySample <- function(study.data, inclusion.criteria,
     ## Use inclusion criteria to select sample from study data
     study.sample <- study.data
     for (i in seq_along(inclusion.criteria)) {
-        if (file.exists(full.file.name))
         criterion.function <- inclusion.criteria[i]
-        study.sample <- criterion.function(study.sample)
+        exclusion.list <- criterion.function(study.sample)
+        study.sample <- exclusion.list$subsample
+        if (save.to.disk) {
+            if (file.exists(full.file.name) & !override) 
+                stop(paste0(full.file.name, " already exists. The function has stopped. If you still want to run the function please delete the file or run this function again setting override to TRUE"))
+            write(exclusion.list$exclusion.text, "exclusions.rmd")
+            if (file.format == "docx"){
+                rmarkdown::render("exclusions.rmd", output_format = "docx")
+                file.remove("exclusions.rmd")
+            }
+        }
     }
-    
+    return(study.sample)
 }
