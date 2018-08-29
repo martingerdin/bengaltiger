@@ -4,14 +4,14 @@
 \alias{ImportStudyData}
 \title{Import study data}
 \usage{
-ImportStudyData(data.file.name = NULL, data.path = "../data/")
+ImportStudyData(data.file.name = NULL, data.path = "./data/")
 }
 \arguments{
 \item{data.file.name}{Character vector of length 1. The name of the study
 data file. Defaults to NULL.}
 
 \item{data.path}{Character vector of length 1. The path to the data
-directory. Defaults to "../data/"}
+directory. Defaults to "./data/"}
 }
 \description{
 Imports the study data from a csv file.
