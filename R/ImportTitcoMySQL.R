@@ -10,7 +10,7 @@
 #' @param mysql.password Character vector of length 1. Password for db access, defaults to mangrovetitco
 #' @param mysql.titco.table Character vector of length 1. The mysql table name, defaults to titco. To use the smaller sample data set, set this to titco_sample
 #' @export
-ImportTitcoStudyData <- function(mysql.server.name = "127.0.0.1", mysql.server.port = 3307,  mysql.database = "TITCO", mysql.username = "titco", mysql.password = "mangrovetitco", mysql.titco.table = "titco") {
+ImportTitcoMySQL <- function(mysql.server.name = "127.0.0.1", mysql.server.port = 3307,  mysql.database = "TITCO", mysql.username = "titco", mysql.password = "mangrovetitco", mysql.titco.table = "titco") {
   mydb <- dbConnect(MySQL(), user=mysql.username, password=mysql.password, dbname=mysql.database, host=mysql.server.name, port=mysql.server.port)
   ## Select all data from database
   study.data <- dbGetQuery(mydb, sprintf("select * from %s", mysql.titco.table))
