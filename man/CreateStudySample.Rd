@@ -83,16 +83,16 @@ ignored. Defaults to c("head_and_neck", "face", "chest", "extremities",
 "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd").}
 
 \item{save.to.disk}{Logical vector of length 1. If TRUE a file named
-"exclusions" is saved to disk where the exclusions are
-described. Defaults to TRUE.}
+"exclusions_and_missingness" is saved to disk where the exclusions and
+missingness are described. Defaults to TRUE.}
 
 \item{file.format}{Character vector of length 1. Has to be either "docx" or
-"rmd". The format in which the file detailing the exclusions is
-saved. Defaults to "docx".}
+"rmd". The format in which the file detailing the exclusions and
+missingness is saved. Defaults to "docx".}
 
-\item{override}{Logical vector of length 1. If TRUE the file "exclusions" is
-replaced if it exists. If FALSE the function aborts if the file
-exists. Defaults to TRUE.}
+\item{override}{Logical vector of length 1. If TRUE the file
+"exclusions_and_missingness" is replaced if it exists. If FALSE the
+function aborts if the file exists. Defaults to TRUE.}
 }
 \description{
 Creates the study sample using a list of inclusion criteria. Note that the

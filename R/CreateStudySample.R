@@ -44,14 +44,14 @@
 #'     "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd",
 #'     "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd").
 #' @param save.to.disk Logical vector of length 1. If TRUE a file named
-#'     "exclusions" is saved to disk where the exclusions are
-#'     described. Defaults to TRUE.
+#'     "exclusions_and_missingness" is saved to disk where the exclusions and
+#'     missingness are described. Defaults to TRUE.
 #' @param file.format Character vector of length 1. Has to be either "docx" or
-#'     "rmd". The format in which the file detailing the exclusions is
-#'     saved. Defaults to "docx".
-#' @param override Logical vector of length 1. If TRUE the file "exclusions" is
-#'     replaced if it exists. If FALSE the function aborts if the file
-#'     exists. Defaults to TRUE.
+#'     "rmd". The format in which the file detailing the exclusions and
+#'     missingness is saved. Defaults to "docx".
+#' @param override Logical vector of length 1. If TRUE the file
+#'     "exclusions_and_missingness" is replaced if it exists. If FALSE the
+#'     function aborts if the file exists. Defaults to TRUE.
 #' @export
 CreateStudySample <- function(study.data, inclusion.criteria,
                               complete.cases = TRUE,
@@ -141,11 +141,11 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         stop("complete.cases has to be a logical vector of length 1")
     if (!is.character(relevant.variables))
         stop("relevant.variables has to be a character vector")
-    if (!is.null & !is.character(add.to.relevant.variables))
+    if (!is.null(add.to.relevant.variables) & !is.character(add.to.relevant.variables))
         stop("add.to.relevant.variables has to be either NULL or a character vector")
-    if (!is.null & !is.character(remove.from.relevant.variables))
+    if (!is.null(remove.from.relevant.variables) & !is.character(remove.from.relevant.variables))
         stop("remove.from.relevant.variables has to be either NULL or a character vector")
-    if (!is.null & !is.character(ignore.variables))
+    if (!is.null(ignore.variables) & !is.character(ignore.variables))
         stop("ignore.variables has to be either NULL or a character vector")
     if (!is.logical(save.to.disk) | !IsLength1(save.to.disk))
         stop("save.to.disk has to be a logical vector of length 1")
@@ -154,7 +154,8 @@ CreateStudySample <- function(study.data, inclusion.criteria,
     if (!is.logical(override) | !IsLength1(override))
         stop("override has to be a logical vector of length 1")
     ## Create full file name
-    full.file.name <- paste0("exclusions.", file.format)
+    file.name <- "exclusions_and_missingness"
+    full.file.name <- paste0(file.name, file.format)
     ## Use inclusion criteria to select sample from study data
     study.sample <- study.data
     for (i in seq_along(inclusion.criteria)) {
@@ -171,20 +172,51 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                     stop(paste0(full.file.name, " already exists. The function has stopped. If you still want to run the function please delete the file or run this function again setting override to TRUE"))
                 file.remove(full.file.name)
             }
-            write(exclusion.list$exclusion.text, "exclusions.rmd", append = TRUE)
+            write(exclusion.list$exclusion.text, paste0(file.name, ".rmd"), append = TRUE)
         }
-    }
-    ## Render exclusions file as docx
-    if (save.to.disk & file.format == "docx"){
-        rmarkdown::render("exclusions.rmd", output_format = "word_document")
-        file.remove("exclusions.rmd")
     }
     ## Keep only relevant variables
     relevant.variables <- c(relevant.variables, add.to.relevant.variables)
     relevant.variables <- relevant.variables[!(relevant.variables %in% remove.from.relevant.variables)]
     study.sample <- study.sample[, relevant.variables]
+    ## Calculate missingness
+    missingness.variables <- colnames(study.sample)[!(colnames(study.sample) %in% ignore.variables)]
+    missingness.list <- lapply(missingness.variables, function(column.name) {
+        column <- study.sample[, column.name]
+        n.missing <- sum(is.na(column))
+        p.missing <- round((n.missing/length(column)) * 100)
+        string <- paste0(n.missing, " (", p.missing, "%) had missing in ", column.name)
+        return(string)
+    })
+    missingness.string <- paste0(paste("-", unlist(missingness.list)), collapse = " \n\n")
     ## Keep only complete cases
-    study.sample <- study.sample[complete.cases(study.sample[, !(colnames(study.sample) %in% ignore.variables)]), ]
+    n.before.missing.excluded <- nrow(study.sample)
+    complete.sample <- study.sample[complete.cases(study.sample[, missingness.variables]), ]
+    n.after.missing.excluded <- nrow(complete.sample)
+    n.missing <- n.before.missing.excluded - n.after.missing.excluded
+    p.missing <- round((n.missing/n.before.missing.excluded) * 100)
+    missingness.handling.string <- paste0("A total of ", n.missing, " (",
+                                          p.missing, "%) patients had missing ",
+                                          "data in at least one variable")
+    if (complete.cases) {
+        study.sample <- complete.sample
+        missingness.handling.string <- paste0(missingness.handling.string,
+                                              " and were therefore excluded. ",
+                                              "A complete case analysis was ",
+                                              "conducted. \n\n")
+    } else {
+        missingness.handling.string <- paste0(missingness.handling.string, ".")
+    }
+    missingness.string <- paste0("\n\n",
+                                 missingness.handling.string,
+                                 missingness.string)
+    if (save.to.disk)
+        write(missingness.string, paste0(file.name, ".rmd"), append = TRUE)
+    ## Render exclusions and missingness file as docx
+    if (save.to.disk & file.format == "docx"){
+        rmarkdown::render(paste0(file.name, ".rmd"), output_format = "word_document")
+        file.remove(paste0(file.name, ".rmd"))
+    }
     ## Return the new study sample
     return(study.sample)
 }
