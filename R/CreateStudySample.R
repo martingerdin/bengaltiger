@@ -7,6 +7,42 @@
 #'     an inclusion criterion. No default.
 #' @param complete.cases Logical vector of length 1. If TRUE only complete cases
 #'     will be returned. If FALSE all cases are returned. Defaults to TRUE.
+#' @param relevant.variables Character vector. The names of variables to keep in
+#'     the study sample. Defaults to c("hos", "age", "sex", "tran", "doi",
+#'     "toi", "doar", "toar", "dodd", "todd", "moi", "sbp_1", "hr_1", "rr_1",
+#'     "gcs_t_1", "died", "head_and_neck", "face", "chest", "extremities",
+#'     "external", "e_1_icd", "e_2_icd", "e_3_icd", "e_4_icd", "e_5_icd",
+#'     "e_6_icd", "e_7_icd", "e_8_icd", "e_9_icd", "e_10_icd", "e_11_icd",
+#'     "e_12_icd", "xray_1_icd", "xray_2_icd", "xray_3_icd", "xray_4_icd",
+#'     "xray_5_icd", "xray_6_icd", "xray_7_icd", "xray_8_icd", "xray_9_icd",
+#'     "xray_10_icd", "xray_11_icd", "fast_1_icd", "fast_2_icd", "fast_3_icd",
+#'     "fast_4_icd", "fast_5_icd", "fast_6_icd", "fast_7_icd", "fast_8_icd",
+#'     "fast_9_icd", "fast_10_icd", "fast_11_icd", "ct_1_icd", "ct_2_icd",
+#'     "ct_3_icd", "ct_4_icd", "ct_5_icd", "ct_6_icd", "ct_7_icd", "ct_8_icd",
+#'     "ct_9_icd", "ct_10_icd", "ct_11_icd", "ct_12_icd", "ct_13_icd",
+#'     "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd",
+#'     "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd").
+#' @param add.to.relevant.variables Character vector. The names of variables to
+#'     add to the default variables in relevant.variables. If NULL no variables
+#'     are added. Defaults to NULL.
+#' @param remove.from.relevant.variables Character vector. The names of
+#'     variables to remove from the default variables in relevant.variables. If
+#'     NULL no variables are removed. Defaults to NULL.
+#' @param ignore.variables Character vector. The names of variables to ignore
+#'     when complete cases are determined. The variables included in this vector
+#'     must also be in relevant.variables. If NULL no variables are
+#'     ignored. Defaults to c("head_and_neck", "face", "chest", "extremities",
+#'     "external", "e_1_icd", "e_2_icd", "e_3_icd", "e_4_icd", "e_5_icd",
+#'     "e_6_icd", "e_7_icd", "e_8_icd", "e_9_icd", "e_10_icd", "e_11_icd",
+#'     "e_12_icd", "xray_1_icd", "xray_2_icd", "xray_3_icd", "xray_4_icd",
+#'     "xray_5_icd", "xray_6_icd", "xray_7_icd", "xray_8_icd", "xray_9_icd",
+#'     "xray_10_icd", "xray_11_icd", "fast_1_icd", "fast_2_icd", "fast_3_icd",
+#'     "fast_4_icd", "fast_5_icd", "fast_6_icd", "fast_7_icd", "fast_8_icd",
+#'     "fast_9_icd", "fast_10_icd", "fast_11_icd", "ct_1_icd", "ct_2_icd",
+#'     "ct_3_icd", "ct_4_icd", "ct_5_icd", "ct_6_icd", "ct_7_icd", "ct_8_icd",
+#'     "ct_9_icd", "ct_10_icd", "ct_11_icd", "ct_12_icd", "ct_13_icd",
+#'     "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd",
+#'     "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd").
 #' @param save.to.disk Logical vector of length 1. If TRUE a file named
 #'     "exclusions" is saved to disk where the exclusions are
 #'     described. Defaults to TRUE.
@@ -18,8 +54,84 @@
 #'     exists. Defaults to TRUE.
 #' @export
 CreateStudySample <- function(study.data, inclusion.criteria,
-                              complete.cases = TRUE, save.to.disk = TRUE,
-                              file.format = "docx", override = TRUE) {
+                              complete.cases = TRUE,
+                              relevant.variables = c("hos", "age", "sex",
+                                                     "tran", "doi", "toi",
+                                                     "doar", "toar", "dodd",
+                                                     "todd", "moi", "sbp_1",
+                                                     "hr_1", "rr_1", "gcs_t_1",
+                                                     "died", "head_and_neck",
+                                                     "face", "chest",
+                                                     "extremities", "external",
+                                                     "e_1_icd", "e_2_icd",
+                                                     "e_3_icd", "e_4_icd",
+                                                     "e_5_icd", "e_6_icd",
+                                                     "e_7_icd", "e_8_icd",
+                                                     "e_9_icd", "e_10_icd",
+                                                     "e_11_icd", "e_12_icd",
+                                                     "xray_1_icd", "xray_2_icd",
+                                                     "xray_3_icd", "xray_4_icd",
+                                                     "xray_5_icd", "xray_6_icd",
+                                                     "xray_7_icd", "xray_8_icd",
+                                                     "xray_9_icd",
+                                                     "xray_10_icd",
+                                                     "xray_11_icd",
+                                                     "fast_1_icd", "fast_2_icd",
+                                                     "fast_3_icd", "fast_4_icd",
+                                                     "fast_5_icd", "fast_6_icd",
+                                                     "fast_7_icd", "fast_8_icd",
+                                                     "fast_9_icd",
+                                                     "fast_10_icd",
+                                                     "fast_11_icd", "ct_1_icd",
+                                                     "ct_2_icd", "ct_3_icd",
+                                                     "ct_4_icd", "ct_5_icd",
+                                                     "ct_6_icd", "ct_7_icd",
+                                                     "ct_8_icd", "ct_9_icd",
+                                                     "ct_10_icd", "ct_11_icd",
+                                                     "ct_12_icd", "ct_13_icd",
+                                                     "op_1_icd", "op_2_icd",
+                                                     "op_3_icd", "op_4_icd",
+                                                     "op_5_icd", "op_6_icd",
+                                                     "op_7_icd", "op_8_icd",
+                                                     "op_9_icd", "op_10_icd",
+                                                     "op_11_icd"),
+                              add.to.relevant.variables = NULL,
+                              remove.from.relevant.variables = NULL,
+                              ignore.variables = c("head_and_neck", "face",
+                                                   "chest", "extremities",
+                                                   "external", "e_1_icd",
+                                                   "e_2_icd", "e_3_icd",
+                                                   "e_4_icd", "e_5_icd",
+                                                   "e_6_icd", "e_7_icd",
+                                                   "e_8_icd", "e_9_icd",
+                                                   "e_10_icd", "e_11_icd",
+                                                   "e_12_icd", "xray_1_icd",
+                                                   "xray_2_icd", "xray_3_icd",
+                                                   "xray_4_icd", "xray_5_icd",
+                                                   "xray_6_icd", "xray_7_icd",
+                                                   "xray_8_icd", "xray_9_icd",
+                                                   "xray_10_icd", "xray_11_icd",
+                                                   "fast_1_icd", "fast_2_icd",
+                                                   "fast_3_icd", "fast_4_icd",
+                                                   "fast_5_icd", "fast_6_icd",
+                                                   "fast_7_icd", "fast_8_icd",
+                                                   "fast_9_icd", "fast_10_icd",
+                                                   "fast_11_icd", "ct_1_icd",
+                                                   "ct_2_icd", "ct_3_icd",
+                                                   "ct_4_icd", "ct_5_icd",
+                                                   "ct_6_icd", "ct_7_icd",
+                                                   "ct_8_icd", "ct_9_icd",
+                                                   "ct_10_icd", "ct_11_icd",
+                                                   "ct_12_icd", "ct_13_icd",
+                                                   "op_1_icd", "op_2_icd",
+                                                   "op_3_icd", "op_4_icd",
+                                                   "op_5_icd", "op_6_icd",
+                                                   "op_7_icd", "op_8_icd",
+                                                   "op_9_icd", "op_10_icd",
+                                                   "op_11_icd"),
+                              save.to.disk = TRUE,
+                              file.format = "docx",
+                              override = TRUE) {
     ## Error handling
     if (!is.data.frame(study.data))
         stop("study.data has to be a data frame")
@@ -27,6 +139,14 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         stop("All items in inclusion.criteria have to be functions")
     if (!is.logical(complete.cases) | !IsLength1(complete.cases))
         stop("complete.cases has to be a logical vector of length 1")
+    if (!is.character(relevant.variables))
+        stop("relevant.variables has to be a character vector")
+    if (!is.null & !is.character(add.to.relevant.variables))
+        stop("add.to.relevant.variables has to be either NULL or a character vector")
+    if (!is.null & !is.character(remove.from.relevant.variables))
+        stop("remove.from.relevant.variables has to be either NULL or a character vector")
+    if (!is.null & !is.character(ignore.variables))
+        stop("ignore.variables has to be either NULL or a character vector")
     if (!is.logical(save.to.disk) | !IsLength1(save.to.disk))
         stop("save.to.disk has to be a logical vector of length 1")
     if (!(file.format %in% c("docx", "rmd")))
@@ -59,6 +179,12 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         rmarkdown::render("exclusions.rmd", output_format = "word_document")
         file.remove("exclusions.rmd")
     }
+    ## Keep only relevant variables
+    relevant.variables <- c(relevant.variables, add.to.relevant.variables)
+    relevant.variables <- relevant.variables[!(relevant.variables %in% remove.from.relevant.variables)]
+    study.sample <- study.sample[, relevant.variables]
+    ## Keep only complete cases
+    study.sample <- study.sample[complete.cases(study.sample[, !(colnames(study.sample) %in% ignore.variables)]), ]
     ## Return the new study sample
     return(study.sample)
 }
