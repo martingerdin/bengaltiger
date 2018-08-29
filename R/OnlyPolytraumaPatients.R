@@ -49,9 +49,9 @@ OnlyPolytraumaPatients <- function(sample,
     total.n.excluded <- n.excluded + n.missing
     exclusion.text <- paste0(total.n.excluded, " did not have polytrauma.")
     if (remove.missing) {
-        exclusion.text <- paste0(total.n.excluded, " excluded: \n",
-                                 "- ", n.missing, " had missing AIS scores \n",
-                                 "- ", n.excluded, " did not have polytrauma")
+        exclusion.text <- paste0(total.n.excluded, " excluded: \n\n",
+                                 "- ", n.missing, " had missing AIS scores \n\n",
+                                 "- ", n.excluded, " did not have polytrauma \n\n")
     }
     return.list <- list(exclusion.text = exclusion.text,
                         subsample = subsample)
