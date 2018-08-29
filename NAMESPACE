@@ -3,7 +3,7 @@
 export(CreateStudySample)
 export(CreateStudyTemplate)
 export(ImportStudyData)
-export(ImportTitcoStudyData)
+export(ImportTitcoMySQL)
 export(Init)
 export(IsLength1)
 export(OnlyPediatricPatients)
