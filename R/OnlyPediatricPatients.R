@@ -38,9 +38,9 @@ OnlyPediatricPatients <- function(sample, age.variable.name = "age", age.cutoff 
         total.n.excluded <- total.n.excluded + n.missing
     exclusion.text <- paste0(total.n.excluded, " were adults.")
     if (remove.missing) {
-        exclusion.text <- paste0(total.n.excluded, " excluded: \n",
-                                 "- ", n.missing, " had missing age \n",
-                                 "- ", n.excluded, " were adults (aged 18 years or above)")
+        exclusion.text <- paste0(total.n.excluded, " excluded: \n\n",
+                                 "- ", n.missing, " had missing age \n\n",
+                                 "- ", n.excluded, " were adults (aged 18 years or above) \n\n")
     }
     return.list <- list(exclusion.text = exclusion.text,
                         subsample = subsample)

@@ -5,7 +5,33 @@
 \title{Create study sample}
 \usage{
 CreateStudySample(study.data, inclusion.criteria, complete.cases = TRUE,
-  save.to.disk = TRUE, file.format = "docx", override = TRUE)
+  relevant.variables = c("hos", "age", "sex", "tran", "doi", "toi", "doar",
+  "toar", "dodd", "todd", "moi", "sbp_1", "hr_1", "rr_1", "gcs_t_1", "died",
+  "head_and_neck", "face", "chest", "extremities", "external", "e_1_icd",
+  "e_2_icd", "e_3_icd", "e_4_icd", "e_5_icd", "e_6_icd", "e_7_icd", "e_8_icd",
+  "e_9_icd", "e_10_icd", "e_11_icd", "e_12_icd", "xray_1_icd", "xray_2_icd",
+  "xray_3_icd", "xray_4_icd", "xray_5_icd", "xray_6_icd", "xray_7_icd",
+  "xray_8_icd", "xray_9_icd", "xray_10_icd", "xray_11_icd", "fast_1_icd",
+  "fast_2_icd",      "fast_3_icd", "fast_4_icd", "fast_5_icd", "fast_6_icd",
+  "fast_7_icd", "fast_8_icd", "fast_9_icd", "fast_10_icd", "fast_11_icd",
+  "ct_1_icd", "ct_2_icd", "ct_3_icd", "ct_4_icd", "ct_5_icd", "ct_6_icd",
+  "ct_7_icd", "ct_8_icd", "ct_9_icd", "ct_10_icd", "ct_11_icd", "ct_12_icd",
+  "ct_13_icd", "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd",
+  "op_6_icd", "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd"),
+  add.to.relevant.variables = NULL, remove.from.relevant.variables = NULL,
+  ignore.variables = c("head_and_neck", "face", "chest", "extremities",
+  "external", "e_1_icd", "e_2_icd", "e_3_icd", "e_4_icd", "e_5_icd", "e_6_icd",
+  "e_7_icd", "e_8_icd", "e_9_icd", "e_10_icd", "e_11_icd", "e_12_icd",
+  "xray_1_icd", "xray_2_icd", "xray_3_icd", "xray_4_icd", "xray_5_icd",
+  "xray_6_icd", "xray_7_icd", "xray_8_icd", "xray_9_icd", "xray_10_icd",
+  "xray_11_icd", "fast_1_icd", "fast_2_icd", "fast_3_icd", "fast_4_icd",
+  "fast_5_icd", "fast_6_icd", "fast_7_icd", "fast_8_icd", "fast_9_icd",
+  "fast_10_icd", "fast_11_icd",      "ct_1_icd", "ct_2_icd", "ct_3_icd",
+  "ct_4_icd", "ct_5_icd", "ct_6_icd", "ct_7_icd", "ct_8_icd", "ct_9_icd",
+  "ct_10_icd", "ct_11_icd", "ct_12_icd", "ct_13_icd", "op_1_icd", "op_2_icd",
+  "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd", "op_7_icd", "op_8_icd",
+  "op_9_icd", "op_10_icd", "op_11_icd"), save.to.disk = TRUE,
+  file.format = "docx", override = TRUE)
 }
 \arguments{
 \item{study.data}{Data frame. The study data. No defaults.}
@@ -16,17 +42,57 @@ an inclusion criterion. No default.}
 \item{complete.cases}{Logical vector of length 1. If TRUE only complete cases
 will be returned. If FALSE all cases are returned. Defaults to TRUE.}
 
+\item{relevant.variables}{Character vector. The names of variables to keep in
+the study sample. Defaults to c("hos", "age", "sex", "tran", "doi",
+"toi", "doar", "toar", "dodd", "todd", "moi", "sbp_1", "hr_1", "rr_1",
+"gcs_t_1", "died", "head_and_neck", "face", "chest", "extremities",
+"external", "e_1_icd", "e_2_icd", "e_3_icd", "e_4_icd", "e_5_icd",
+"e_6_icd", "e_7_icd", "e_8_icd", "e_9_icd", "e_10_icd", "e_11_icd",
+"e_12_icd", "xray_1_icd", "xray_2_icd", "xray_3_icd", "xray_4_icd",
+"xray_5_icd", "xray_6_icd", "xray_7_icd", "xray_8_icd", "xray_9_icd",
+"xray_10_icd", "xray_11_icd", "fast_1_icd", "fast_2_icd", "fast_3_icd",
+"fast_4_icd", "fast_5_icd", "fast_6_icd", "fast_7_icd", "fast_8_icd",
+"fast_9_icd", "fast_10_icd", "fast_11_icd", "ct_1_icd", "ct_2_icd",
+"ct_3_icd", "ct_4_icd", "ct_5_icd", "ct_6_icd", "ct_7_icd", "ct_8_icd",
+"ct_9_icd", "ct_10_icd", "ct_11_icd", "ct_12_icd", "ct_13_icd",
+"op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd",
+"op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd").}
+
+\item{add.to.relevant.variables}{Character vector. The names of variables to
+add to the default variables in relevant.variables. If NULL no variables
+are added. Defaults to NULL.}
+
+\item{remove.from.relevant.variables}{Character vector. The names of
+variables to remove from the default variables in relevant.variables. If
+NULL no variables are removed. Defaults to NULL.}
+
+\item{ignore.variables}{Character vector. The names of variables to ignore
+when complete cases are determined. The variables included in this vector
+must also be in relevant.variables. If NULL no variables are
+ignored. Defaults to c("head_and_neck", "face", "chest", "extremities",
+"external", "e_1_icd", "e_2_icd", "e_3_icd", "e_4_icd", "e_5_icd",
+"e_6_icd", "e_7_icd", "e_8_icd", "e_9_icd", "e_10_icd", "e_11_icd",
+"e_12_icd", "xray_1_icd", "xray_2_icd", "xray_3_icd", "xray_4_icd",
+"xray_5_icd", "xray_6_icd", "xray_7_icd", "xray_8_icd", "xray_9_icd",
+"xray_10_icd", "xray_11_icd", "fast_1_icd", "fast_2_icd", "fast_3_icd",
+"fast_4_icd", "fast_5_icd", "fast_6_icd", "fast_7_icd", "fast_8_icd",
+"fast_9_icd", "fast_10_icd", "fast_11_icd", "ct_1_icd", "ct_2_icd",
+"ct_3_icd", "ct_4_icd", "ct_5_icd", "ct_6_icd", "ct_7_icd", "ct_8_icd",
+"ct_9_icd", "ct_10_icd", "ct_11_icd", "ct_12_icd", "ct_13_icd",
+"op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd",
+"op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd").}
+
 \item{save.to.disk}{Logical vector of length 1. If TRUE a file named
-"exclusions" is saved to disk where the exclusions are
-described. Defaults to TRUE.}
+"exclusions_and_missingness" is saved to disk where the exclusions and
+missingness are described. Defaults to TRUE.}
 
 \item{file.format}{Character vector of length 1. Has to be either "docx" or
-"rmd". The format in which the file detailing the exclusions is
-saved. Defaults to "docx".}
+"rmd". The format in which the file detailing the exclusions and
+missingness is saved. Defaults to "docx".}
 
-\item{override}{Logical vector of length 1. If TRUE the file "exclusions" is
-replaced if it exists. If FALSE the function aborts if the file
-exists. Defaults to TRUE.}
+\item{override}{Logical vector of length 1. If TRUE the file
+"exclusions_and_missingness" is replaced if it exists. If FALSE the
+function aborts if the file exists. Defaults to TRUE.}
 }
 \description{
 Creates the study sample using a list of inclusion criteria. Note that the

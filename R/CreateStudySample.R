@@ -7,19 +7,131 @@
 #'     an inclusion criterion. No default.
 #' @param complete.cases Logical vector of length 1. If TRUE only complete cases
 #'     will be returned. If FALSE all cases are returned. Defaults to TRUE.
+#' @param relevant.variables Character vector. The names of variables to keep in
+#'     the study sample. Defaults to c("hos", "age", "sex", "tran", "doi",
+#'     "toi", "doar", "toar", "dodd", "todd", "moi", "sbp_1", "hr_1", "rr_1",
+#'     "gcs_t_1", "died", "head_and_neck", "face", "chest", "extremities",
+#'     "external", "e_1_icd", "e_2_icd", "e_3_icd", "e_4_icd", "e_5_icd",
+#'     "e_6_icd", "e_7_icd", "e_8_icd", "e_9_icd", "e_10_icd", "e_11_icd",
+#'     "e_12_icd", "xray_1_icd", "xray_2_icd", "xray_3_icd", "xray_4_icd",
+#'     "xray_5_icd", "xray_6_icd", "xray_7_icd", "xray_8_icd", "xray_9_icd",
+#'     "xray_10_icd", "xray_11_icd", "fast_1_icd", "fast_2_icd", "fast_3_icd",
+#'     "fast_4_icd", "fast_5_icd", "fast_6_icd", "fast_7_icd", "fast_8_icd",
+#'     "fast_9_icd", "fast_10_icd", "fast_11_icd", "ct_1_icd", "ct_2_icd",
+#'     "ct_3_icd", "ct_4_icd", "ct_5_icd", "ct_6_icd", "ct_7_icd", "ct_8_icd",
+#'     "ct_9_icd", "ct_10_icd", "ct_11_icd", "ct_12_icd", "ct_13_icd",
+#'     "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd",
+#'     "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd").
+#' @param add.to.relevant.variables Character vector. The names of variables to
+#'     add to the default variables in relevant.variables. If NULL no variables
+#'     are added. Defaults to NULL.
+#' @param remove.from.relevant.variables Character vector. The names of
+#'     variables to remove from the default variables in relevant.variables. If
+#'     NULL no variables are removed. Defaults to NULL.
+#' @param ignore.variables Character vector. The names of variables to ignore
+#'     when complete cases are determined. The variables included in this vector
+#'     must also be in relevant.variables. If NULL no variables are
+#'     ignored. Defaults to c("head_and_neck", "face", "chest", "extremities",
+#'     "external", "e_1_icd", "e_2_icd", "e_3_icd", "e_4_icd", "e_5_icd",
+#'     "e_6_icd", "e_7_icd", "e_8_icd", "e_9_icd", "e_10_icd", "e_11_icd",
+#'     "e_12_icd", "xray_1_icd", "xray_2_icd", "xray_3_icd", "xray_4_icd",
+#'     "xray_5_icd", "xray_6_icd", "xray_7_icd", "xray_8_icd", "xray_9_icd",
+#'     "xray_10_icd", "xray_11_icd", "fast_1_icd", "fast_2_icd", "fast_3_icd",
+#'     "fast_4_icd", "fast_5_icd", "fast_6_icd", "fast_7_icd", "fast_8_icd",
+#'     "fast_9_icd", "fast_10_icd", "fast_11_icd", "ct_1_icd", "ct_2_icd",
+#'     "ct_3_icd", "ct_4_icd", "ct_5_icd", "ct_6_icd", "ct_7_icd", "ct_8_icd",
+#'     "ct_9_icd", "ct_10_icd", "ct_11_icd", "ct_12_icd", "ct_13_icd",
+#'     "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd",
+#'     "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd").
 #' @param save.to.disk Logical vector of length 1. If TRUE a file named
-#'     "exclusions" is saved to disk where the exclusions are
-#'     described. Defaults to TRUE.
+#'     "exclusions_and_missingness" is saved to disk where the exclusions and
+#'     missingness are described. Defaults to TRUE.
 #' @param file.format Character vector of length 1. Has to be either "docx" or
-#'     "rmd". The format in which the file detailing the exclusions is
-#'     saved. Defaults to "docx".
-#' @param override Logical vector of length 1. If TRUE the file "exclusions" is
-#'     replaced if it exists. If FALSE the function aborts if the file
-#'     exists. Defaults to TRUE.
+#'     "rmd". The format in which the file detailing the exclusions and
+#'     missingness is saved. Defaults to "docx".
+#' @param override Logical vector of length 1. If TRUE the file
+#'     "exclusions_and_missingness" is replaced if it exists. If FALSE the
+#'     function aborts if the file exists. Defaults to TRUE.
 #' @export
 CreateStudySample <- function(study.data, inclusion.criteria,
-                              complete.cases = TRUE, save.to.disk = TRUE,
-                              file.format = "docx", override = TRUE) {
+                              complete.cases = TRUE,
+                              relevant.variables = c("hos", "age", "sex",
+                                                     "tran", "doi", "toi",
+                                                     "doar", "toar", "dodd",
+                                                     "todd", "moi", "sbp_1",
+                                                     "hr_1", "rr_1", "gcs_t_1",
+                                                     "died", "head_and_neck",
+                                                     "face", "chest",
+                                                     "extremities", "external",
+                                                     "e_1_icd", "e_2_icd",
+                                                     "e_3_icd", "e_4_icd",
+                                                     "e_5_icd", "e_6_icd",
+                                                     "e_7_icd", "e_8_icd",
+                                                     "e_9_icd", "e_10_icd",
+                                                     "e_11_icd", "e_12_icd",
+                                                     "xray_1_icd", "xray_2_icd",
+                                                     "xray_3_icd", "xray_4_icd",
+                                                     "xray_5_icd", "xray_6_icd",
+                                                     "xray_7_icd", "xray_8_icd",
+                                                     "xray_9_icd",
+                                                     "xray_10_icd",
+                                                     "xray_11_icd",
+                                                     "fast_1_icd", "fast_2_icd",
+                                                     "fast_3_icd", "fast_4_icd",
+                                                     "fast_5_icd", "fast_6_icd",
+                                                     "fast_7_icd", "fast_8_icd",
+                                                     "fast_9_icd",
+                                                     "fast_10_icd",
+                                                     "fast_11_icd", "ct_1_icd",
+                                                     "ct_2_icd", "ct_3_icd",
+                                                     "ct_4_icd", "ct_5_icd",
+                                                     "ct_6_icd", "ct_7_icd",
+                                                     "ct_8_icd", "ct_9_icd",
+                                                     "ct_10_icd", "ct_11_icd",
+                                                     "ct_12_icd", "ct_13_icd",
+                                                     "op_1_icd", "op_2_icd",
+                                                     "op_3_icd", "op_4_icd",
+                                                     "op_5_icd", "op_6_icd",
+                                                     "op_7_icd", "op_8_icd",
+                                                     "op_9_icd", "op_10_icd",
+                                                     "op_11_icd"),
+                              add.to.relevant.variables = NULL,
+                              remove.from.relevant.variables = NULL,
+                              ignore.variables = c("head_and_neck", "face",
+                                                   "chest", "extremities",
+                                                   "external", "e_1_icd",
+                                                   "e_2_icd", "e_3_icd",
+                                                   "e_4_icd", "e_5_icd",
+                                                   "e_6_icd", "e_7_icd",
+                                                   "e_8_icd", "e_9_icd",
+                                                   "e_10_icd", "e_11_icd",
+                                                   "e_12_icd", "xray_1_icd",
+                                                   "xray_2_icd", "xray_3_icd",
+                                                   "xray_4_icd", "xray_5_icd",
+                                                   "xray_6_icd", "xray_7_icd",
+                                                   "xray_8_icd", "xray_9_icd",
+                                                   "xray_10_icd", "xray_11_icd",
+                                                   "fast_1_icd", "fast_2_icd",
+                                                   "fast_3_icd", "fast_4_icd",
+                                                   "fast_5_icd", "fast_6_icd",
+                                                   "fast_7_icd", "fast_8_icd",
+                                                   "fast_9_icd", "fast_10_icd",
+                                                   "fast_11_icd", "ct_1_icd",
+                                                   "ct_2_icd", "ct_3_icd",
+                                                   "ct_4_icd", "ct_5_icd",
+                                                   "ct_6_icd", "ct_7_icd",
+                                                   "ct_8_icd", "ct_9_icd",
+                                                   "ct_10_icd", "ct_11_icd",
+                                                   "ct_12_icd", "ct_13_icd",
+                                                   "op_1_icd", "op_2_icd",
+                                                   "op_3_icd", "op_4_icd",
+                                                   "op_5_icd", "op_6_icd",
+                                                   "op_7_icd", "op_8_icd",
+                                                   "op_9_icd", "op_10_icd",
+                                                   "op_11_icd"),
+                              save.to.disk = TRUE,
+                              file.format = "docx",
+                              override = TRUE) {
     ## Error handling
     if (!is.data.frame(study.data))
         stop("study.data has to be a data frame")
@@ -27,6 +139,14 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         stop("All items in inclusion.criteria have to be functions")
     if (!is.logical(complete.cases) | !IsLength1(complete.cases))
         stop("complete.cases has to be a logical vector of length 1")
+    if (!is.character(relevant.variables))
+        stop("relevant.variables has to be a character vector")
+    if (!is.null(add.to.relevant.variables) & !is.character(add.to.relevant.variables))
+        stop("add.to.relevant.variables has to be either NULL or a character vector")
+    if (!is.null(remove.from.relevant.variables) & !is.character(remove.from.relevant.variables))
+        stop("remove.from.relevant.variables has to be either NULL or a character vector")
+    if (!is.null(ignore.variables) & !is.character(ignore.variables))
+        stop("ignore.variables has to be either NULL or a character vector")
     if (!is.logical(save.to.disk) | !IsLength1(save.to.disk))
         stop("save.to.disk has to be a logical vector of length 1")
     if (!(file.format %in% c("docx", "rmd")))
@@ -34,10 +154,12 @@ CreateStudySample <- function(study.data, inclusion.criteria,
     if (!is.logical(override) | !IsLength1(override))
         stop("override has to be a logical vector of length 1")
     ## Create full file name
-    full.file.name <- paste0("exclusions.", file.format)
+    file.name <- "exclusions_and_missingness"
+    full.file.name <- paste0(file.name, file.format)
     ## Use inclusion criteria to select sample from study data
     study.sample <- study.data
     for (i in seq_along(inclusion.criteria)) {
+        n.before.exclusion <- nrow(study.sample)
         ## Select the function to select a subset of patients from the inclusion
         ## criteria function list
         criterion.function <- inclusion.criteria[[i]]
@@ -46,17 +168,74 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         ## Save exclusions to disk, but first check if the file already
         ## exists
         if (save.to.disk) {
-            if (file.exists(full.file.name)){
+            if (file.exists(full.file.name) & i == 1){
                 if (!override)
                     stop(paste0(full.file.name, " already exists. The function has stopped. If you still want to run the function please delete the file or run this function again setting override to TRUE"))
                 file.remove(full.file.name)
             }
-            write(exclusion.list$exclusion.text, "exclusions.rmd", append = TRUE)
-            if (file.format == "docx"){
-                rmarkdown::render("exclusions.rmd", output_format = "word_document")
-                file.remove("exclusions.rmd")
+            inclusion.text <- paste0("**Exclusions step ", i, "** \n\n",
+                                     exclusion.list$exclusion.text, " \n\n",
+                                     "*", nrow(study.sample),
+                                     " patients remained.* \n\n")
+            ## If it is the first exclusion critera being applied then the
+            ## number of patients in the cohort should be pasted above the text
+            ## detailing the exclusions.
+            if (i == 1) {
+                inclusion.text <- paste0("**Before exclusions** \n\n",
+                                         "There were ", n.before.exclusion,
+                                         " patients in the cohort. \n\n",
+                                         inclusion.text)
             }
+            write(inclusion.text, paste0(file.name, ".rmd"), append = TRUE)
         }
+    }
+    ## Keep only relevant variables
+    relevant.variables <- c(relevant.variables, add.to.relevant.variables)
+    relevant.variables <- relevant.variables[!(relevant.variables %in% remove.from.relevant.variables)]
+    study.sample <- study.sample[, relevant.variables]
+    ## Calculate missingness
+    missingness.variables <- colnames(study.sample)[!(colnames(study.sample) %in% ignore.variables)]
+    missingness.list <- lapply(missingness.variables, function(column.name) {
+        column <- study.sample[, column.name]
+        n.missing <- sum(is.na(column))
+        p.missing <- round((n.missing/length(column)) * 100)
+        string <- paste0(n.missing, " (", p.missing, "%) had missing in ", column.name)
+        return(string)
+    })
+    missingness.string <- paste0(paste("-", unlist(missingness.list)), collapse = " \n\n")
+    ## Keep only complete cases
+    n.before.missing.excluded <- nrow(study.sample)
+    complete.sample <- study.sample[complete.cases(study.sample[, missingness.variables]), ]
+    n.after.missing.excluded <- nrow(complete.sample)
+    n.missing <- n.before.missing.excluded - n.after.missing.excluded
+    p.missing <- round((n.missing/n.before.missing.excluded) * 100)
+    missingness.handling.string <- paste0("A total of ", n.missing,
+                                          " (", p.missing,
+                                          "%) patients had missing ",
+                                          "data in at least one variable")
+    if (complete.cases) {
+        study.sample <- complete.sample
+        missingness.handling.string <- paste0("**Exclusions step ",
+                                              length(inclusion.criteria) + 1,
+                                              "** \n\n",
+                                              missingness.handling.string,
+                                              " and were therefore excluded")
+    } else {
+        missingness.handling.string <- paste0("**Missingness** \n\n",
+                                              missingness.handling.string)
+    }
+    missingness.string <- paste0("\n\n",
+                                 missingness.handling.string, ": \n\n",
+                                 missingness.string, " \n\n",
+                                 "**Finally** \n\n",
+                                 "The study sample included ",
+                                 nrow(study.sample), " patients.")
+    if (save.to.disk)
+        write(missingness.string, paste0(file.name, ".rmd"), append = TRUE)
+    ## Render exclusions and missingness file as docx
+    if (save.to.disk & file.format == "docx"){
+        rmarkdown::render(paste0(file.name, ".rmd"), output_format = "word_document")
+        file.remove(paste0(file.name, ".rmd"))
     }
     ## Return the new study sample
     return(study.sample)
