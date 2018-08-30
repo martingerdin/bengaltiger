@@ -159,6 +159,7 @@ CreateStudySample <- function(study.data, inclusion.criteria,
     ## Use inclusion criteria to select sample from study data
     study.sample <- study.data
     for (i in seq_along(inclusion.criteria)) {
+        n.before.exclusion <- nrow(study.sample)
         ## Select the function to select a subset of patients from the inclusion
         ## criteria function list
         criterion.function <- inclusion.criteria[[i]]
@@ -172,7 +173,20 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                     stop(paste0(full.file.name, " already exists. The function has stopped. If you still want to run the function please delete the file or run this function again setting override to TRUE"))
                 file.remove(full.file.name)
             }
-            write(exclusion.list$exclusion.text, paste0(file.name, ".rmd"), append = TRUE)
+            inclusion.text <- paste0("**Exclusions step ", i, "** \n\n",
+                                     exclusion.list$exclusion.text, " \n\n",
+                                     "*", nrow(study.sample),
+                                     " patients remained.* \n\n")
+            ## If it is the first exclusion critera being applied then the
+            ## number of patients in the cohort should be pasted above the text
+            ## detailing the exclusions.
+            if (i == 1) {
+                inclusion.text <- paste0("**Before exclusions** \n\n",
+                                         "There were ", n.before.exclusion,
+                                         " patients in the cohort. \n\n",
+                                         inclusion.text)
+            }
+            write(inclusion.text, paste0(file.name, ".rmd"), append = TRUE)
         }
     }
     ## Keep only relevant variables
@@ -195,21 +209,27 @@ CreateStudySample <- function(study.data, inclusion.criteria,
     n.after.missing.excluded <- nrow(complete.sample)
     n.missing <- n.before.missing.excluded - n.after.missing.excluded
     p.missing <- round((n.missing/n.before.missing.excluded) * 100)
-    missingness.handling.string <- paste0("A total of ", n.missing, " (",
-                                          p.missing, "%) patients had missing ",
+    missingness.handling.string <- paste0("A total of ", n.missing,
+                                          " (", p.missing,
+                                          "%) patients had missing ",
                                           "data in at least one variable")
     if (complete.cases) {
         study.sample <- complete.sample
-        missingness.handling.string <- paste0(missingness.handling.string,
-                                              " and were therefore excluded. ",
-                                              "A complete case analysis was ",
-                                              "conducted. \n\n")
+        missingness.handling.string <- paste0("**Exclusions step ",
+                                              length(inclusion.criteria) + 1,
+                                              "** \n\n",
+                                              missingness.handling.string,
+                                              " and were therefore excluded")
     } else {
-        missingness.handling.string <- paste0(missingness.handling.string, ".")
+        missingness.handling.string <- paste0("**Missingness** \n\n",
+                                              missingness.handling.string)
     }
     missingness.string <- paste0("\n\n",
-                                 missingness.handling.string,
-                                 missingness.string)
+                                 missingness.handling.string, ": \n\n",
+                                 missingness.string, " \n\n",
+                                 "**Finally** \n\n",
+                                 "The study sample included ",
+                                 nrow(study.sample), " patients.")
     if (save.to.disk)
         write(missingness.string, paste0(file.name, ".rmd"), append = TRUE)
     ## Render exclusions and missingness file as docx
