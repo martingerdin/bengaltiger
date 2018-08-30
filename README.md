@@ -192,18 +192,23 @@ git checkout develop
 git merge --no-ff -m "Add ApplyExclusionCriteria function"
 # If new feature should be merged with master and result in new release
 git checkout master
-# Change version number in DESCRIPTION, increment MINOR as new feature was added
 git merge --no-ff -m "Add ApplyExclusionCriteria function"
-git push #! Important note, see below
-git tag -a v1.1.0 -m "Version 1.1.0"
+# Change version number in DESCRIPTION, increment MINOR as new feature was added
+git add DESCRIPTION
+git commit -m "Update version number"
+git tag -a v1.1.0 -m "Version 1.1.0" # See note below
+git push 
 git push --tags
 gren release 
 gren changelog --override
 ```
 
-It's important that commits that closes issues are pushed before a commit is
-tagged and `gren` is used to release a new version. If this is not done, then
-the release notes and changelog will lag one version behind the repository.
+To make sure that `gren` includes closed issues in the correct release notes
+it's important that there is a separate "tag commit" that is later than the
+merge from
+develop. See
+[this issue](https://github.com/github-tools/github-release-notes/issues/181)
+for a discussion on this.
 
 ## Code style guide
 We use [Google's R Style Guide](https://google.github.io/styleguide/Rguide.xml)
