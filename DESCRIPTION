@@ -9,7 +9,8 @@ Depends: R (>= 3.3.0)
 Imports: RMySQL,
 	 rmarkdown,
 	 DBI,
-	 tableone
+	 tableone,
+	 knitr
 License: LICENCE.md
 Encoding: UTF-8
 LazyData: true
