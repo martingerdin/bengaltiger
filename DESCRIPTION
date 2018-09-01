@@ -8,7 +8,9 @@ Description: Streamlines data analysis and manuscript writing for medical
 Depends: R (>= 3.3.0)
 Imports: RMySQL,
 	 rmarkdown,
-	 DBI
+	 DBI,
+	 tableone,
+	 knitr
 License: LICENCE.md
 Encoding: UTF-8
 LazyData: true
