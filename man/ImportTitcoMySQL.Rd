@@ -4,9 +4,10 @@
 \alias{ImportTitcoMySQL}
 \title{Import titco study data from mysql server}
 \usage{
-ImportTitcoMySQL(mysql.server.name = "127.0.0.1", mysql.server.port = 3307,
-  mysql.database = "TITCO", mysql.username = "titco",
-  mysql.password = "mangrovetitco", mysql.titco.table = "titco")
+ImportTitcoMySQL(mysql.server.name = "127.0.0.1",
+  mysql.server.port = 3307, mysql.database = "TITCO",
+  mysql.username = "titco", mysql.password = "mangrovetitco",
+  mysql.titco.table = "titco")
 }
 \arguments{
 \item{mysql.server.name}{Character vector of length 1. The hostname or IP of the mysql-server, defaults to 127.0.0.1.}

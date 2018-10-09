@@ -120,7 +120,8 @@ AddTraumaticBrainInjury <- function(study.sample,
     if (!add.as.factor) tbi <- as.character(tbi)
     study.sample[, variable.name] <- tbi
     ## Drop used variables
-    study.sample <- study.sample[, -grep(paste0(icd.variables, collapse = "|"), colnames(study.sample))]
+    if (drop.used.variables)
+        study.sample <- study.sample[, -grep(paste0(icd.variables, collapse = "|"), colnames(study.sample))]
     ## Return study sample
     return(study.sample)
 }
