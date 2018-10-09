@@ -24,22 +24,22 @@
 #'     the table to disk. Has to be one of c("pdf", "rmd", "docx"). Defaults to
 #'     "docx".
 #' @export
-create.table.of.sample.characteristics <- function(study.sample,
-                                                   data.dictionary = NULL,
-                                                   group = NULL,
-                                                   variables = NULL,
-                                                   exclude.variables = NULL,
-                                                   include.overall = TRUE,
-                                                   include.missing = TRUE,
-                                                   digits = 1,
-                                                   save.to.disk = TRUE,
-                                                   file.format = "docx") {
+CreateSampleCharacteristicsTable <- function(study.sample,
+                                             data.dictionary = NULL,
+                                             group = NULL,
+                                             variables = NULL,
+                                             exclude.variables = NULL,
+                                             include.overall = TRUE,
+                                             include.missing = TRUE,
+                                             digits = 1,
+                                             save.to.disk = TRUE,
+                                             file.format = "docx") {
     ## Error handling
     if (!is.data.frame(study.sample))
         stop("study.sample has to be a data.frame")
     if (!is.null(data.dictionary))
         stop("data.dictionary has to be NULL")
-    if ((!is.character(group) & !is.null(group)) | IsLength1(group))
+    if ((!is.character(group) & !is.null(group)) | !IsLength1(group))
         stop("group has to be a character vector of length 1 or NULL")
     if (!is.character(variables) & !is.null(variables))
         stop("variables has to be a character vector or NULL")
@@ -51,7 +51,7 @@ create.table.of.sample.characteristics <- function(study.sample,
         stop("include.missing has to be a character vector of length 1")
     if (!is.numeric(digits) | !IsLength1(digits) | digits < 0)
         stop("digits has to be a numeric vector of length 1")
-    if (!is.logical(save) | !IsLength1(save))
+    if (!is.logical(save.to.disk) | !IsLength1(save.to.disk))
         stop("save has to be a character vector of length 1")
     if (!(file.format %in% c("docx", "rmd", "pdf")) | !IsLength1(file.format))
         stop("file.format has to be one of docx, rmd, or pdf")
@@ -171,8 +171,8 @@ create.table.of.sample.characteristics <- function(study.sample,
     if (save.to.disk) {
         ## Create R markdown code
         table.file <- paste0("```{r echo = FALSE, results = 'asis'} \n",
-                          "kable(table, caption = 'Sample characteristics') \n",
-                          "```")
+                             "kable(table, caption = 'Sample characteristics') \n",
+                             "```")
         ## Write to disk
         write(table.file, "sample_characteristics_table.rmd")
         ## Render to desired format
