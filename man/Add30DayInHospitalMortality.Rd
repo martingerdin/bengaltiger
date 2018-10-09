@@ -7,8 +7,8 @@
 Add30DayInHospitalMortality(study.sample, from.date = "doar",
   from.time = "toar", to.date = "dodd", to.time = "todd",
   date.format = "\%Y-\%m-\%d", time.format = "\%H:\%M",
-  died.variable = "died", died.value = "Yes", levels = c("Yes", "No"),
-  variable.name = "m30d", add.as.factor = TRUE,
+  died.variable = "died", died.value = "Yes", levels = c("Yes",
+  "No"), variable.name = "m30d", add.as.factor = TRUE,
   drop.used.variables = TRUE)
 }
 \arguments{

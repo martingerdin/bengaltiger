@@ -4,10 +4,11 @@
 \alias{EstimateTraumaticBrainInjuryProportion}
 \title{Estimate traumatic brain injury proportion}
 \usage{
-EstimateTraumaticBrainInjuryProportion(study.sample, variable.name = "tbi",
-  tbi.level = "Yes", digits = 3, bootstrap.confidence.interval = TRUE,
-  random.seed = NULL, number.of.bootstrap.samples = 1000,
-  save.to.disk = TRUE, return.result = FALSE)
+EstimateTraumaticBrainInjuryProportion(study.sample,
+  variable.name = "tbi", tbi.level = "Yes", digits = 3,
+  bootstrap.confidence.interval = TRUE, random.seed = NULL,
+  number.of.bootstrap.samples = 1000, save.to.disk = TRUE,
+  return.result = FALSE)
 }
 \arguments{
 \item{study.sample}{Data frame. The study sample. No default.}
