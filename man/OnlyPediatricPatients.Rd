@@ -4,11 +4,11 @@
 \alias{OnlyPediatricPatients}
 \title{Only pediatric patients}
 \usage{
-OnlyPediatricPatients(sample, age.variable.name = "age", age.cutoff = 18,
-  remove.missing = TRUE)
+OnlyPediatricPatients(study.sample, age.variable.name = "age",
+  age.cutoff = 18, remove.missing = TRUE)
 }
 \arguments{
-\item{sample}{Data frame. The study sample. No default.}
+\item{study.sample}{Data frame. The study sample. No default.}
 
 \item{age.variable.name}{Character vector of length 1. The name of the age
 variable. Defaults to "age".}
