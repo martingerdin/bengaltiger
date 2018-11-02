@@ -34,6 +34,9 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                                              digits = 1,
                                              save.to.disk = TRUE,
                                              file.format = "docx") {
+    ## Load required packages
+    library("tableone")
+    library("knitr")
     ## Error handling
     if (!is.data.frame(study.sample))
         stop("study.sample has to be a data.frame")
