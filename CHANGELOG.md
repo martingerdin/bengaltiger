@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.0.22.9000 (02/11/2018)
+
+#### Bug Fixes:
+
+- [#62](https://github.com/martingerdin/bengaltiger/issues/62) Fix error in CreateSampleCharacteristicsTable error handling 
+
+---
+
+## v0.0.21.9000 (10/10/2018)
+
+#### Bug Fixes:
+
+- [#57](https://github.com/martingerdin/bengaltiger/issues/57) Update function documentation 
+- [#56](https://github.com/martingerdin/bengaltiger/issues/56) Fix syntax errors in AddTraumaticBrainInjury and OnlyPediatricPatients 
+
+#### New Functions
+
+- [#53](https://github.com/martingerdin/bengaltiger/issues/53) OnlyIsolatedTraumaticBrainInjuryPatients 
+- [#51](https://github.com/martingerdin/bengaltiger/issues/51) EstimateTraumaticBrainInjuryProportion 
+- [#46](https://github.com/martingerdin/bengaltiger/issues/46) AddTraumaticBrainInjury 
+
+---
+
 ## v0.0.20.9000 (09/10/2018)
 
 #### Enhancements:
