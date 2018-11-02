@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.0.23.9000 (02/11/2018)
+
+#### Enhancements:
+
+- [#65](https://github.com/martingerdin/bengaltiger/issues/65) Add label so that gren ignores certain issues when creating release notes 
+
+#### Bug Fixes:
+
+- [#63](https://github.com/martingerdin/bengaltiger/issues/63) knitr and tableone are not loaded 
+
+---
+
 ## v0.0.22.9000 (02/11/2018)
 
 #### Bug Fixes:
