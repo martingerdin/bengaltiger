@@ -13,19 +13,22 @@
 #'     modified using table.options. If FALSE the model object is
 #'     returned. Defaults to TRUE.
 #' @param table.options List. Can only include "odds.ratio",
-#'     "confidence.interval", and "p.value". Valid values of "odds.ratio" are
-#'     TRUE or FALSE. If FALSE the coefficients are included in the table
-#'     instead of the odds ratios. Defaults to TRUE. "confidence.interval" has
-#'     to be a value between 0 and 1 and governs the width of the confidence
-#'     interval. Defaults to 0.95, i.e. a 95% confidence interval is
-#'     presented. Valid values of "p.value" are TRUE or FALSE. If TRUE the
-#'     p-value is included in the table. Defaults to FALSE.
+#'     "confidence.interval", "include.intercept", "include.p.value", and
+#'     "digits". Valid values of "odds.ratio" are TRUE or FALSE. If FALSE the
+#'     coefficients are included in the table instead of the odds
+#'     ratios. Defaults to TRUE. "confidence.interval" has to be a value between
+#'     0 and 1 and governs the width of the confidence interval. Defaults to
+#'     0.95, i.e. a 95% confidence interval is presented. Valid values of
+#'     "include.intercept" are TRUE or FALSE. If TRUE the model intercept is
+#'     reported. Defaults to FALSE. Valid values of "include.p.value" are TRUE
+#'     or FALSE. If TRUE the p-value is included in the table. Defaults to
+#'     FALSE. Valid values of "digits" are any integer greater than 0.
 #' @export
 LogisticRegression <- function(study.sample, outcome.name, covariate.names,
                                stop.if.missing = TRUE, create.table = TRUE,
                                table.options = list(odds.ratio = TRUE,
                                                     confidence.interval = 0.95,
-                                                    p.value = FALSE)) {
+                                                    include.p.value = FALSE)) {
     ## Error handling
     if (!is.data.frame(study.sample))
         stop("study.data has to be a data frame")
@@ -39,8 +42,8 @@ LogisticRegression <- function(study.sample, outcome.name, covariate.names,
         stop("create.table has to be a logical vector of length 1")
     if (!is.list(table.options))
         stop("table.options has to be a list")
-    if (!any(names(table.options) %in% c("odds.ratio", "confidence.interval", "p.value")))
-        stop("table.options can only include odds.ratio, confidence.interval, and p.value")
+    if (!any(names(table.options) %in% c("odds.ratio", "confidence.interval", "include.intercept", "include.p.value")))
+        stop("table.options can only include odds.ratio, confidence.interval, include.intercept, and include.p.value")
     ## Get model outcome
     model.outcome <- study.sample[, outcome.name]
     ## Create model data
