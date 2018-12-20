@@ -14,12 +14,18 @@
 #'     reported. Defaults to FALSE.
 #' @param digits Numerical vector of length 1. Has to be an integer greater than
 #'     0. The number of digits when reporting results. Defaults to 2.
+#' @param save.table Logical vector of length 1. If TRUE the table is saved to
+#'     the results file. Defaults to TRUE.
+#' @param table.name Character vector of length 1 or NULL. The name of the table
+#'     when saved. Only used if save.table is TRUE, in which case table.name
+#'     cannot be NULL. Defaults to NULL.
 #' @export
 CreateLogisticRegressionTable <- function(model.object, odds.ratio = TRUE,
                                           confidence.interval = 0.95,
                                           include.intercept = FALSE,
                                           include.p.value = FALSE,
-                                          digits = 2) {
+                                          digits = 2, save.table = TRUE,
+                                          table.name = NULL) {
     ## Load required packages
     library(knitr)
     ## Error handling
@@ -35,6 +41,8 @@ CreateLogisticRegressionTable <- function(model.object, odds.ratio = TRUE,
         stop("include.intercept has to be a logical vector of length 1")
     if (!is.integer(digits) | digits < 0 | !IsLength1(digits))
         stop("digits has to be an integer greater than 0")
+    if ((!is.character(table.name) | !IsLength1(table.name)) & !is.null(table.name))
+        stop("table.name has to be a character vector of length 1 or NULL")
     ## Create table component list
     table.components <- list()
     ## Extract parameters from model object
@@ -77,6 +85,12 @@ CreateLogisticRegressionTable <- function(model.object, odds.ratio = TRUE,
         table.draft <- table.draft[-grep("(Intercept)", table.draft[, 1]), ]
     ## Format table
     formatted.table <- kable(table.draft)
+    ## Save table
+    if (save.table) {
+        if (is.null(table.name))
+            stop("table.name has to be a character vector if save.table is TRUE")
+        SaveToResults(formatted.table, table.name)
+    }
     ## Return table
     return(formatted.table)
 }
