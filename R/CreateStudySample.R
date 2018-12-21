@@ -44,9 +44,11 @@
 #'     "ct_9_icd", "ct_10_icd", "ct_11_icd", "ct_12_icd", "ct_13_icd",
 #'     "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd",
 #'     "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd").
+#' @param save.to.results Logical vector of length 1. If TRUE the output is
+#'     saved to a results object in the parent environment. Defaults to TRUE.
 #' @param save.to.disk Logical vector of length 1. If TRUE a file named
 #'     "exclusions_and_missingness" is saved to disk where the exclusions and
-#'     missingness are described. Defaults to TRUE.
+#'     missingness are described. Defaults to FALSE.
 #' @param file.format Character vector of length 1. Has to be either "docx" or
 #'     "rmd". The format in which the file detailing the exclusions and
 #'     missingness is saved. Defaults to "docx".
@@ -130,7 +132,8 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                                                    "op_7_icd", "op_8_icd",
                                                    "op_9_icd", "op_10_icd",
                                                    "op_11_icd"),
-                              save.to.disk = TRUE,
+                              save.to.results = TRUE,
+                              save.to.disk = FALSE,
                               file.format = "docx",
                               override = TRUE) {
     ## Error handling
@@ -148,6 +151,8 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         stop("remove.from.relevant.variables has to be either NULL or a character vector")
     if (!is.null(ignore.variables) & !is.character(ignore.variables))
         stop("ignore.variables has to be either NULL or a character vector")
+    if (!is.logical(save.to.results) | !IsLength1(save.to.results))
+        stop("save.to.results has to be a logical vector of length 1")
     if (!is.logical(save.to.disk) | !IsLength1(save.to.disk))
         stop("save.to.disk has to be a logical vector of length 1")
     if (!(file.format %in% c("docx", "rmd")))
@@ -231,6 +236,8 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                                  "**Finally** \n\n",
                                  "The study sample included ",
                                  nrow(study.sample), " patients.")
+    if (save.to.results)
+        SaveToResults(missingness.string)
     if (save.to.disk)
         write(missingness.string, paste0(file.name, ".rmd"), append = TRUE)
     ## Render exclusions and missingness file as docx
