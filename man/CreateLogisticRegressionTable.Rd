@@ -6,7 +6,8 @@
 \usage{
 CreateLogisticRegressionTable(model.object, odds.ratio = TRUE,
   confidence.interval = 0.95, include.intercept = FALSE,
-  include.p.value = FALSE, digits = 2)
+  include.p.value = FALSE, digits = 2, save.table = TRUE,
+  table.name = NULL)
 }
 \arguments{
 \item{model.object}{List of class glm. The model object on which to base the
@@ -27,6 +28,13 @@ reported. Defaults to FALSE.}
 
 \item{digits}{Numerical vector of length 1. Has to be an integer greater than
 0. The number of digits when reporting results. Defaults to 2.}
+
+\item{save.table}{Logical vector of length 1. If TRUE the table is saved to
+the results file. Defaults to TRUE.}
+
+\item{table.name}{Character vector of length 1 or NULL. The name of the table
+when saved. Only used if save.table is TRUE, in which case table.name
+cannot be NULL. Defaults to NULL.}
 }
 \description{
 Creates a table for reporting logistic regression results.
