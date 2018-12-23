@@ -18,8 +18,10 @@
 #'     included. Defaults to TRUE.
 #' @param digits Numeric vector of length 1 greater than or equal to 0. Number
 #'     of digits to use when rounding table entries. Defaults to 1.
+#' @param save.to.results Logical vector of length 1. If TRUE the table object
+#'     is saved to a results file on disk using SaveToResults. Defaults to TRUE.
 #' @param save.to.disk Logical vector of length 1. If TRUE the table object is
-#'     saved to disk. Defaults to TRUE.
+#'     saved to disk. Defaults to FALSE.
 #' @param file.format Character vector of length 1. The format in which to save
 #'     the table to disk. Has to be one of c("pdf", "rmd", "docx"). Defaults to
 #'     "docx".
@@ -32,7 +34,8 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                                              include.overall = TRUE,
                                              include.missing = TRUE,
                                              digits = 1,
-                                             save.to.disk = TRUE,
+                                             save.to.results = TRUE,
+                                             save.to.disk = FALSE,
                                              file.format = "docx") {
     ## Error handling
     if (!is.data.frame(study.sample))
@@ -51,8 +54,10 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         stop("include.missing has to be a character vector of length 1")
     if (!is.numeric(digits) | !IsLength1(digits) | digits < 0)
         stop("digits has to be a numeric vector of length 1")
+    if (!is.logical(save.to.results) | !IsLength1(save.to.results))
+        stop("save.to.results has to be a character vector of length 1")    
     if (!is.logical(save.to.disk) | !IsLength1(save.to.disk))
-        stop("save has to be a character vector of length 1")
+        stop("save.to.disk has to be a character vector of length 1")
     if (!(file.format %in% c("docx", "rmd", "pdf")) | !IsLength1(file.format))
         stop("file.format has to be one of docx, rmd, or pdf")
     ## Define variables
@@ -167,6 +172,11 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     ## formatted_table <- add.star.caption(formatted_table, star_caption) # add caption*
     ## Put formatted table in tables
     ## tables$formatted <- formatted_table
+    ## Save formatted table to results file
+    if (save.to.results) {
+        formatted.table <- paste0(kable(table, caption = "Sample characteristics", format = "markdown"), collapse = "\n")
+        SaveToResults(formatted.table, "sample.characteristics.table")
+    }
     ## Save formatted table to disk 
     if (save.to.disk) {
         ## Create R markdown code

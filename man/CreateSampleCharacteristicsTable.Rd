@@ -7,7 +7,7 @@
 CreateSampleCharacteristicsTable(study.sample, data.dictionary = NULL,
   group = NULL, variables = NULL, exclude.variables = NULL,
   include.overall = TRUE, include.missing = TRUE, digits = 1,
-  save.to.disk = TRUE, file.format = "docx")
+  save.to.results = TRUE, save.to.disk = FALSE, file.format = "docx")
 }
 \arguments{
 \item{study.sample}{Data frame. The study sample. No default.}
@@ -35,8 +35,11 @@ included. Defaults to TRUE.}
 \item{digits}{Numeric vector of length 1 greater than or equal to 0. Number
 of digits to use when rounding table entries. Defaults to 1.}
 
+\item{save.to.results}{Logical vector of length 1. If TRUE the table object
+is saved to a results file on disk using SaveToResults. Defaults to TRUE.}
+
 \item{save.to.disk}{Logical vector of length 1. If TRUE the table object is
-saved to disk. Defaults to TRUE.}
+saved to disk. Defaults to FALSE.}
 
 \item{file.format}{Character vector of length 1. The format in which to save
 the table to disk. Has to be one of c("pdf", "rmd", "docx"). Defaults to
