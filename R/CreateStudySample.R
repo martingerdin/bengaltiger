@@ -45,7 +45,7 @@
 #'     "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd",
 #'     "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd").
 #' @param save.to.results Logical vector of length 1. If TRUE the output is
-#'     saved to a results object in the parent environment. Defaults to TRUE.
+#'     saved to a results file on disk. Defaults to TRUE.
 #' @param save.to.disk Logical vector of length 1. If TRUE a file named
 #'     "exclusions_and_missingness" is saved to disk where the exclusions and
 #'     missingness are described. Defaults to FALSE.
@@ -237,7 +237,7 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                                  "The study sample included ",
                                  nrow(study.sample), " patients.")
     if (save.to.results)
-        SaveToResults(missingness.string)
+        SaveToResults(missingness.string, "missingness.string")
     if (save.to.disk)
         write(missingness.string, paste0(file.name, ".rmd"), append = TRUE)
     ## Render exclusions and missingness file as docx
