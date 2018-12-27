@@ -37,12 +37,15 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                                              save.to.results = TRUE,
                                              save.to.disk = FALSE,
                                              file.format = "docx") {
+    ## Load required packages
+    library("tableone")
+    library("knitr")
     ## Error handling
     if (!is.data.frame(study.sample))
         stop("study.sample has to be a data.frame")
     if (!is.null(data.dictionary))
         stop("data.dictionary has to be NULL")
-    if ((!is.character(group) & !is.null(group)) | !IsLength1(group))
+    if ((!is.character(group) | !IsLength1(group)) & !is.null(group))
         stop("group has to be a character vector of length 1 or NULL")
     if (!is.character(variables) & !is.null(variables))
         stop("variables has to be a character vector or NULL")

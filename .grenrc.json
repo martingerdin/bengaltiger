@@ -8,6 +8,10 @@
 	"Bug Fixes:": ["bug"],
 	"New Functions": ["function"]
     },
+    "ignoreIssuesWith": [
+	"wontfix",
+	"nobug"
+    ],
     "template": {
         "commit": "- [{{message}}]({{url}}) - @{{author}}",
         "issue": "- [{{text}}]({{url}}) {{name}} ",
