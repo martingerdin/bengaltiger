@@ -164,6 +164,8 @@ CreateStudySample <- function(study.data, inclusion.criteria,
     full.file.name <- paste0(file.name, file.format)
     ## Use inclusion criteria to select sample from study data
     study.sample <- study.data
+    ## Create inclusion list
+    inclusion.list <- list()
     for (i in seq_along(inclusion.criteria)) {
         n.before.exclusion <- nrow(study.sample)
         ## Select the function to select a subset of patients from the inclusion
@@ -171,6 +173,23 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         criterion.function <- inclusion.criteria[[i]]
         exclusion.list <- criterion.function(study.sample)
         study.sample <- exclusion.list$subsample
+        ## Create inclusion text
+        inclusion.text <- paste0("**Exclusions step ", i, "** \n\n",
+                                 exclusion.list$exclusion.text, " \n\n",
+                                 "*", nrow(study.sample),
+                                 " patients remained.* \n\n")
+
+        ## If it is the first exclusion critera being applied then the
+        ## number of patients in the cohort should be pasted above the text
+        ## detailing the exclusions.
+        if (i == 1) {
+            inclusion.text <- paste0("**Before exclusions** \n\n",
+                                     "There were ", n.before.exclusion,
+                                     " patients in the cohort. \n\n",
+                                     inclusion.text)
+        }
+        ## Add to inclusion list
+        inclusion.list[[paste0("exclusion.", i)]] <- inclusion.text
         ## Save exclusions to disk, but first check if the file already
         ## exists
         if (save.to.disk) {
@@ -178,19 +197,6 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                 if (!override)
                     stop(paste0(full.file.name, " already exists. The function has stopped. If you still want to run the function please delete the file or run this function again setting override to TRUE"))
                 file.remove(full.file.name)
-            }
-            inclusion.text <- paste0("**Exclusions step ", i, "** \n\n",
-                                     exclusion.list$exclusion.text, " \n\n",
-                                     "*", nrow(study.sample),
-                                     " patients remained.* \n\n")
-            ## If it is the first exclusion critera being applied then the
-            ## number of patients in the cohort should be pasted above the text
-            ## detailing the exclusions.
-            if (i == 1) {
-                inclusion.text <- paste0("**Before exclusions** \n\n",
-                                         "There were ", n.before.exclusion,
-                                         " patients in the cohort. \n\n",
-                                         inclusion.text)
             }
             write(inclusion.text, paste0(file.name, ".rmd"), append = TRUE)
         }
@@ -236,8 +242,12 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                                  "**Finally** \n\n",
                                  "The study sample included ",
                                  nrow(study.sample), " patients.")
+    ## Add missingness string to inclusion list
+    inclusion.list$missingness.string <- missingness.string
+    ## Collapse inclusion list
+    inclusions.and.exclusions <- paste0(unlist(inclusion.list), collapse = "\n")
     if (save.to.results)
-        SaveToResults(missingness.string, "missingness.string")
+        SaveToResults(inclusions.and.exclusions, "inclusions.and.exclusions")
     if (save.to.disk)
         write(missingness.string, paste0(file.name, ".rmd"), append = TRUE)
     ## Render exclusions and missingness file as docx
