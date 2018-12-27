@@ -19,13 +19,16 @@
 #' @param table.name Character vector of length 1 or NULL. The name of the table
 #'     when saved. Only used if save.table is TRUE, in which case table.name
 #'     cannot be NULL. Defaults to NULL.
+#' @param verbose Logical vector of length 1. If TRUE progress is printed as the
+#'     function runs. Useful for debugging. Defaults to FALSE.
 #' @export
 CreateLogisticRegressionTable <- function(model.object, odds.ratio = TRUE,
                                           confidence.interval = 0.95,
                                           include.intercept = FALSE,
                                           include.p.value = FALSE,
                                           digits = 2, save.table = TRUE,
-                                          table.name = NULL) {
+                                          table.name = NULL,
+                                          verbose = FALSE) {
     ## Load required packages
     library(knitr)
     ## Error handling
@@ -39,7 +42,7 @@ CreateLogisticRegressionTable <- function(model.object, odds.ratio = TRUE,
         stop("include.p.value has to be a logical vector of length 1")
     if (!is.logical(include.intercept) | !IsLength1(include.intercept))
         stop("include.intercept has to be a logical vector of length 1")
-    if (!is.integer(digits) | digits < 0 | !IsLength1(digits))
+    if (!is.numeric(digits) | digits < 0 | !IsLength1(digits))
         stop("digits has to be an integer greater than 0")
     if ((!is.character(table.name) | !IsLength1(table.name)) & !is.null(table.name))
         stop("table.name has to be a character vector of length 1 or NULL")
@@ -55,6 +58,8 @@ CreateLogisticRegressionTable <- function(model.object, odds.ratio = TRUE,
     if (include.p.value)
         table.components$p.value <- summary(model.object)$coefficients[, "Pr(>|z|)"]
     ## Format figures
+    if (verbose)
+        print(paste0("digits = ", digits))
     fmt <- paste0("%.", digits, "f")
     reverse.sprintf <- function(x, fmt) sprintf(fmt, x)
     table.components <- lapply(table.components, reverse.sprintf, fmt = fmt)
@@ -84,7 +89,7 @@ CreateLogisticRegressionTable <- function(model.object, odds.ratio = TRUE,
     if (!include.intercept)
         table.draft <- table.draft[-grep("(Intercept)", table.draft[, 1]), ]
     ## Format table
-    formatted.table <- kable(table.draft)
+    formatted.table <- paste0(kable(table.draft), collapse = "\n")
     ## Save table
     if (save.table) {
         if (is.null(table.name))
@@ -92,5 +97,5 @@ CreateLogisticRegressionTable <- function(model.object, odds.ratio = TRUE,
         SaveToResults(formatted.table, table.name)
     }
     ## Return table
-    return(formatted.table)
+    return(cat(formatted.table))
 }
