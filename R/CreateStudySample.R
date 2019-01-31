@@ -164,8 +164,8 @@ CreateStudySample <- function(study.data, inclusion.criteria,
     full.file.name <- paste0(file.name, file.format)
     ## Use inclusion criteria to select sample from study data
     study.sample <- study.data
-    ## Create inclusion list
-    inclusion.list <- list()
+    ## Create inclusion and flowchart lists
+    inclusion.list <- flowchart.list <- list()
     for (i in seq_along(inclusion.criteria)) {
         n.before.exclusion <- nrow(study.sample)
         ## Select the function to select a subset of patients from the inclusion
@@ -178,7 +178,11 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                                  exclusion.list$exclusion.text, " \n\n",
                                  "*", nrow(study.sample),
                                  " patients remained.* \n\n")
-
+        ## Save number of patients remaining to flowchart list
+        flowchart.list <- c(flowchart.list,
+                            list(exclusion.list$exclusion.text),
+                            list(paste0(nrow(study.sample),
+                                        " patients remained")))
         ## If it is the first exclusion critera being applied then the
         ## number of patients in the cohort should be pasted above the text
         ## detailing the exclusions.
@@ -187,6 +191,9 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                                      "There were ", n.before.exclusion,
                                      " patients in the cohort. \n\n",
                                      inclusion.text)
+            flowchart.list <- c(list(paste0(n.before.exclusion,
+                                       " patients in the cohort")),
+                                flowchart.list)
         }
         ## Add to inclusion list
         inclusion.list[[paste0("exclusion.", i)]] <- inclusion.text
@@ -232,6 +239,9 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                                               "** \n\n",
                                               missingness.handling.string,
                                               " and were therefore excluded")
+        flowchart.list <- c(flowchart.list,
+                            list(paste0(n.missing, " patients were excluded ",
+                                        "due to missing data")))
     } else {
         missingness.handling.string <- paste0("**Missingness** \n\n",
                                               missingness.handling.string)
@@ -242,12 +252,25 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                                  "**Finally** \n\n",
                                  "The study sample included ",
                                  nrow(study.sample), " patients.")
+    ## Add final sample size to flowchart list
+    flowchart.list <- c(flowchart.list,
+                        list(paste0(nrow(study.sample), " patients were ",
+                                    "included in the study sample")))
     ## Add missingness string to inclusion list
     inclusion.list$missingness.string <- missingness.string
     ## Collapse inclusion list
     inclusions.and.exclusions <- paste0(unlist(inclusion.list), collapse = "\n")
-    if (save.to.results)
+    ## Save to results
+    if (save.to.results){
         SaveToResults(inclusions.and.exclusions, "inclusions.and.exclusions")
+        ## Clean flowchart list before it is saved
+        flowchart.list <- lapply(flowchart.list, function(element) {
+            new.element <- sub("\\.$", "", element)
+            return(new.element)
+        })
+        SaveToResults(flowchart.list, "flowchart.list")
+    }
+    ## Save to disk
     if (save.to.disk)
         write(missingness.string, paste0(file.name, ".rmd"), append = TRUE)
     ## Render exclusions and missingness file as docx
