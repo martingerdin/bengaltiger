@@ -1,9 +1,10 @@
 #' Save to results
 #'
-#' Saves the desired output to a results file in the current workind
+#' Saves the desired output to a results file in the current working
 #' directory. Output saved in this file can later be compiled as a document.
-#' @param output.object Character vector of length 1. The output to be saved. No
-#'     default.
+#' @param output.object Any object. The output to be saved. Most often you want
+#'     this to be a character vector of length 1, why you will see a warning if
+#'     it is something else. No default.
 #' @param object.name Character vector of length 1. The name of the output
 #'     object in the results object. No default.
 #' @param overwrite Logical vector of length 1. If TRUE any entry in the results
@@ -12,8 +13,8 @@
 #' @export
 SaveToResults <- function(output.object, object.name, overwrite = TRUE) {
     ## Error handling
-    if (!is.character(output.object) | !IsLength1(output.object))
-        stop("output.object has to be a character vector of length 1")
+    if ((!is.character(output.object) | !IsLength1(output.object)))
+        warning("output.object is not a character vector of length 1. Are you sure this is correct?")
     if (!is.character(object.name) | !IsLength1(object.name))
         stop("object.name has to be a character vector of length 1")
     if (!is.logical(overwrite) | !IsLength1(overwrite))
