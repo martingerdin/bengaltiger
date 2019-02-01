@@ -27,10 +27,10 @@ variable with the date from which to start counting. Defaults to "dodd".}
 variable with the time from which to start counting. Defaults to "todd".}
 
 \item{date.format}{Character vector of length 1. The date format. Defaults to
-"%Y-%m-%d".}
+"\%Y-\%m-\%d".}
 
 \item{time.format}{Character vector of length 1. The date format. Defaults to
-"%H:%M".}
+"\%H:\%M".}
 
 \item{died.variable}{Character vector of length 1. The name of the variable
 indicating whether the patient was dead at the end of follow up. Defaults

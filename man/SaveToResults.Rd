@@ -7,8 +7,9 @@
 SaveToResults(output.object, object.name, overwrite = TRUE)
 }
 \arguments{
-\item{output.object}{Character vector of length 1. The output to be saved. No
-default.}
+\item{output.object}{Any object. The output to be saved. Most often you want
+this to be a character vector of length 1, why you will see a warning if
+it is something else. No default.}
 
 \item{object.name}{Character vector of length 1. The name of the output
 object in the results object. No default.}
@@ -18,6 +19,6 @@ object with the same name as object.name is overwritten. Defaults to
 TRUE.}
 }
 \description{
-Saves the desired output to a results file in the current workind
+Saves the desired output to a results file in the current working
 directory. Output saved in this file can later be compiled as a document.
 }

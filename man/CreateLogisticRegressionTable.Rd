@@ -7,7 +7,7 @@
 CreateLogisticRegressionTable(model.object, odds.ratio = TRUE,
   confidence.interval = 0.95, include.intercept = FALSE,
   include.p.value = FALSE, digits = 2, save.table = TRUE,
-  table.name = NULL)
+  table.name = NULL, verbose = FALSE)
 }
 \arguments{
 \item{model.object}{List of class glm. The model object on which to base the
@@ -35,6 +35,9 @@ the results file. Defaults to TRUE.}
 \item{table.name}{Character vector of length 1 or NULL. The name of the table
 when saved. Only used if save.table is TRUE, in which case table.name
 cannot be NULL. Defaults to NULL.}
+
+\item{verbose}{Logical vector of length 1. If TRUE progress is printed as the
+function runs. Useful for debugging. Defaults to FALSE.}
 }
 \description{
 Creates a table for reporting logistic regression results.
