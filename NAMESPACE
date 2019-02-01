@@ -2,6 +2,7 @@
 
 export(Add30DayInHospitalMortality)
 export(AddTraumaticBrainInjury)
+export(CompileResults)
 export(CreateLogisticRegressionTable)
 export(CreateSampleCharacteristicsTable)
 export(CreateStudySample)
