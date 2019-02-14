@@ -13,11 +13,11 @@ SourceAdditionalFunctions <- function(path = "./misc/R/") {
     ## List files with additional functions
     function.files <- list.files(path = path,
                                  pattern = "^[A-Za-z0-9]*.R$")
-    function.files.paths <- list(paste0(path, function.files))
+    function.files.paths <- paste0(path, function.files)
     ## Source those files
     message.done <- "No additional functions were sourced"
     if (length(function.files) != 0) {
-        do.call(source, function.files.paths)
+        invisible(lapply(function.files.paths, source))
         past.tense <- " were"
         if (length(function.files) == 1)
             past.tense <- " was"
