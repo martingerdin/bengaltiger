@@ -20,6 +20,10 @@
 #'     of digits to use when rounding table entries. Defaults to 1.
 #' @param save.to.results Logical vector of length 1. If TRUE the table object
 #'     is saved to a results file on disk using SaveToResults. Defaults to TRUE.
+#' @param table.name Character vector of length 1. The name of the table when
+#'     passed to SaveToResults. Deafults to "sample.characteristics.table".
+#' @param table.caption Character vector of length 1. The table
+#'     caption. Deafults to "Sample characteristics".
 #' @param save.to.disk Logical vector of length 1. If TRUE the table object is
 #'     saved to disk. Defaults to FALSE.
 #' @param file.format Character vector of length 1. The format in which to save
@@ -35,6 +39,8 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                                              include.missing = TRUE,
                                              digits = 1,
                                              save.to.results = TRUE,
+                                             table.name = "sample.characteristics.table",
+                                             table.caption = "Sample characteristics",
                                              save.to.disk = FALSE,
                                              file.format = "docx") {
     ## Load required packages
@@ -42,33 +48,37 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     library("knitr")
     ## Error handling
     if (!is.data.frame(study.sample))
-        stop("study.sample has to be a data.frame")
+        stop ("study.sample has to be a data.frame")
     if (!is.null(data.dictionary))
-        stop("data.dictionary has to be NULL")
+        stop ("data.dictionary has to be NULL")
     if ((!is.character(group) | !IsLength1(group)) & !is.null(group))
-        stop("group has to be a character vector of length 1 or NULL")
+        stop ("group has to be a character vector of length 1 or NULL")
     if (!is.character(variables) & !is.null(variables))
-        stop("variables has to be a character vector or NULL")
+        stop ("variables has to be a character vector or NULL")
     if (!is.character(exclude.variables) & !is.null(exclude.variables))
-        stop("exclude.variables has to be a character vector or NULL")
+        stop ("exclude.variables has to be a character vector or NULL")
     if (!is.logical(include.overall) | !IsLength1(include.overall))
-        stop("include.overall has to be a character vector of length 1")
+        stop ("include.overall has to be a character vector of length 1")
     if (!is.logical(include.missing) | !IsLength1(include.missing))
-        stop("include.missing has to be a character vector of length 1")
+        stop ("include.missing has to be a character vector of length 1")
     if (!is.numeric(digits) | !IsLength1(digits) | digits < 0)
-        stop("digits has to be a numeric vector of length 1")
+        stop ("digits has to be a numeric vector of length 1")
     if (!is.logical(save.to.results) | !IsLength1(save.to.results))
-        stop("save.to.results has to be a character vector of length 1")    
+        stop ("save.to.results has to be a character vector of length 1")
+    if (!is.character(table.name) | !IsLength1(table.name))
+        stop ("table.name has to be a character vector of length 1")
+    if (!is.character(table.caption) | !IsLength1(table.caption))
+        stop ("table.caption has to be a character vector of length 1")        
     if (!is.logical(save.to.disk) | !IsLength1(save.to.disk))
-        stop("save.to.disk has to be a character vector of length 1")
+        stop ("save.to.disk has to be a character vector of length 1")
     if (!(file.format %in% c("docx", "rmd", "pdf")) | !IsLength1(file.format))
-        stop("file.format has to be one of docx, rmd, or pdf")
+        stop ("file.format has to be one of docx, rmd, or pdf")
     ## Define variables
     if (is.null(variables)) variables <- colnames(study.sample)
     if (!is.null(exclude.variables)) variables <- variables[!(variables %in% exclude.variables)]
     if (!is.null(group)) 
         if (!(group %in% variables))
-            stop("group has to be one of the variables to be in the table")
+            stop ("group has to be one of the variables to be in the table")
     ## Define table data
     table.data <- study.sample[, variables]
     ## Make a list that will hold the individual tables
@@ -177,8 +187,8 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     ## tables$formatted <- formatted_table
     ## Save formatted table to results file
     if (save.to.results) {
-        formatted.table <- paste0(kable(table, caption = "Sample characteristics", format = "markdown"), collapse = "\n")
-        SaveToResults(formatted.table, "sample.characteristics.table")
+        formatted.table <- paste0(kable(table, caption = table.caption, format = "markdown"), collapse = "\n")
+        SaveToResults(formatted.table, table.name)
     }
     ## Save formatted table to disk 
     if (save.to.disk) {
