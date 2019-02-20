@@ -101,7 +101,7 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     nonormal.variables <- sapply(table.data, is.numeric)
     ## Format the tables in table.list
     formatted.tables <- lapply(table.list, print,
-                               nonnormal = variables[nonormal.variables],
+                               nonnormal = names(nonormal.variables)[nonormal.variables],
                                noSpaces = TRUE,
                                catDigits = digits,
                                contDigits = digits,
