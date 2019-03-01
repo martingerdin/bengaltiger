@@ -1,7 +1,7 @@
 #' Create logistic regression table
 #'
 #' Creates a table for reporting logistic regression results.
-#' @param model.object List of class glm. The model object on which to base the
+#' @param model.list List. The model objects on which to base the
 #'     table. No default.
 #' @param odds.ratio Logical vector of length 1. If TRUE odds ratios are
 #'     reported in the table instead of coefficients. Defaults to TRUE.
@@ -22,7 +22,7 @@
 #' @param verbose Logical vector of length 1. If TRUE progress is printed as the
 #'     function runs. Useful for debugging. Defaults to FALSE.
 #' @export
-CreateLogisticRegressionTable <- function(model.object, odds.ratio = TRUE,
+CreateLogisticRegressionTable <- function(model.list, odds.ratio = TRUE,
                                           confidence.interval = 0.95,
                                           include.intercept = FALSE,
                                           include.p.value = FALSE,
@@ -32,8 +32,8 @@ CreateLogisticRegressionTable <- function(model.object, odds.ratio = TRUE,
     ## Load required packages
     library(knitr)
     ## Error handling
-    if (!is.list(model.object) | !("glm" %in% class(model.object)))
-        stop("model.object has to be of class glm")
+    if (!is.list(model.list))
+        stop("model.list has to be a list")
     if (!is.logical(odds.ratio) | !IsLength1(odds.ratio))
         stop("odds.ratio has to be a logical vector of length 1")
     if (!is.numeric(confidence.interval) | !IsLength1(confidence.interval)| confidence.interval <= 0 | confidence.interval >= 1)
@@ -47,47 +47,30 @@ CreateLogisticRegressionTable <- function(model.object, odds.ratio = TRUE,
     if ((!is.character(table.name) | !IsLength1(table.name)) & !is.null(table.name))
         stop("table.name has to be a character vector of length 1 or NULL")
     ## Create table component list
-    table.components <- list()
-    ## Extract parameters from model object
-    table.components$coefficients <- coef(model.object)
-    ## Generate confidence intervals
-    table.components$confidence.intervals <- confint(model.object, level = confidence.interval)
-    ## Make coefficients into odds ratios
-    table.components <- lapply(table.components, exp)
-    ## Extract p-values
-    if (include.p.value)
-        table.components$p.value <- summary(model.object)$coefficients[, "Pr(>|z|)"]
-    ## Format figures
-    if (verbose)
-        print(paste0("digits = ", digits))
-    fmt <- paste0("%.", digits, "f")
-    reverse.sprintf <- function(x, fmt) sprintf(fmt, x)
-    table.components <- lapply(table.components, reverse.sprintf, fmt = fmt)
-    ## Merge coefficients and confidence intervals
-    table.components$confidence.intervals <- matrix(table.components$confidence.intervals, ncol = 2)
-    table.components$merged.parameters <-  with(table.components,
-                                               paste0(coefficients,
-                                                      " (",
-                                                      confidence.intervals[, 1],
-                                                      "-",
-                                                      confidence.intervals[, 2],
-                                                      ")"))
-    table.components$coefficients <- NULL
-    table.components$confidence.intervals <- NULL
-    ## Create table draft
-    table.draft <- do.call(cbind, table.components)
-    ## Add names to table
-    colnames(table.draft)[1] <- "Coefficient"
-    if (odds.ratio)
-        colnames(table.draft)[1] <- "Odds ratio"
-    colnames(table.draft)[1] <- paste0(colnames(table.draft)[1], " (95% CI)")
-    if (include.p.value)
-        colnames(table.draft)[2] <- "P-value"
-    table.draft <- cbind(names(coef(model.object)), table.draft)
-    colnames(table.draft)[1] <- "Covariate"
-    ## Remove intercept
-    if (!include.intercept)
-        table.draft <- table.draft[-grep("(Intercept)", table.draft[, 1]), ]
+    table.components.list <- lapply(model.list, CreateLogisticRegressionSubTable,
+                                    odds.ratio = odds.ratio,
+                                    confidence.interval = confidence.interval,
+                                    include.intercept = include.intercept,
+                                    include.p.value = include.p.value,
+                                    digits = digits,
+                                    verbose = verbose)
+    ## Create adjusted table
+    table.draft <- table.components.list[[1]]
+    ## Create unadjusted table and merge with adjusted
+    if (length(table.components.list) > 1) {
+        colnames(table.draft)[-1] <- paste0("Adjusted ", tolower(colnames(table.draft)[-1]))
+        table.components.list[[1]] <- NULL
+        unadjusted.table.draft <- do.call(rbind, table.components.list)
+        colnames(unadjusted.table.draft)[-1] <- paste0("Unadjusted ", tolower(colnames(unadjusted.table.draft)[-1]))
+        table.draft <- merge(as.data.frame(unadjusted.table.draft), as.data.frame(table.draft), by = "Covariate")
+        colnames(table.draft) <- gsub("95% ci", "95% CI", colnames(table.draft))
+    }
+    ## Keep only adjusted intercept
+    if (include.intercept & any(grepl("Unadjusted", colnames(table.draft)))) {
+        intercept.rows <- grep("(Intercept)", table.draft$Covariate)
+        table.draft[intercept.rows[1], 2] <- NA
+        table.draft <- table.draft[-intercept.rows[2:length(intercept.rows)], ]
+    }
     ## Format table
     formatted.table <- paste0(kable(table.draft), collapse = "\n")
     ## Save table
