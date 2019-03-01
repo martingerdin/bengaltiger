@@ -5,10 +5,11 @@
 \title{Logistic regression}
 \usage{
 LogisticRegression(study.sample, outcome.name, covariate.names,
-  stop.if.missing = TRUE, create.table = TRUE,
-  table.options = list(odds.ratio = TRUE, confidence.interval = 0.95,
-  include.p.value = FALSE, digits = 2, save.table = TRUE, table.name =
-  NULL, verbose = FALSE), verbose = FALSE)
+  run.bivariable.analyses = FALSE, stop.if.missing = TRUE,
+  create.table = TRUE, table.options = list(odds.ratio = TRUE,
+  confidence.interval = 0.95, include.p.value = FALSE, digits = 2,
+  save.table = TRUE, table.name = NULL, verbose = FALSE),
+  verbose = FALSE)
 }
 \arguments{
 \item{study.sample}{Data frame. The study sample. No default.}
@@ -18,6 +19,10 @@ variable. No default.}
 
 \item{covariate.names}{Character vector. The names of the covariates. No
 default.}
+
+\item{run.bivariable.analyses}{Logical vector of length 1. If TRUE bivariable
+analyses are run before the full model is run and these results are
+included in the final table as unadjusted estimates. Defaults to FALSE.}
 
 \item{stop.if.missing}{Logical vector of length 1. If TRUE the execution
 stops if there is missing data in the outcome or covariates. Defaults to
