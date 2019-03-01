@@ -1,5 +1,41 @@
 # Changelog
 
+## v0.0.24 (02/03/2019)
+
+#### Enhancements:
+
+- [#77](https://github.com/martingerdin/bengaltiger/issues/77) Add argument to allow custom sample characteristics table name 
+- [#74](https://github.com/martingerdin/bengaltiger/issues/74) Add script to update documentation 
+- [#73](https://github.com/martingerdin/bengaltiger/issues/73) Create PDF manual 
+- [#71](https://github.com/martingerdin/bengaltiger/issues/71) Modify how inclusions and exclusions are saved to results 
+- [#54](https://github.com/martingerdin/bengaltiger/issues/54) Save results to .results 
+
+#### Bug Fixes:
+
+- [#79](https://github.com/martingerdin/bengaltiger/issues/79) CreateSampleCharacteristicsTable do not report all numeric variables as non-normal 
+- [#76](https://github.com/martingerdin/bengaltiger/issues/76) SourceAdditionalFiles function.files.paths is a vector but should be a list 
+- [#69](https://github.com/martingerdin/bengaltiger/issues/69) Add digits to table.options in LogisticRegression 
+
+#### New Functions
+
+- [#90](https://github.com/martingerdin/bengaltiger/issues/90) ICDVariables 
+- [#88](https://github.com/martingerdin/bengaltiger/issues/88) EstimateInHospitalMortality 
+- [#86](https://github.com/martingerdin/bengaltiger/issues/86) CreateLogisticRegressionSubTable 
+- [#85](https://github.com/martingerdin/bengaltiger/issues/85) CreateBootstrapSamples 
+- [#84](https://github.com/martingerdin/bengaltiger/issues/84) AddTriageRevisedTraumaScore 
+- [#83](https://github.com/martingerdin/bengaltiger/issues/83) AddTimeToFirstVitals 
+- [#82](https://github.com/martingerdin/bengaltiger/issues/82) AddTimeBetweenInjuryAndArrival 
+- [#81](https://github.com/martingerdin/bengaltiger/issues/81) Add24HoursInHospitalMortality 
+- [#80](https://github.com/martingerdin/bengaltiger/issues/80) AISVariables 
+- [#75](https://github.com/martingerdin/bengaltiger/issues/75) OnlyAdolescentsAndYoungAdults 
+- [#72](https://github.com/martingerdin/bengaltiger/issues/72) CompileResults 
+- [#68](https://github.com/martingerdin/bengaltiger/issues/68) Add SaveToResults 
+- [#67](https://github.com/martingerdin/bengaltiger/issues/67) Add CreateLogisticRegressionTable 
+- [#66](https://github.com/martingerdin/bengaltiger/issues/66) Add LogisticRegression 
+- [#60](https://github.com/martingerdin/bengaltiger/issues/60) SourceAdditionalFunctions 
+
+---
+
 ## v0.0.23.9000 (02/11/2018)
 
 #### Enhancements:
