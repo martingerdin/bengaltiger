@@ -33,7 +33,8 @@ CreateStudySample(study.data, inclusion.criteria, complete.cases = TRUE,
   "ct_9_icd", "ct_10_icd", "ct_11_icd", "ct_12_icd", "ct_13_icd",
   "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd",
   "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd"),
-  save.to.disk = TRUE, file.format = "docx", override = TRUE)
+  save.to.results = TRUE, save.to.disk = FALSE, file.format = "docx",
+  override = TRUE)
 }
 \arguments{
 \item{study.data}{Data frame. The study data. No defaults.}
@@ -85,9 +86,12 @@ ignored. Defaults to c("head_and_neck", "face", "chest", "extremities",
 "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd",
 "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd").}
 
+\item{save.to.results}{Logical vector of length 1. If TRUE the output is
+saved to a results file on disk. Defaults to TRUE.}
+
 \item{save.to.disk}{Logical vector of length 1. If TRUE a file named
 "exclusions_and_missingness" is saved to disk where the exclusions and
-missingness are described. Defaults to TRUE.}
+missingness are described. Defaults to FALSE.}
 
 \item{file.format}{Character vector of length 1. Has to be either "docx" or
 "rmd". The format in which the file detailing the exclusions and

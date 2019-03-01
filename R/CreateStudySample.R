@@ -44,9 +44,11 @@
 #'     "ct_9_icd", "ct_10_icd", "ct_11_icd", "ct_12_icd", "ct_13_icd",
 #'     "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd",
 #'     "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd").
+#' @param save.to.results Logical vector of length 1. If TRUE the output is
+#'     saved to a results file on disk. Defaults to TRUE.
 #' @param save.to.disk Logical vector of length 1. If TRUE a file named
 #'     "exclusions_and_missingness" is saved to disk where the exclusions and
-#'     missingness are described. Defaults to TRUE.
+#'     missingness are described. Defaults to FALSE.
 #' @param file.format Character vector of length 1. Has to be either "docx" or
 #'     "rmd". The format in which the file detailing the exclusions and
 #'     missingness is saved. Defaults to "docx".
@@ -130,7 +132,8 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                                                    "op_7_icd", "op_8_icd",
                                                    "op_9_icd", "op_10_icd",
                                                    "op_11_icd"),
-                              save.to.disk = TRUE,
+                              save.to.results = TRUE,
+                              save.to.disk = FALSE,
                               file.format = "docx",
                               override = TRUE) {
     ## Error handling
@@ -148,6 +151,8 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         stop("remove.from.relevant.variables has to be either NULL or a character vector")
     if (!is.null(ignore.variables) & !is.character(ignore.variables))
         stop("ignore.variables has to be either NULL or a character vector")
+    if (!is.logical(save.to.results) | !IsLength1(save.to.results))
+        stop("save.to.results has to be a logical vector of length 1")
     if (!is.logical(save.to.disk) | !IsLength1(save.to.disk))
         stop("save.to.disk has to be a logical vector of length 1")
     if (!(file.format %in% c("docx", "rmd")))
@@ -159,6 +164,8 @@ CreateStudySample <- function(study.data, inclusion.criteria,
     full.file.name <- paste0(file.name, file.format)
     ## Use inclusion criteria to select sample from study data
     study.sample <- study.data
+    ## Create inclusion and flowchart lists
+    inclusion.list <- flowchart.list <- list()
     for (i in seq_along(inclusion.criteria)) {
         n.before.exclusion <- nrow(study.sample)
         ## Select the function to select a subset of patients from the inclusion
@@ -166,6 +173,30 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         criterion.function <- inclusion.criteria[[i]]
         exclusion.list <- criterion.function(study.sample)
         study.sample <- exclusion.list$subsample
+        ## Create inclusion text
+        inclusion.text <- paste0("**Exclusions step ", i, "** \n\n",
+                                 exclusion.list$exclusion.text, " \n\n",
+                                 "*", nrow(study.sample),
+                                 " patients remained.* \n\n")
+        ## Save number of patients remaining to flowchart list
+        flowchart.list <- c(flowchart.list,
+                            list(exclusion.list$exclusion.text),
+                            list(paste0(nrow(study.sample),
+                                        " patients remained")))
+        ## If it is the first exclusion critera being applied then the
+        ## number of patients in the cohort should be pasted above the text
+        ## detailing the exclusions.
+        if (i == 1) {
+            inclusion.text <- paste0("**Before exclusions** \n\n",
+                                     "There were ", n.before.exclusion,
+                                     " patients in the cohort. \n\n",
+                                     inclusion.text)
+            flowchart.list <- c(list(paste0(n.before.exclusion,
+                                       " patients in the cohort")),
+                                flowchart.list)
+        }
+        ## Add to inclusion list
+        inclusion.list[[paste0("exclusion.", i)]] <- inclusion.text
         ## Save exclusions to disk, but first check if the file already
         ## exists
         if (save.to.disk) {
@@ -173,19 +204,6 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                 if (!override)
                     stop(paste0(full.file.name, " already exists. The function has stopped. If you still want to run the function please delete the file or run this function again setting override to TRUE"))
                 file.remove(full.file.name)
-            }
-            inclusion.text <- paste0("**Exclusions step ", i, "** \n\n",
-                                     exclusion.list$exclusion.text, " \n\n",
-                                     "*", nrow(study.sample),
-                                     " patients remained.* \n\n")
-            ## If it is the first exclusion critera being applied then the
-            ## number of patients in the cohort should be pasted above the text
-            ## detailing the exclusions.
-            if (i == 1) {
-                inclusion.text <- paste0("**Before exclusions** \n\n",
-                                         "There were ", n.before.exclusion,
-                                         " patients in the cohort. \n\n",
-                                         inclusion.text)
             }
             write(inclusion.text, paste0(file.name, ".rmd"), append = TRUE)
         }
@@ -221,6 +239,9 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                                               "** \n\n",
                                               missingness.handling.string,
                                               " and were therefore excluded")
+        flowchart.list <- c(flowchart.list,
+                            list(paste0(n.missing, " patients were excluded ",
+                                        "due to missing data")))
     } else {
         missingness.handling.string <- paste0("**Missingness** \n\n",
                                               missingness.handling.string)
@@ -231,6 +252,25 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                                  "**Finally** \n\n",
                                  "The study sample included ",
                                  nrow(study.sample), " patients.")
+    ## Add final sample size to flowchart list
+    flowchart.list <- c(flowchart.list,
+                        list(paste0(nrow(study.sample), " patients were ",
+                                    "included in the study sample")))
+    ## Add missingness string to inclusion list
+    inclusion.list$missingness.string <- missingness.string
+    ## Collapse inclusion list
+    inclusions.and.exclusions <- paste0(unlist(inclusion.list), collapse = "\n")
+    ## Save to results
+    if (save.to.results){
+        SaveToResults(inclusions.and.exclusions, "inclusions.and.exclusions")
+        ## Clean flowchart list before it is saved
+        flowchart.list <- lapply(flowchart.list, function(element) {
+            new.element <- sub("\\.$", "", element)
+            return(new.element)
+        })
+        SaveToResults(flowchart.list, "flowchart.list")
+    }
+    ## Save to disk
     if (save.to.disk)
         write(missingness.string, paste0(file.name, ".rmd"), append = TRUE)
     ## Render exclusions and missingness file as docx

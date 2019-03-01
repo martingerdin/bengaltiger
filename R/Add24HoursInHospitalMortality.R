@@ -1,6 +1,6 @@
-#' Add 30-day in hospital mortality
+#' Add 24-hour in hospital mortality
 #'
-#' Adds the variable 30-day in hospital mortality to the study sample
+#' Adds the variable 24-hour in hospital mortality to the study sample
 #' @param study.sample Data frame. The study sample. No default.
 #' @param from.date Character or POSIXt vector of length 1. The name of the
 #'     variable with the date from which to start counting. Defaults to "doar".
@@ -20,29 +20,29 @@
 #' @param died.value Character vector of length 1. The value or level of the
 #'     died variable that means that the patients died. Defaults to "Yes".
 #' @param levels Character vector of length 2. The levels to use to encode the
-#'     resulting 30-day in hospital mortality variable. The first item in the
+#'     resulting 24-hour in hospital mortality variable. The first item in the
 #'     vector should be the level to be used to represent a death. Defaults to
 #'     c("Yes", "No").
-#' @param variable.name Character vector of length 1. The name of the 30-day in
-#'     hospital mortality variable. Defaults to "m30d".
-#' @param add.as.factor Logical vector of length 1. If TRUE the 30-day in
-#'     hospital mortality variables is added to the study sample as a
-#'     factor. If FALSE it is added as character. Defaults to TRUE.
+#' @param variable.name Character vector of length 1. The name of the 24-hour
+#'     in hospital mortality variable. Defaults to "m24h".
+#' @param add.as.factor Logical vector of length 1. If TRUE the 24-hour in
+#'     hospital mortality variables is added to the study sample as a factor. If
+#'     FALSE it is added as character. Defaults to TRUE.
 #' @param drop.used.variables Logical vector of length 1. If TRUE the date and
-#'     time variables used to calculate 30-day in hospital mortality is dropped
-#'     from the sample. Defaults to TRUE.
+#'     time variables used to calculate 24-hour in hospital mortality is
+#'     dropped from the sample. Defaults to TRUE.
 #' @export
-Add30DayInHospitalMortality <- function(study.sample, from.date = "doar",
-                                        from.time = "toar", to.date = "dodd",
-                                        to.time = "todd",
-                                        date.format = "%Y-%m-%d",
-                                        time.format = "%H:%M",
-                                        died.variable = "died",
-                                        died.value = "Yes",
-                                        levels = c("Yes", "No"),
-                                        variable.name = "m30d",
-                                        add.as.factor = TRUE,
-                                        drop.used.variables = TRUE) {
+Add24HourInHospitalMortality <- function(study.sample, from.date = "doar",
+                                         from.time = "toar", to.date = "dodd",
+                                         to.time = "todd",
+                                         date.format = "%Y-%m-%d",
+                                         time.format = "%H:%M",
+                                         died.variable = "died",
+                                         died.value = "Yes",
+                                         levels = c("Yes", "No"),
+                                         variable.name = "m24h",
+                                         add.as.factor = TRUE,
+                                         drop.used.variables = TRUE) {
     ## Error handling
     if (!is.data.frame(study.sample))
         stop("study.sample has to be a data.frame")
@@ -79,15 +79,15 @@ Add30DayInHospitalMortality <- function(study.sample, from.date = "doar",
                                      study.sample[, to.time]),
                               format = format))
     ## Calculate time between from and to
-    time.between <- difftime(to, from, units = "days")
-    ## Define 30 day in hospital mortality
-    m30d <- as.factor(time.between <= 30 & study.sample[, died.variable] == died.value)
-    levels(m30d) <- levels[c(2, 1)]
+    time.between <- difftime(to, from, units = "hours")
+    ## Define 24 hour in hospital mortality
+    m24h <- as.factor(time.between <= 24 & study.sample[, died.variable] == died.value)
+    levels(m24h) <- levels[c(2, 1)]
     ## Set class
     if (!add.as.factor)
-        m30d <- as.character(m30d)
+        m24h <- as.character(m24h)
     ## Add to study sample
-    study.sample[, variable.name] <- m30d
+    study.sample[, variable.name] <- m24h
     ## Drop date and time variables from study sample
     if (drop.used.variables)
         study.sample <- study.sample[, -grep(paste0(c(from.date, from.time, to.date, to.time), collapse = "|"), colnames(study.sample))]

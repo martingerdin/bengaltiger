@@ -9,6 +9,7 @@
 	"New Functions": ["function"]
     },
     "ignoreIssuesWith": [
+	"replaced",
 	"wontfix",
 	"nobug"
     ],
