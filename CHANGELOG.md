@@ -1,5 +1,15 @@
 # Changelog
 
+## v.0.0.25.9000 (07/03/2019)
+
+#### Enhancements:
+
+- [#92](https://github.com/martingerdin/bengaltiger/issues/92) Make CreateSampleCharacteristicsTable handle multiple imputed data 
+- [#91](https://github.com/martingerdin/bengaltiger/issues/91) Update LogisticRegression 
+- [#87](https://github.com/martingerdin/bengaltiger/issues/87) Update CreateLogisticRegressionTable to report both unadjusted and adjusted estimates 
+
+---
+
 ## v0.0.24 (02/03/2019)
 
 #### Enhancements:
