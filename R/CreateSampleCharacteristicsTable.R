@@ -16,6 +16,11 @@
 #' @param include.missing Not currently used. Logical vector of length 1. If
 #'     TRUE a column with the number (%) of missing values in each variable is
 #'     included. Defaults to TRUE.
+#' @param include.complete.data Logical vector of length 1. If TRUE the final
+#'     table has two columns, one with complete cases only and one with multiple
+#'     imputed data. Only used if the data is detected as multiple imputed,
+#'     i.e. includes the variables ".imp" AND ".id". Overrides group and
+#'     include.overall. 
 #' @param digits Numeric vector of length 1 greater than or equal to 0. Number
 #'     of digits to use when rounding table entries. Defaults to 1.
 #' @param save.to.results Logical vector of length 1. If TRUE the table object
@@ -37,6 +42,7 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                                              exclude.variables = NULL,
                                              include.overall = TRUE,
                                              include.missing = TRUE,
+                                             include.complete.data = FALSE,                                             
                                              digits = 1,
                                              save.to.results = TRUE,
                                              table.name = "sample.characteristics.table",
@@ -61,6 +67,8 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         stop ("include.overall has to be a character vector of length 1")
     if (!is.logical(include.missing) | !IsLength1(include.missing))
         stop ("include.missing has to be a character vector of length 1")
+    if (!is.logical(include.complete.data) | !IsLength1(include.complete.data))
+        stop ("include.complete.data has to be a character vector of length 1")    
     if (!is.numeric(digits) | !IsLength1(digits) | digits < 0)
         stop ("digits has to be a numeric vector of length 1")
     if (!is.logical(save.to.results) | !IsLength1(save.to.results))
@@ -73,6 +81,20 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         stop ("save.to.disk has to be a character vector of length 1")
     if (!(file.format %in% c("docx", "rmd", "pdf")) | !IsLength1(file.format))
         stop ("file.format has to be one of docx, rmd, or pdf")
+    ## Find out if data.frame is multiple imputed data
+    mi <- FALSE
+    if (all(c(".imp", ".id") %in% colnames(study.sample))) {
+        mi <- TRUE
+        exclude.variables <- c(exclude.variables, ".imp", ".id")
+    }
+    if (mi & include.complete.data) {
+        if (!any(study.sample$.imp == 0))
+            stop ("study.sample does not include any original data as indicated by .imp == 0. Please run this function again with include.complete.data to FALSE")
+        study.sample$.complete <- factor(as.numeric(study.sample$.imp != 0), c(0,1 ), c("Complete", "Imputed"))
+        study.sample <- study.sample[complete.cases(study.sample), ]
+        group = ".complete"
+        include.overall = FALSE
+    } 
     ## Define variables
     if (is.null(variables)) variables <- colnames(study.sample)
     if (!is.null(exclude.variables)) variables <- variables[!(variables %in% exclude.variables)]
@@ -89,18 +111,18 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         ## table
         variables <- variables[!(variables %in% group)]
         ## Create the grouped table
-        table.list$grouped.table <- CreateTableOne(vars = variables,
-                                                   strata = group,
-                                                   data = table.data,
-                                                   test = FALSE) 
+        table.list$grouped.table <- tableone::CreateTableOne(vars = variables,
+                                                             strata = group,
+                                                             data = table.data,
+                                                             test = FALSE) 
     }
     ## Create the overall table if there should be one
-    if (is.null(group) | include.overall) table.list$overall.table <- CreateTableOne(vars = variables, data = table.data)
+    if (is.null(group) | include.overall) table.list$overall.table <- tableone::CreateTableOne(vars = variables, data = table.data)
     ## Define variables to be treated as non-normally distributed, i.e. so that
     ## they are reported using medians and IQR
     nonormal.variables <- sapply(table.data, is.numeric)
     ## Format the tables in table.list
-    formatted.tables <- lapply(table.list, print,
+    formatted.tables <- lapply(table.list, tableone:::print.TableOne,
                                nonnormal = names(nonormal.variables)[nonormal.variables],
                                noSpaces = TRUE,
                                catDigits = digits,
@@ -109,22 +131,47 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                                printToggle = FALSE)
     ## Combine the formatted tables into one
     table <- do.call(cbind, formatted.tables)
+    ## Generate format based on number of digits
+    fmt <- paste0("%.", digits, "f") 
+    ## If data is imputed, replace counts with count/number of imputed datasets
+    if (mi) {
+        ns <- as.numeric(table["n", ]) # Get row with n in each strata
+        m <- length(unique(study.sample$.imp)) # Get number of imputations
+        new.ns <- ns/m # Set new n to the original divided by the number of imputations
+        # If the second column include complete data then it should not be replaced
+        if (include.complete.data)
+            new.ns[2] <- ns[2] 
+        table["n", ] <- new.ns # Replace ns with the new numbers
+        table.copy <- table # Make a copy of table
+        par.index <- grep("\\(", table.copy) # Find index of cells with percentages
+        par.data <- table.copy[par.index] # Get those cells
+        ## Format cells
+        par.fmt <- unlist(lapply(par.data, function(x) {
+            numbers <- unlist(strsplit(x, " ")) # Split element on space
+            n <- round(as.numeric(numbers[1])) # Get the count as the first element in the numbers vector
+            new.n <- sprintf(fmt, n/m) # Divide that number by the number of imputations
+            cell <- paste(new.n, numbers[2]) # Paste together to form new cell
+            return(cell)
+        }))
+        table[par.index] <- par.fmt # Replace cells with old counts with new counts
+    }
     ## Remove duplicate level columns
     level.indices <- grep("level", colnames(table)) # Find the indices of columns named level
     if (length(level.indices) > 1) table <- table[, -level.indices[2]] # Remove the second level column
     ## Rename level column
     colnames(table)[1] <- "Level"
     ## Modify the first table row with n to also include percentages
-    if (!is.null(group)) {
+    if (!is.null(group) & !include.complete.data) {
         ni <- grep("^n$", rownames(table)) # Get index of row with n
         nnum <- as.numeric(table[ni, ]) # Make numeric
         ps <- round(nnum/nrow(table.data) * 100, digits = digits) # Estimate percentages
-        fmt <- paste0("%.", digits, "f") # Generate format based on number of digits
         nn <- paste0(nnum, " (", sprintf(fmt, ps), ")") # Format numbers with percentages
         table[ni, ] <- nn # Put back in table
         rownames(table)[ni] <- "n (%)" # Modify name of n row
         table["n (%)", "Level"] <- ""
     }
+    ## Replace any NA with ""
+    table[is.na(table)] <- ""
     ## The code below is currently not implemented
     ##
     ## ## Replace variable names with labels
