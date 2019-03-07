@@ -6,8 +6,9 @@
 \usage{
 CreateSampleCharacteristicsTable(study.sample, data.dictionary = NULL,
   group = NULL, variables = NULL, exclude.variables = NULL,
-  include.overall = TRUE, include.missing = TRUE, digits = 1,
-  save.to.results = TRUE, table.name = "sample.characteristics.table",
+  include.overall = TRUE, include.missing = TRUE,
+  include.complete.data = FALSE, digits = 1, save.to.results = TRUE,
+  table.name = "sample.characteristics.table",
   table.caption = "Sample characteristics", save.to.disk = FALSE,
   file.format = "docx")
 }
@@ -33,6 +34,12 @@ TRUE.}
 \item{include.missing}{Not currently used. Logical vector of length 1. If
 TRUE a column with the number (%) of missing values in each variable is
 included. Defaults to TRUE.}
+
+\item{include.complete.data}{Logical vector of length 1. If TRUE the final
+table has two columns, one with complete cases only and one with multiple
+imputed data. Only used if the data is detected as multiple imputed,
+i.e. includes the variables ".imp" AND ".id". Overrides group and
+include.overall.}
 
 \item{digits}{Numeric vector of length 1 greater than or equal to 0. Number
 of digits to use when rounding table entries. Defaults to 1.}
