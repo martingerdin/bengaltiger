@@ -86,6 +86,7 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     if (all(c(".imp", ".id") %in% colnames(study.sample))) {
         mi <- TRUE
         exclude.variables <- c(exclude.variables, ".imp", ".id")
+        message ("Data is detected as multiple imputed and will be treated as such.")
     }
     if (mi & include.complete.data) {
         if (!any(study.sample$.imp == 0))
