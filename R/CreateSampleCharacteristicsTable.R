@@ -178,6 +178,9 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     }
     ## Replace any NA with ""
     table[is.na(table)] <- ""
+    ## Remove level column if empty
+    if (all(table[, "Level"] == ""))
+        table <- table[, -grep("Level", colnames(table))]
     ## The code below is currently not implemented
     ##
     ## ## Replace variable names with labels
@@ -264,3 +267,4 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     ## Return table
     return(table)
 }
+table
