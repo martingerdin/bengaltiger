@@ -86,8 +86,10 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     if (all(c(".imp", ".id") %in% colnames(study.sample))) {
         mi <- TRUE
         exclude.variables <- c(exclude.variables, ".imp", ".id")
-        message ("Data is detected as multiple imputed and will be treated as such.")
+        message ("Data is detected as multiple imputed and will be treated as such. \n")
     }
+    ## Modify study sample if complete data should be reported with multiple
+    ## imputed data
     if (mi & include.complete.data) {
         if (!any(study.sample$.imp == 0))
             stop ("study.sample does not include any original data as indicated by .imp == 0. Please run this function again with include.complete.data to FALSE")
@@ -95,7 +97,10 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         study.sample <- study.sample[complete.cases(study.sample), ]
         group = ".complete"
         include.overall = FALSE
-    } 
+    }
+    ## Remove original data from study sample if it should not be reported
+    if (mi & !include.complete.data & any(study.sample$.imp == 0))
+        study.sample <- study.sample[!study.sample$.imp == 0, ]
     ## Define variables
     if (is.null(variables)) variables <- colnames(study.sample)
     if (!is.null(exclude.variables)) variables <- variables[!(variables %in% exclude.variables)]
