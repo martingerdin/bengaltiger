@@ -140,21 +140,21 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                                showAllLevels = TRUE,
                                printToggle = FALSE)
     ## Combine the formatted tables into one
-    table <- do.call(cbind, formatted.tables)
+    raw.table <- do.call(cbind, formatted.tables)
     ## Generate format based on number of digits
     fmt <- paste0("%.", digits, "f") 
     ## If data is imputed, replace counts with count/number of imputed datasets
     if (mi) {
-        ns <- as.numeric(table["n", ]) # Get row with n in each strata
+        ns <- as.numeric(raw.table["n", ]) # Get row with n in each strata
         m <- length(unique(study.sample$.imp)) # Get number of imputations
         new.ns <- ns/m # Set new n to the original divided by the number of imputations
         # If the second column include complete data then it should not be replaced
         if (include.complete.data)
             new.ns[2] <- ns[2] 
-        table["n", ] <- new.ns # Replace ns with the new numbers
-        table.copy <- table # Make a copy of table
-        par.index <- grep("\\(", table.copy) # Find index of cells with percentages
-        par.data <- table.copy[par.index] # Get those cells
+        raw.table["n", ] <- new.ns # Replace ns with the new numbers
+        raw.table.copy <- raw.table # Make a copy of raw.table
+        par.index <- grep("\\(", raw.table.copy) # Find index of cells with percentages
+        par.data <- raw.table.copy[par.index] # Get those cells
         ## Format cells
         par.fmt <- unlist(lapply(par.data, function(x) {
             numbers <- unlist(strsplit(x, " ")) # Split element on space
@@ -163,47 +163,47 @@ CreateSampleCharacteristicsTable <- function(study.sample,
             cell <- paste(new.n, numbers[2]) # Paste together to form new cell
             return(cell)
         }))
-        table[par.index] <- par.fmt # Replace cells with old counts with new counts
+        raw.table[par.index] <- par.fmt # Replace cells with old counts with new counts
     }
     ## Remove duplicate level columns
-    level.indices <- grep("level", colnames(table)) # Find the indices of columns named level
-    if (length(level.indices) > 1) table <- table[, -level.indices[2]] # Remove the second level column
+    level.indices <- grep("level", colnames(raw.table)) # Find the indices of columns named level
+    if (length(level.indices) > 1) raw.table <- raw.table[, -level.indices[2]] # Remove the second level column
     ## Rename level column
-    colnames(table)[1] <- "Level"
-    ## Modify the first table row with n to also include percentages
-    ni <- grep("^n$", rownames(table)) # Get index of row with n
+    colnames(raw.table)[1] <- "Level"
+    ## Modify the first raw.table row with n to also include percentages
+    ni <- grep("^n$", rownames(raw.table)) # Get index of row with n
     if (!is.null(group) & !include.complete.data) {
-        nnum <- as.numeric(table[ni, ]) # Make numeric
-        ps <- round(nnum/nrow(table.data) * 100, digits = digits) # Estimate percentages
+        nnum <- as.numeric(raw.table[ni, ]) # Make numeric
+        ps <- round(nnum/nrow(raw.table.data) * 100, digits = digits) # Estimate percentages
         nn <- paste0(nnum, " (", sprintf(fmt, ps), ")") # Format numbers with percentages
-        table[ni, ] <- nn # Put back in table
-        rownames(table)[ni] <- "n (%)" # Modify name of n row
-        table["n (%)", "Level"] <- ""
+        raw.table[ni, ] <- nn # Put back in raw.table
+        rownames(raw.table)[ni] <- "n (%)" # Modify name of n row
+        raw.table["n (%)", "Level"] <- ""
     }
     ## Move n to column header if only overall data is reported
     if (is.null(group)) {
-        n <- table[ni, "Overall"] # Get n
-        table <- table[-ni, ] # Remove n row from table
-        colnames(table)[2] <- paste0(colnames(table)[2], ", n = ", n)
+        n <- raw.table[ni, "Overall"] # Get n
+        raw.table <- raw.table[-ni, ] # Remove n row from raw.table
+        colnames(raw.table)[2] <- paste0(colnames(raw.table)[2], ", n = ", n)
     }
     ## Move (median [IQR]) to column header if there are only quantitative
     ## variables
     pattern <- "\\(median \\[IQR\\]\\)"
-    if (length(grep(pattern, rownames(table))) == nrow(table)) {
-        rownames(table) <- gsub(pattern, "", rownames(table))
-        colnames(table)[2] <- paste0(colnames(table)[2], " (median [IQR])")
+    if (length(grep(pattern, rownames(raw.table))) == nrow(raw.table)) {
+        rownames(raw.table) <- gsub(pattern, "", rownames(raw.table))
+        colnames(raw.table)[2] <- paste0(colnames(raw.table)[2], " (median [IQR])")
     }
     ## Replace any NA with ""
-    table[is.na(table)] <- ""
-    ## Make table into a data.frame
-    table <- as.data.frame(table)
+    raw.table[is.na(raw.table)] <- ""
+    ## Make raw.table into a data.frame
+    raw.table <- as.data.frame(raw.table)
     ## Add rownames as column
-    table <- cbind(rownames(table), table)
-    colnames(table)[1] <- "Characteristic"
-    rownames(table) <- NULL
+    raw.table <- cbind(rownames(raw.table), raw.table)
+    colnames(raw.table)[1] <- "Characteristic"
+    rownames(raw.table) <- NULL
     ## Remove level column if empty
-    if (all(table[, "Level"] == ""))
-        table <- table[, -grep("Level", colnames(table))]
+    if (all(raw.table[, "Level"] == ""))
+        raw.table <- raw.table[, -grep("Level", colnames(raw.table))]
     ## The code below is currently not implemented
     ##
     ## ## Replace variable names with labels
@@ -266,14 +266,14 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     ## tables$formatted <- formatted_table
     ## Save formatted table to results file
     if (save.to.results) {
-        formatted.table <- paste0(kable(table, caption = table.caption, format = "markdown"), collapse = "\n")
+        formatted.table <- paste0(kable(raw.table, caption = table.caption, format = "markdown"), collapse = "\n")
         SaveToResults(formatted.table, table.name)
     }
     ## Save formatted table to disk 
     if (save.to.disk) {
         ## Create R markdown code
         table.file <- paste0("```{r echo = FALSE, results = 'asis'} \n",
-                             "kable(table, caption = \"", table.caption, "\") \n",
+                             "kable(raw.table, caption = \"", table.caption, "\") \n",
                              "```")
         ## Write to disk
         write(table.file, "sample_characteristics_table.rmd")
@@ -288,6 +288,6 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         }
     }
     ## Return table
-    return(table)
+    return(raw.table)
 }
-table
+
