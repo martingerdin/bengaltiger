@@ -180,11 +180,18 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         rownames(table)[ni] <- "n (%)" # Modify name of n row
         table["n (%)", "Level"] <- ""
     }
-    ## Move n to column heading if only overall data is reported
+    ## Move n to column header if only overall data is reported
     if (is.null(group)) {
         n <- table[ni, "Overall"] # Get n
         table <- table[-ni, ] # Remove n row from table
-        colnames(table)[2] <- paste0("Overall, n = ", n)
+        colnames(table)[2] <- paste0(colnames(table)[2], ", n = ", n)
+    }
+    ## Move (median [IQR]) to column header if there are only quantitative
+    ## variables
+    pattern <- "\\(median \\[IQR\\]\\)"
+    if (length(grep(pattern, rownames(table))) == nrow(table)) {
+        rownames(table) <- gsub(pattern, "", rownames(table))
+        colnames(table)[2] <- paste0(colnames(table)[2], " (median [IQR])")
     }
     ## Replace any NA with ""
     table[is.na(table)] <- ""
