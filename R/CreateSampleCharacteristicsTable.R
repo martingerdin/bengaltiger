@@ -98,6 +98,8 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         study.sample$.complete <- factor(as.numeric(study.sample$.imp != 0), c(0,1 ), c("Complete", "Imputed"))
         study.sample <- study.sample[complete.cases(study.sample), ]
         group = ".complete"
+        if (!is.null(variables))
+            variables <- c(variables, group)
         include.overall = FALSE
         if (table.caption == "Sample characteristics of multiple imputed data")
             table.caption <- "Sample characteristics of complete and multiple imputed data"
