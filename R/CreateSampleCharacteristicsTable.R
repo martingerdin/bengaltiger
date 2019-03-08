@@ -171,14 +171,20 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     ## Rename level column
     colnames(table)[1] <- "Level"
     ## Modify the first table row with n to also include percentages
+    ni <- grep("^n$", rownames(table)) # Get index of row with n
     if (!is.null(group) & !include.complete.data) {
-        ni <- grep("^n$", rownames(table)) # Get index of row with n
         nnum <- as.numeric(table[ni, ]) # Make numeric
         ps <- round(nnum/nrow(table.data) * 100, digits = digits) # Estimate percentages
         nn <- paste0(nnum, " (", sprintf(fmt, ps), ")") # Format numbers with percentages
         table[ni, ] <- nn # Put back in table
         rownames(table)[ni] <- "n (%)" # Modify name of n row
         table["n (%)", "Level"] <- ""
+    }
+    ## Move n to column heading if only overall data is reported
+    if (is.null(group)) {
+        n <- table[ni, "Overall"] # Get n
+        table <- table[-ni, ] # Remove n row from table
+        colnames(table)[2] <- paste0("Overall, n = ", n)
     }
     ## Replace any NA with ""
     table[is.na(table)] <- ""
