@@ -1,5 +1,22 @@
 # Changelog
 
+## v.0.0.26.9000 (08/03/2019)
+
+#### Enhancements:
+
+- [#98](https://github.com/martingerdin/bengaltiger/issues/98) Place (median [IQR]) in column header if only quantitative variables are reported by CreateSampleCharacteristicsTable 
+- [#97](https://github.com/martingerdin/bengaltiger/issues/97) Place n in column header if only overall table is created by CreateSampleCharacteristicsTable 
+- [#96](https://github.com/martingerdin/bengaltiger/issues/96) Indicate in sample characteristics table caption that data is multiple imputed 
+- [#95](https://github.com/martingerdin/bengaltiger/issues/95) Remove levels column in sample characteristics table if only quantitative data is reported 
+- [#93](https://github.com/martingerdin/bengaltiger/issues/93) Add message to CreateSampleCharacteristicsTable if data detected as multiple imputed 
+
+#### Bug Fixes:
+
+- [#100](https://github.com/martingerdin/bengaltiger/issues/100) .complete is not added to variables in CreateSampleCharacteristicsTable 
+- [#94](https://github.com/martingerdin/bengaltiger/issues/94) Remove original data from study.sample when producing sample characteristics table of multiple imputed data 
+
+---
+
 ## v.0.0.25.9000 (07/03/2019)
 
 #### Enhancements:
