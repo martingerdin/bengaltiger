@@ -86,6 +86,8 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     if (all(c(".imp", ".id") %in% colnames(study.sample))) {
         mi <- TRUE
         exclude.variables <- c(exclude.variables, ".imp", ".id")
+        if (table.caption == "Sample characteristics")
+            table.caption <- "Sample characteristics of multiple imputed data"
         message ("Data is detected as multiple imputed and will be treated as such. \n")
     }
     ## Modify study sample if complete data should be reported with multiple
@@ -97,6 +99,8 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         study.sample <- study.sample[complete.cases(study.sample), ]
         group = ".complete"
         include.overall = FALSE
+        if (table.caption == "Sample characteristics of multiple imputed data")
+            table.caption <- "Sample characteristics of complete and multiple imputed data"
     }
     ## Remove original data from study sample if it should not be reported
     if (mi & !include.complete.data & any(study.sample$.imp == 0))
@@ -178,6 +182,12 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     }
     ## Replace any NA with ""
     table[is.na(table)] <- ""
+    ## Make table into a data.frame
+    table <- as.data.frame(table)
+    ## Add rownames as column
+    table <- cbind(rownames(table), table)
+    colnames(table)[1] <- "Characteristic"
+    rownames(table) <- NULL
     ## Remove level column if empty
     if (all(table[, "Level"] == ""))
         table <- table[, -grep("Level", colnames(table))]
@@ -250,7 +260,7 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     if (save.to.disk) {
         ## Create R markdown code
         table.file <- paste0("```{r echo = FALSE, results = 'asis'} \n",
-                             "kable(table, caption = 'Sample characteristics') \n",
+                             "kable(table, caption = \"", table.caption, "\") \n",
                              "```")
         ## Write to disk
         write(table.file, "sample_characteristics_table.rmd")
