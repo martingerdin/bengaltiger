@@ -278,15 +278,16 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                              "kable(raw.table, caption = \"", table.caption, "\") \n",
                              "```")
         ## Write to disk
-        write(table.file, "sample_characteristics_table.rmd")
+        file.name <- paste0(table.name, ".Rmd")
+        write(table.file, file.name)
         ## Render to desired format
         if (file.format != "rmd") {
             output.format.list <- list(docx = "word_document",
                                        pdf = "pdf_document",
                                        html = "html_document")
-            rmarkdown::render("sample_characteristics_table.rmd",
+            rmarkdown::render(file.name,
                               output_format = output.format.list[[file.format]])
-            file.remove("sample_characteristics_table.rmd")
+            file.remove(file.name)
         }
     }
     ## Return table
