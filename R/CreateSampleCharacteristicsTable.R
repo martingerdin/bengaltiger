@@ -20,13 +20,14 @@
 #'     table has two columns, one with complete cases only and one with multiple
 #'     imputed data. Only used if the data is detected as multiple imputed,
 #'     i.e. includes the variables ".imp" AND ".id". Overrides group and
-#'     include.overall. 
+#'     include.overall.
 #' @param digits Numeric vector of length 1 greater than or equal to 0. Number
 #'     of digits to use when rounding table entries. Defaults to 1.
 #' @param save.to.results Logical vector of length 1. If TRUE the table object
 #'     is saved to a results file on disk using SaveToResults. Defaults to TRUE.
 #' @param table.name Character vector of length 1. The name of the table when
-#'     passed to SaveToResults. Deafults to "sample.characteristics.table".
+#'     passed to SaveToResults and saved to disk.. Deafults to
+#'     "sample.characteristics.table".
 #' @param table.caption Character vector of length 1. The table
 #'     caption. Deafults to "Sample characteristics".
 #' @param save.to.disk Logical vector of length 1. If TRUE the table object is
@@ -278,15 +279,16 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                              "kable(raw.table, caption = \"", table.caption, "\") \n",
                              "```")
         ## Write to disk
-        write(table.file, "sample_characteristics_table.rmd")
+        file.name <- paste0(table.name, ".Rmd")
+        write(table.file, file.name)
         ## Render to desired format
         if (file.format != "rmd") {
             output.format.list <- list(docx = "word_document",
                                        pdf = "pdf_document",
                                        html = "html_document")
-            rmarkdown::render("sample_characteristics_table.rmd",
+            rmarkdown::render(file.name,
                               output_format = output.format.list[[file.format]])
-            file.remove("sample_characteristics_table.rmd")
+            file.remove(file.name)
         }
     }
     ## Return table
