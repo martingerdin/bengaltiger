@@ -48,7 +48,8 @@ of digits to use when rounding table entries. Defaults to 1.}
 is saved to a results file on disk using SaveToResults. Defaults to TRUE.}
 
 \item{table.name}{Character vector of length 1. The name of the table when
-passed to SaveToResults. Deafults to "sample.characteristics.table".}
+passed to SaveToResults and saved to disk.. Deafults to
+"sample.characteristics.table".}
 
 \item{table.caption}{Character vector of length 1. The table
 caption. Deafults to "Sample characteristics".}
