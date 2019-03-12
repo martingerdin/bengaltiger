@@ -1,7 +1,7 @@
 Package: bengaltiger
 Title: bengaltiger
 Version: 0.0.27.9000
-Authors@R: c(person("Martin", "Gerdin Wärnberg", email = "martingerdin@gmail.com", role = c("aut", "cre"))
+Authors@R: c(person("Martin", "Gerdin Wärnberg", email = "martingerdin@gmail.com", role = c("aut", "cre")),
 	     person("Johanna", "Berg", role = c("aut")),
 	     person("Martin", "Henriksson", role = c("ctb")))
 Description: Streamlines data analysis and manuscript writing for medical
