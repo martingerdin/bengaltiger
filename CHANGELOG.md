@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.0.28.9000 (12/03/2019)
+
+#### Enhancements:
+
+- [#102](https://github.com/martingerdin/bengaltiger/issues/102) Have CreateSampleCharacteristicsTable use table.name to name file when saved to disk 
+
+---
+
+## v0.0.27.9000 (10/03/2019)
+*No changelog for this release.*
+
+---
+
 ## v.0.0.26.9000 (08/03/2019)
 
 #### Enhancements:
