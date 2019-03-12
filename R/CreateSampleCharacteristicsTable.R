@@ -177,7 +177,7 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     ni <- grep("^n$", rownames(raw.table)) # Get index of row with n
     if (!is.null(group) & !include.complete.data) {
         nnum <- as.numeric(raw.table[ni, ]) # Make numeric
-        ps <- round(nnum/nrow(raw.table.data) * 100, digits = digits) # Estimate percentages
+        ps <- round(nnum/nrow(table.data) * 100, digits = digits) # Estimate percentages
         nn <- paste0(nnum, " (", sprintf(fmt, ps), ")") # Format numbers with percentages
         raw.table[ni, ] <- nn # Put back in raw.table
         rownames(raw.table)[ni] <- "n (%)" # Modify name of n row
