@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.0.29.9000 (12/03/2019)
+
+#### Bug Fixes:
+
+- [#106](https://github.com/martingerdin/bengaltiger/issues/106) Fix error in CreateSampleCharacteristicsTable, replace raw.table.data with table.data 
+- [#103](https://github.com/martingerdin/bengaltiger/issues/103) Fix author names in description 
+
+---
+
 ## v0.0.28.9000 (12/03/2019)
 
 #### Enhancements:
