@@ -48,7 +48,7 @@ OnlyAdolescentsAndYoungAdults <- function(study.sample, age.variable.name = "age
     if (remove.missing) {
         exclusion.text <- paste0(total.n.excluded, " excluded: \n\n",
                                  "- ", n.missing, " had missing age \n\n",
-                                 "- ", n.excluded, " were young children (age < ", lower.age.cutoff, "years) or adults (age > ", upper.age.cutoff, " years) \n\n")
+                                 "- ", n.excluded, " were young children (age < ", lower.age.cutoff, " years) or adults (age > ", upper.age.cutoff, " years) \n\n")
     }
     return.list <- list(exclusion.text = exclusion.text,
                         subsample = subsample)
