@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.0.30.9000 (29/03/2019)
+
+#### Bug Fixes:
+
+- [#110](https://github.com/martingerdin/bengaltiger/issues/110) Characteristic column comes out formatted weird with lots of ... 
+
+#### New Functions
+
+- [#108](https://github.com/martingerdin/bengaltiger/issues/108) AddSpecificInjuryVariable 
+
+---
+
 ## v0.0.29.9000 (12/03/2019)
 
 #### Bug Fixes:
@@ -293,11 +305,3 @@
 #### Bug Fixes:
 
 - [#4](https://github.com/martingerdin/bengaltiger/issues/4) Fix JSON error in gren configuration file 
-
----
-
-## v0.0.7.9000 (20/08/2018)
-
-#### Enhancements:
-
-- [#3](https://github.com/martingerdin/bengaltiger/issues/3) Switch to issues as data source for gren 
