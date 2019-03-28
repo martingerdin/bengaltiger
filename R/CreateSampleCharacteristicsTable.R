@@ -199,7 +199,7 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     ## Replace any NA with ""
     raw.table[is.na(raw.table)] <- ""
     ## Make raw.table into a data.frame
-    raw.table <- as.data.frame(raw.table)
+    ## raw.table <- as.data.frame(raw.table)
     ## Add rownames as column
     raw.table <- cbind(rownames(raw.table), raw.table)
     colnames(raw.table)[1] <- "Characteristic"
