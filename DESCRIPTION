@@ -3,7 +3,8 @@ Title: bengaltiger
 Version: 0.0.30.9000
 Authors@R: c(person("Martin", "Gerdin Wärnberg", email = "martingerdin@gmail.com", role = c("aut", "cre")),
 	     person("Johanna", "Berg", role = c("aut")),
-	     person("Martin", "Henriksson", role = c("ctb")))
+	     person("Martin", "Henriksson", role = c("ctb")),
+	     person("Ludvig", "Wärnberg Gerdin", role = c("ctb"))))
 Description: Streamlines data analysis and manuscript writing for medical
   research, primarily on the Towards Improved Trauma Care Outcomes (TITCO) in
   India cohort.
