@@ -14,6 +14,7 @@
 #' @param number.of.bootstrap.samples Numeric vector of length 1. Has to be a
 #'     positive integer. The number of bootstrap samples to create. Only used it
 #'     bootstrap.confidence.interval is TRUE. Defaults to 1000.
+#' @export
 CreateBootstrapSamples <- function(study.sample, random.seed.already.set = FALSE,
                                    random.seed = NULL,
                                    number.of.bootstrap.samples = 1000) {
