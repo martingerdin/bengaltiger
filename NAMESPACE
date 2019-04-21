@@ -3,6 +3,7 @@
 export(AISVariables)
 export(Add24HourInHospitalMortality)
 export(Add30DayInHospitalMortality)
+export(AddAISSeverityIndicator)
 export(AddSpecificInjuryVariable)
 export(AddTimeBetweenArrivalAndDishcarge)
 export(AddTimeBetweenInjuryAndArrival)
