@@ -14,10 +14,10 @@
 #' @param number.of.bootstrap.samples Numeric vector of length 1. Has to be a
 #'     positive integer. The number of bootstrap samples to create. Only used it
 #'     bootstrap.confidence.interval is TRUE. Defaults to 1000.
-#' @param return.samples Logical. If true, the function returns bootstrap.samples.
-#'     Defaults to FALSE.
-#' @param save.to.disk Logical. If true, bootstrap.samples are saved to disk in
-#'      RDS format. Defaults to TRUE.
+#' @param return.samples Logical vector of length 1. If TRUE, the function
+#'     returns bootstrap.samples to parent enviroment. Defaults to FALSE.
+#' @param save.to.disk Logical vector of length 1. If TRUE, bootstrap.samples
+#'     are saved to disk in RDS format. Defaults to TRUE.
 CreateBootstrapSamples <- function(study.sample, random.seed.already.set = FALSE,
                                    random.seed = NULL,
                                    number.of.bootstrap.samples = 1000,
@@ -33,9 +33,9 @@ CreateBootstrapSamples <- function(study.sample, random.seed.already.set = FALSE
             stop("random.seed has to be an integer")
     if (!is.numeric(number.of.bootstrap.samples) | !IsLength1(number.of.bootstrap.samples) | number.of.bootstrap.samples < 0 | as.integer(number.of.bootstrap.samples) != number.of.bootstrap.samples)
         stop("number.of.bootstrap.samples has to be a positive integer")    
-    if (!is.logical(return.samples))
+    if (!is.logical(return.samples) | !IsLength1(return.samples))
         stop("return.samples has to be a logical vector of length 1")
-    if (!is.logical(save.to.disk))
+    if (!is.logical(save.to.disk) | !IsLength1(save.to.disk))
         stop("save.to.disk has to be a logical vector of length 1")
     ## Get row indices to use to generate bootstrap samples
     number.of.rows <- nrow(study.sample)
@@ -46,15 +46,13 @@ CreateBootstrapSamples <- function(study.sample, random.seed.already.set = FALSE
     bootstrap.samples <- lapply(row.indices, function(i) {
         return(study.sample[i,])
     })
-    if (return.samples) {
-       ## Return bootstrap samples
-       return(bootstrap.samples)
-       }
+    ## Save bootstrap samples to disk
     if (save.to.disk) {
-       ## Save bootstrap samples to disk
        saveRDS(bootstrap.samples, "bootstrap.samples.Rds")
        ## Let the user know that the samples are saved
        message("Bootstrap samples created and saved to disk")
-       }
-
+    }
+    ## Return bootstrap samples
+    if (return.samples) 
+       return(bootstrap.samples)
 }
