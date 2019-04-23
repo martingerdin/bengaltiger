@@ -5,7 +5,8 @@
 \title{Create bootstrap samples}
 \usage{
 CreateBootstrapSamples(study.sample, random.seed.already.set = FALSE,
-  random.seed = NULL, number.of.bootstrap.samples = 1000)
+  random.seed = NULL, number.of.bootstrap.samples = 1000,
+  return.samples = FALSE, save.to.disk = TRUE)
 }
 \arguments{
 \item{study.sample}{Data frame. The study sample. No default.}
@@ -22,6 +23,12 @@ is FALSE. Defaults to NULL.}
 \item{number.of.bootstrap.samples}{Numeric vector of length 1. Has to be a
 positive integer. The number of bootstrap samples to create. Only used it
 bootstrap.confidence.interval is TRUE. Defaults to 1000.}
+
+\item{return.samples}{Logical vector of length 1. If TRUE, the function
+returns bootstrap.samples to parent enviroment. Defaults to FALSE.}
+
+\item{save.to.disk}{Logical vector of length 1. If TRUE, bootstrap.samples
+are saved to disk in RDS format. Defaults to TRUE.}
 }
 \description{
 Creates bootstrap samples and save them to disk, to use in functions that
