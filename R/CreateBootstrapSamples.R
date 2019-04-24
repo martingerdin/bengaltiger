@@ -46,6 +46,8 @@ CreateBootstrapSamples <- function(study.sample, random.seed.already.set = FALSE
     bootstrap.samples <- lapply(row.indices, function(i) {
         return(study.sample[i,])
     })
+    ## Name bootstrap samples
+    names(bootstrap.samples) <- paste0("bootstrap.sample.", 1:length(bootstrap.samples))
     ## Save bootstrap samples to disk
     if (save.to.disk) {
        saveRDS(bootstrap.samples, "bootstrap.samples.Rds")
