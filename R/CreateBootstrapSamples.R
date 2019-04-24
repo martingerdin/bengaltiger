@@ -18,6 +18,7 @@
 #'     returns bootstrap.samples to parent enviroment. Defaults to FALSE.
 #' @param save.to.disk Logical vector of length 1. If TRUE, bootstrap.samples
 #'     are saved to disk in RDS format. Defaults to TRUE.
+#' @export
 CreateBootstrapSamples <- function(study.sample, random.seed.already.set = FALSE,
                                    random.seed = NULL,
                                    number.of.bootstrap.samples = 1000,
