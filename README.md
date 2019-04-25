@@ -100,10 +100,10 @@ For example:
 ```shell
 git checkout develop
 ghi open -m "ApplyExclusionCriteria" -L function -u martingerdin
-git checkout -b feature-add-ApplyExclusionCriteria
+git checkout -b feature-iss15 # Where 15 is a reference to the github issue
 # Work on feature
 git add --all
-git commit -m "Close #12 - Add ApplyExclusionCriteria" # Where 12 is the issue 
+git commit -m "Close #15 - Add ApplyExclusionCriteria" # Where 15 is the issue 
                                                        # number
 git checkout develop
 git merge --no-ff feature-add-ApplyExclusionCriteria -m "Merge feature-add-ApplyExclusionCriteria into develop"
@@ -181,13 +181,13 @@ git branch -d fix-iss18
 ```shell
 git checkout develop
 ghi open -m "ApplyExclusionCriteria" -L function
-git checkout -b feature-feature-add-ApplyExclusionCriteria
+git checkout -b feature-iss15
 # Work on feature
 git add ApplyExclusionCriteria.R
 git commit -m "Write function template"
 # Continue work on featue
 git add ApplyExclusionCriteria.R
-git commit -m "Close #12 - Add ApplyExclusionCriteria"
+git commit -m "Close #15 - Add ApplyExclusionCriteria"
 git checkout develop
 git merge --no-ff -m "Add ApplyExclusionCriteria function"
 # If new feature should be merged with master and result in new release
