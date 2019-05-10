@@ -1,7 +1,8 @@
 #' CreateFlowchart
 #'
-#' Generates flowchart using TikZ. Compiled with pdflatex or knitr depending on file extension in flowchart.file.path. Requires the xstring and tikz LaTex packages.
+#' Generates flowchart using TikZ. Requires the xstring and tikz packages. Compiled with knitr or pdflatex depending on file extension in flowchart.file.path. However, if non-default font is used, flowchart is compiled using xelatex and the mathspec package is required.
 #' @param flowchart.elements Character vector. Content for nodes. Length must be > 1. Defaults to NULL.
+#' @param flowchart.font String. The font for flowchart nodes, e.g. LiberationSerif. Uses the mathspec package. Flowchart is compiled with XeLaTex or knitr depending on file extension in flowchart.file.path. Defaults to NULL.
 #' @param flowchart.file.path String. The flowchart file path. Defaults to "./flowchart.rtex".
 #' @param print.tikz Logical. If TRUE, TikZ code is printed to console. Defaults to TRUE.
 #' @param save.tikz  Logical. If TRUE, TikZ code for flowchart is saved to disk. Defaults to TRUE.
@@ -9,10 +10,12 @@
 #' @param train.test.split Logical. If TRUE, last two elements of flowchart list are interpreted as "train" and "test" texts, i.e. text explaining how many patients are grouped in train and test samples. Second to last element is displayed to the left and last element is displayed to the right. Defaults to FALSE.
 #' @param prettify Logical. If TRUE, shadows are used for flowchart nodes. Requires TikZ package shadows.blur. Defaults to FALSE.
 #' @param read.from.results Logical. If TRUE, flowchart.elements is read from results.Rds. Defaults to TRUE.
+#' @param ... Arguments for system function.
 #' @export
-CreateFlowchart <- function(flowchart.elements = NULL, flowchart.file.path = "./flowchart.rtex",
-                            print.tikz = TRUE, save.tikz = TRUE, compile.flowchart = TRUE,
-                            train.test.split = FALSE, prettify = FALSE, read.from.results = TRUE)
+CreateFlowchart <- function(flowchart.elements = NULL, flowchart.font = NULL,
+                            flowchart.file.path = "./flowchart.rtex", print.tikz = TRUE,
+                            save.tikz = TRUE, compile.flowchart = TRUE, train.test.split = FALSE,
+                            prettify = FALSE, read.from.results = TRUE, ...)
 {
     # Get file format of flowchart.file.path
     flowchart.file.format <- substr(flowchart.file.path,
@@ -56,10 +59,10 @@ CreateFlowchart <- function(flowchart.elements = NULL, flowchart.file.path = "./
       (block \\i)
       {\\arrayElement};
       %% Draw the cross-validation nodes
-      \\node[below left = 3.5cm and 1mm of block \\i, nodeStyle] (test) {\\test};
-      \\node[below right = 3.5cm and 1mm of block \\i, nodeStyle] (train) {\\train};
+      \\node[below left = 3.75cm and 1.5cm of block \\i.south, nodeStyle] (test) {\\test};
+      \\node[below right = 3.75cm and 1.5cm of block \\i.south, nodeStyle] (train) {\\train};
       %% Invisible helper node
-      \\node[below = 1.5cm of block \\i] (helper) {};
+      \\node[below = 1.75cm of block \\i] (helper) {};
       \\draw[shorten >= 3pt, thick] (block \\i) |- (helper.center);
       \\draw[->, shorten >= 3pt, thick] (helper.center) -| (test);
       \\draw[->, shorten >= 3pt, thick] (helper.center) -| (train);
@@ -67,7 +70,7 @@ CreateFlowchart <- function(flowchart.elements = NULL, flowchart.file.path = "./
       \\node[on chain,
       nodeStyle]
       (block \\i)
-      {\\arrayElement};x
+      {\\arrayElement};
     }
     \\fi")
     }
@@ -80,16 +83,24 @@ CreateFlowchart <- function(flowchart.elements = NULL, flowchart.file.path = "./
    arrows.meta,
    decorations.pathmorphing
 }", flowchart.lib)
-
+    if (!is.null(flowchart.font)){
+        font.set <- gsub("%s", flowchart.font,
+"\\usepackage{xstring}
+\\usepackage{mathspec}
+\\setmainfont{%s}
+\\setmathfont(Digits){%s}",
+fixed = TRUE)
+        latex.preamble <- sub("\\usepackage{xstring}", font.set, latex.preamble, fixed = TRUE)
+    } 
     flowchart.node.style <- sprintf("
 \\tikzset{nodeStyle/.style={
 %s   align=center,
    text width=60mm,
    minimum height=15mm,
    draw,
-   fill = white}
+   fill = white,
+   inner sep = 2mm}
 }", flowchart.set)
-
     flowchart.tikz.command <- do.call(sprintf, c(list("
 \\newcommand{\\CreateFlowchart}[1]{
 %% Count number of commas in input array
@@ -107,7 +118,7 @@ CreateFlowchart <- function(flowchart.elements = NULL, flowchart.file.path = "./
   \\else
     \\node[on chain] (mid \\i) {};
     %% Define exclusion nodes, i.e. nodes to contain information on excluded patients
-    \\node[nodeStyle, right =2cm of mid \\i] (right \\i)
+    \\node[nodeStyle, right =1.5cm of mid \\i] (right \\i)
     {\\arrayElement};
     %% Draw arrows from middle to exclusion nodes
     \\draw[->, shorten >=3pt, thick] (mid \\i.center) -- (right \\i);
@@ -159,14 +170,14 @@ paste("\\def\\flowchartElements", paste(flowchart.elements, collapse = ""), "\n"
 \\end{document}")
     ## Write flowchart to disk
     if (save.tikz) write(tikz.print, file = flowchart.file.path)
-    ## Compile with either knitr or pdflatex, depending on file extension
+    ## Compile with either knitr, pdflatex, or xelatex depending on file extension and font param
     if (compile.flowchart) {
         if (flowchart.file.format == ".rtex") {
             knitr::knit2pdf(flowchart.file.path)
         } else if (flowchart.file.format == ".tex") {
-            system(paste("pdflatex", flowchart.file.path, collapse = ""), ignore.stdout = TRUE)
-            message (sprintf("\nPdflatex output surpressed. See %s for compile status.",
-                             sub(flowchart.file.format, ".log", flowchart.file.path)))
+            compiler <- "pdflatex"
+            if (!is.null(flowchart.font)) compiler <- "xelatex"
+            system(paste(compiler, flowchart.file.path, collapse = ""), ...)
         }
     }    
     if (print.tikz) cat(tikz.print)
