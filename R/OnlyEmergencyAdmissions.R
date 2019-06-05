@@ -17,7 +17,7 @@ OnlyEmergencyAdmissions <- function(study.sample, admission.type.variable.name =
         stop("study.sample has to be a data frame")
     if (!is.character(admission.type.variable.name) | !IsLength1(admission.type.variable.name))
         stop("admission.type.variable.name has to be a character vector of length 1")
-    if ((!is.numeric(emergency.value) & !is.character) | !IsLength1(emergency.value))
+    if ((!is.numeric(emergency.value) & !is.character(emergency.value)) | !IsLength1(emergency.value))
         stop("emergency.value has to be a character or numeric vector of length 1")
     if (!is.logical(remove.missing) | !IsLength1(remove.missing))
         stop("remove.missing has to be a logical vector of length 1")
