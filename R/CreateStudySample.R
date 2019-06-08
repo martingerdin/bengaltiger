@@ -7,6 +7,12 @@
 #'     an inclusion criterion. No default.
 #' @param complete.cases Logical vector of length 1. If TRUE only complete cases
 #'     will be returned. If FALSE all cases are returned. Defaults to TRUE.
+#' @param return.incomplete.cases Logical vector of length 1. Ignored if
+#'     complete.cases is FALSE. If complete.cases is TRUE and this is TRUE a
+#'     list is returned instead of a data.frame. The list has two entries. The
+#'     first is a data.frame with only complete cases, called
+#'     complete.sample. The second is a data.frame with only incomplete cases,
+#'     called incomplete.sample. Defaults to FALSE.
 #' @param relevant.variables Character vector. The names of variables to keep in
 #'     the study sample. Defaults to c("hos", "sex", "tran", "doi", "toi",
 #'     "doar", "toar", "dodd", "todd", "moi", "age", "sbp_1", "hr_1", "rr_1",
@@ -58,6 +64,7 @@
 #' @export
 CreateStudySample <- function(study.data, inclusion.criteria,
                               complete.cases = TRUE,
+                              return.incomplete.cases = FALSE,
                               relevant.variables = c("hos", "sex", "tran",
                                                      "doi", "toi", "doar",
                                                      "toar", "dodd", "todd",
@@ -143,6 +150,8 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         stop("All items in inclusion.criteria have to be functions")
     if (!is.logical(complete.cases) | !IsLength1(complete.cases))
         stop("complete.cases has to be a logical vector of length 1")
+    if (!is.logical(return.incomplete.cases) | !IsLength1(return.incomplete.cases))
+        stop("return.incomplete.cases has to be a logical vector of length 1")    
     if (!is.character(relevant.variables))
         stop("relevant.variables has to be a character vector")
     if (!is.null(add.to.relevant.variables) & !is.character(add.to.relevant.variables))
@@ -229,7 +238,9 @@ CreateStudySample <- function(study.data, inclusion.criteria,
     missingness.string <- paste0(paste("-", unlist(missingness.list)), collapse = " \n\n")
     ## Keep only complete cases
     n.before.missing.excluded <- nrow(study.sample)
-    complete.sample <- study.sample[complete.cases(study.sample[, missingness.variables]), ]
+    complete.indices <- complete.cases(study.sample[, missingness.variables])
+    complete.sample <- study.sample[complete.indices, ]
+    incomplete.sample <- study.sample[!complete.indices, ]
     n.after.missing.excluded <- nrow(complete.sample)
     n.missing <- n.before.missing.excluded - n.after.missing.excluded
     p.missing <- round((n.missing/n.before.missing.excluded) * 100)
@@ -289,6 +300,10 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         rmarkdown::render(paste0(file.name, ".rmd"), output_format = "word_document")
         file.remove(paste0(file.name, ".rmd"))
     }
-    ## Return the new study sample
-    return(study.sample)
+    ## Create return object
+    return.object <- study.sample
+    if (complete.cases & return.incomplete.cases)
+        return.object <- list(complete.sample = study.sample,
+                              incomplete.sample = incomplete.sample)
+    return(return.object)
 }
