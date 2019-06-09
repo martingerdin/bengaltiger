@@ -131,6 +131,18 @@ CreateSampleCharacteristicsTable <- function(study.sample,
             stop ("group has to be one of the variables to be in the table")
     ## Define table data
     table.data <- study.sample[, variables]
+    ## Find out if all variables are in the codebook
+    if (!is.null(codebook)) {
+        in.codebook <- sapply(variables, function(variable) any(variable == names(codebook)))
+        if (!all(in.codebook)) {
+            missing.variables <- variables[!in.codebook]
+            for (missing.variable in missing.variables) {
+                warning (paste0(missing.variable, " is not in the codebook and is therefore assigned the variable name as label"))
+                codebook[[missing.variable]] <- list(full.label.entry = missing.variable,
+                                                     abbreviated.label.entry = "")
+            }
+        }
+    }
     ## Make a list that will hold the individual tables
     table.list <- list()
     ## Create the grouped table if there should be one
