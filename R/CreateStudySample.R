@@ -52,6 +52,9 @@
 #'     "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd").
 #' @param save.to.results Logical vector of length 1. If TRUE the output is
 #'     saved to a results file on disk. Defaults to TRUE.
+#' @param results.name Character vector of length 1. The name of the analysis of
+#'     missingness and exclusions saved to results. Defaults to
+#'     "inclusions.and.exclusions".
 #' @param save.to.disk Logical vector of length 1. If TRUE a file named
 #'     "exclusions_and_missingness" is saved to disk where the exclusions and
 #'     missingness are described. Defaults to FALSE.
@@ -140,6 +143,7 @@ CreateStudySample <- function(study.data, inclusion.criteria,
                                                    "op_9_icd", "op_10_icd",
                                                    "op_11_icd"),
                               save.to.results = TRUE,
+                              results.name = "inclusions.and.exclusions",
                               save.to.disk = FALSE,
                               file.format = "docx",
                               override = TRUE) {
@@ -162,6 +166,8 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         stop("ignore.variables has to be either NULL or a character vector")
     if (!is.logical(save.to.results) | !IsLength1(save.to.results))
         stop("save.to.results has to be a logical vector of length 1")
+    if (!is.character(results.name) | !IsLength1(results.name))
+        stop("results.name has to be a character vector of length 1")
     if (!is.logical(save.to.disk) | !IsLength1(save.to.disk))
         stop("save.to.disk has to be a logical vector of length 1")
     if (!(file.format %in% c("docx", "rmd")))
@@ -169,7 +175,7 @@ CreateStudySample <- function(study.data, inclusion.criteria,
     if (!is.logical(override) | !IsLength1(override))
         stop("override has to be a logical vector of length 1")
     ## Create full file name
-    file.name <- "exclusions_and_missingness"
+    file.name <- results.name
     full.file.name <- paste0(file.name, file.format)
     ## Use inclusion criteria to select sample from study data
     study.sample <- study.data
@@ -284,7 +290,7 @@ CreateStudySample <- function(study.data, inclusion.criteria,
     inclusions.and.exclusions <- paste0(unlist(inclusion.list), collapse = "\n")
     ## Save to results
     if (save.to.results){
-        SaveToResults(inclusions.and.exclusions, "inclusions.and.exclusions")
+        SaveToResults(inclusions.and.exclusions, results.name)
         ## Clean flowchart list before it is saved
         flowchart.list <- lapply(flowchart.list, function(element) {
             new.element <- sub("\\.$", "", element)
