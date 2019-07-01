@@ -328,7 +328,16 @@ CreateSampleCharacteristicsTable <- function(study.sample,
             file.remove(file.name)
         }
     }
+    ## Create return table
+    return.table <- raw.table
+    if (table.caption != "") {
+        return.table <- rbind(colnames(return.table), return.table)
+        return.table <- rbind(c(table.caption, rep("", ncol(return.table) - 1)), return.table)
+        colnames(return.table) <- NULL
+    }
+    if (abbreviations != "")
+        return.table <- rbind(return.table, c(abbreviations, rep("", ncol(return.table) - 1)))
     ## Return table
-    return(raw.table)
+    return(return.table)
 }
 
