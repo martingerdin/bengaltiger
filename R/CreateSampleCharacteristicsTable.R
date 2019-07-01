@@ -86,7 +86,7 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     if (!is.list(codebook) & !is.null(codebook))
         stop ("codebook has to be a list or NULL")
     if (!is.list(codebook.options) | !all(names(codebook.options) %in% c("full.label.entry", "abbreviated.label.entry"))) 
-        stop ("codebook.options has to be a list with the named entries full.label.entry and abbreviated.label.entry")        
+        stop ("codebook.options has to be a list with the named entries full.label.entry and abbreviated.label.entry")
     if (!is.logical(save.to.results) | !IsLength1(save.to.results))
         stop ("save.to.results has to be a character vector of length 1")
     if (!is.character(table.name) | !IsLength1(table.name))
@@ -142,6 +142,13 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                                                      abbreviated.label.entry = "")
             }
         }
+    }
+    ## Check that the full and abbreviated label entries are present for each
+    ## variable in the codebook
+    if (!is.null(codebook)) {
+        label.entries.in.codebook <- sapply(codebook, function(variable) all(codebook.options$full.label.entry %in% names(variable)) & codebook.options$abbreviated.label.entry %in% names(variable))
+        if (!any(label.entries.in.codebook))
+            stop (with(codebook.options, paste0("Some codebook entries do not include ", full.label.entry, " or ", abbreviated.label.entry, ". \nMaybe you have called them something else?")))
     }
     ## Make a list that will hold the individual tables
     table.list <- list()
