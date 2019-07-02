@@ -9,8 +9,8 @@ CreateSampleCharacteristicsTable(study.sample, group = NULL,
   include.missing = TRUE, include.complete.data = FALSE, digits = 1,
   codebook = NULL, codebook.options = list(full.label.entry =
   "full.label", abbreviated.label.entry = "abbreviated.label"),
-  return.pretty = FALSE, save.to.results = TRUE,
-  table.name = "sample.characteristics.table",
+  return.pretty = FALSE, return.as.data.frame = TRUE,
+  save.to.results = TRUE, table.name = "sample.characteristics.table",
   table.caption = "Sample characteristics", save.to.disk = FALSE,
   file.format = "docx")
 }
@@ -61,6 +61,9 @@ list(full.label.entry = "full.label", abbreviated.label.entry =
 \item{return.pretty}{Logical vector of length 1. If TRUE the returned table
 object is made pretty by adding the caption and abbreviations. Defaults
 to FALSE.}
+
+\item{return.as.data.frame}{Logical vector of length 1. If TRUE the table is
+returned as a data.frame instad of a matrix. Defaults to TRUE.}
 
 \item{save.to.results}{Logical vector of length 1. If TRUE the table object
 is saved to a results file on disk using SaveToResults. Defaults to TRUE.}

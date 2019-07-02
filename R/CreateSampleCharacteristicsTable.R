@@ -37,6 +37,8 @@
 #' @param return.pretty Logical vector of length 1. If TRUE the returned table
 #'     object is made pretty by adding the caption and abbreviations. Defaults
 #'     to FALSE.
+#' @param return.as.data.frame Logical vector of length 1. If TRUE the table is
+#'     returned as a data.frame instad of a matrix. Defaults to TRUE.
 #' @param save.to.results Logical vector of length 1. If TRUE the table object
 #'     is saved to a results file on disk using SaveToResults. Defaults to TRUE.
 #' @param table.name Character vector of length 1. The name of the table when
@@ -62,6 +64,7 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                                              codebook.options = list(full.label.entry = "full.label",
                                                                      abbreviated.label.entry = "abbreviated.label"),
                                              return.pretty = FALSE,
+                                             return.as.data.frame = TRUE,
                                              save.to.results = TRUE,
                                              table.name = "sample.characteristics.table",
                                              table.caption = "Sample characteristics",
@@ -93,6 +96,8 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         stop ("codebook.options has to be a list with the named entries full.label.entry and abbreviated.label.entry")
     if (!is.logical(return.pretty) | !IsLength1(return.pretty))
         stop ("return.pretty has to be a logical vector of length 1")
+    if (!is.logical(return.as.data.frame) | !IsLength1(return.as.data.frame))
+        stop ("return.as.data.frame has to be a logical vector of length 1")
     if (!is.logical(save.to.results) | !IsLength1(save.to.results))
         stop ("save.to.results has to be a logical vector of length 1")
     if (!is.character(table.name) | !IsLength1(table.name))
@@ -345,6 +350,8 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         return.table <- rbind(return.table, c(abbreviations, rep("", ncol(return.table) - 1)))
     if (!return.pretty)
         return.table <- raw.table
+    if (return.as.data.frame)
+        return.table <- as.data.frame(return.table)
     ## Return table
     return(return.table)
 }
