@@ -271,7 +271,7 @@ CreateStudySample <- function(study.data, inclusion.criteria,
             var.missing.strings <- paste(sapply(vars.with.missing, "[[", "string.wo.perc"), collapse = ", ")
             missingness.node.text <- list(paste0(n.missing,
                                                  " patients were excluded ",
-                                                 "due to missing data: , ",
+                                                 "due to missing data in other variables: , ",
                                                  var.missing.strings))
         } 
         flowchart.list <- c(flowchart.list,
