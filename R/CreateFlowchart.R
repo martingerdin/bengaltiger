@@ -22,7 +22,7 @@ CreateFlowchart <- function(flowchart.elements = NULL, flowchart.font = NULL,
                                     regexpr("\\.[^\\.]*$", flowchart.file.path)[1],
                                     nchar(flowchart.file.path))
     ## Error handling
-    if (length(flowchart.elements) < 1)
+    if (length(flowchart.elements) < 1 & !is.null(flowchart.elements))
         stop("Length of flowchart.elements must be > 1.")
     if (!length(flowchart.elements) %% 2 != 0 & !read.from.results)
         stop("Length of flowchart.elements must be an odd integer.")
@@ -31,7 +31,7 @@ CreateFlowchart <- function(flowchart.elements = NULL, flowchart.font = NULL,
     if (!dir.exists(flowchart.file.path) & (!save.tikz & compile.flowchart))
         stop("Parameter save.tikz is set to FALSE and compile.flowchart is set to TRUE. Path flowchart.file.path must exist for this combination of settings.")
     if (!is.null(flowchart.elements) & read.from.results)
-        warning("Parameter read.from.results is set to TRUE and flowchart.elements is non-NULL, thus flowchart.elements will be \nignored. If you want custom flowchart.elements in flowchart, set read.from.results to FALSE and re-run function.")
+        warning("Parameter read.from.results is set to TRUE and flowchart.elements is non-NULL, thus flowchart.elements will be \nignored. If you want custom flowchart.elements in the flowchart, set read.from.results to FALSE and re-run function.")
     if (read.from.results) 
         ## Read flowchart elements, remove newline and format
         flowchart.elements <- lapply(readRDS("results.Rds")$flowchart.list, function (node.text) {
