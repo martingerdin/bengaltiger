@@ -239,9 +239,11 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         n.missing <- sum(is.na(column))
         p.missing <- round((n.missing/length(column)) * 100)
         string <- paste0(n.missing, " (", p.missing, "%) had missing in ", column.name)
-        return(string)
+        return(list(string.w.perc = string,
+                    string.wo.perc = paste(n.missing, "had missing in", column.name),
+                    n.missing = n.missing))
     })
-    missingness.string <- paste0(paste("-", unlist(missingness.list)), collapse = " \n\n")
+    missingness.string <- paste("-", sapply(missingness.list, "[[", "string.w.perc"), collapse = " \n\n")
     ## Keep only complete cases
     n.before.missing.excluded <- nrow(study.sample)
     complete.indices <- complete.cases(study.sample[, missingness.variables])
@@ -258,17 +260,19 @@ CreateStudySample <- function(study.data, inclusion.criteria,
         study.sample <- complete.sample
         missingness.handling.string <- paste0("**Exclusions step ",
                                               length(inclusion.criteria) + 1,
-                                              "** \n\n",
+                                              "** \n#\n",
                                               missingness.handling.string,
                                               " and were therefore excluded")
         missingness.node.text <- flowchart.list[[length(flowchart.list)]] <- NULL
-        ## Do not include the complete.cases exclusion node if data does not contain
-        ## missing values
+        ## Check if any subjects have been excluded due to missing data
         if (n.missing != 0){
-            flowchart.list[[length(flowchart.list) + 1]] <- node.text
+            flowchart.list <- c(flowchart.list, node.text)
+            vars.with.missing <- missingness.list[sapply(missingness.list, "[[", "n.missing") != 0]
+            var.missing.strings <- paste(sapply(vars.with.missing, "[[", "string.wo.perc"), collapse = ", ")
             missingness.node.text <- list(paste0(n.missing,
                                                  " patients were excluded ",
-                                                 "due to missing data"))  
+                                                 "due to missing data in other variables: , ",
+                                                 var.missing.strings))
         } 
         flowchart.list <- c(flowchart.list,
                             missingness.node.text,
