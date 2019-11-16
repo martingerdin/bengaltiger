@@ -41,7 +41,7 @@ OnlyTransferredPatients <- function(study.sample, transfer.variable.name = "tran
     exclusion.text <- paste0(total.n.excluded, " were direct admissions.")
     if (remove.missing) {
         exclusion.text <- paste0(total.n.excluded, " excluded: \n\n",
-                                 "- ", n.missing, " had transfer status \n\n",
+                                 "- ", n.missing, " had missing transfer status \n\n",
                                  "- ", n.excluded, " were direct admissions \n\n")
     }
     return.list <- list(exclusion.text = exclusion.text,
