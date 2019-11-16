@@ -8,7 +8,7 @@
 #'     injury type variable that indicates that a patients had blunt trauma.
 #'     Defaults to "Blunt".
 #' @param remove.missing Logical vector of length 1. If TRUE all observations
-#'     with missing age, as detected by is.na, are removed from the
+#'     with missing injury type, as detected by is.na, are removed from the
 #'     sample. Defaults to TRUE.
 #' @export
 OnlyBluntTraumaPatients <- function(study.sample, injury.type.variable.name = "ti",
@@ -30,7 +30,7 @@ OnlyBluntTraumaPatients <- function(study.sample, injury.type.variable.name = "t
         subsample <- subsample[!is.na(subsample[, injury.type.variable.name]), ]
         n.missing <- nrow(study.sample) - nrow(subsample)
     }
-    ## Remove direct admissions
+    ## Remove patients with penetrating trauma
     subsample <- subsample[subsample[, injury.type.variable.name] == blunt.value, ]
     n.excluded <- nrow(study.sample) - nrow(subsample) - n.missing
     ## Collate return list

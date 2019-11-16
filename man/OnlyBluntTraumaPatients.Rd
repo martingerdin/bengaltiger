@@ -18,7 +18,7 @@ injury type variable that indicates that a patients had blunt trauma.
 Defaults to "Blunt".}
 
 \item{remove.missing}{Logical vector of length 1. If TRUE all observations
-with missing age, as detected by is.na, are removed from the
+with missing injury type, as detected by is.na, are removed from the
 sample. Defaults to TRUE.}
 }
 \description{
