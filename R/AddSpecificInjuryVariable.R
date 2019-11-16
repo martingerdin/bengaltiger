@@ -78,7 +78,7 @@ AddSpecificInjuryVariable <- function(study.sample,
                                                            "op_11_icd"),
                                       levels = c("Yes", "No"),
                                       add.as.factor = TRUE,
-                                      drop.used.variables = TRUE) {
+                                      drop.used.variables = FALSE) {
     ## Error handling
     if (!is.data.frame(study.sample))
         stop("study.sample has to be a data.frame")
@@ -111,3 +111,6 @@ AddSpecificInjuryVariable <- function(study.sample,
     ## Return study sample
     return(study.sample)
 }
+
+
+

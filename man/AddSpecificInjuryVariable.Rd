@@ -17,7 +17,7 @@ AddSpecificInjuryVariable(study.sample, injury.codes, variable.name,
   "ct_12_icd", "ct_13_icd", "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd",
   "op_5_icd", "op_6_icd", "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd",
   "op_11_icd"), levels = c("Yes", "No"), add.as.factor = TRUE,
-  drop.used.variables = TRUE)
+  drop.used.variables = FALSE)
 }
 \arguments{
 \item{study.sample}{Data frame. The study sample. No default.}

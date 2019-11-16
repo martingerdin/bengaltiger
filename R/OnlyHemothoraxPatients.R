@@ -31,6 +31,8 @@ OnlyHemothoraxPatients <- function(study.sample, hemothorax.value = "s27.1",
     ## Remove patients without hemothorax
     subsample <- subsample[subsample[, "hemothorax"] == "Yes", ]
     n.excluded <- nrow(study.sample) - nrow(subsample) - n.missing
+    ## Remove hemothorax variable
+    subsample$hemothorax <- NULL
     ## Collate return list
     total.n.excluded <- n.excluded
     if (remove.missing)
