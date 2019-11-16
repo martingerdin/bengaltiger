@@ -5,7 +5,7 @@
 \title{Get revised trauma score components}
 \usage{
 GetRevisedTraumaScoreComponents(study.sample, gcs.name = "gcs_t_1",
-  sbp.name = "sbp_1", rr.name = "rr_1")
+  sbp.name = "sbp_1", rr.name = "rr_1", return.labels = FALSE)
 }
 \arguments{
 \item{study.sample}{Data frame. The study sample. No default.}
@@ -18,6 +18,9 @@ pressure variable. Defaults to "sbp_1".}
 
 \item{rr.name}{Character vector of length 1. The name of the respiratory rate
 variable. Defaults to "rr_1".}
+
+\item{return.labels}{Logical vector of length 1. If TRUE the labels rather
+than the values are returned. Defaults to FALSE.}
 }
 \description{
 Gets revised trauma score components
