@@ -4,24 +4,24 @@
 \alias{CreateSampleCharacteristicsTable}
 \title{Create sample characteristics table}
 \usage{
-CreateSampleCharacteristicsTable(study.sample, data.dictionary = NULL,
-  group = NULL, variables = NULL, exclude.variables = NULL,
-  include.overall = TRUE, include.missing = TRUE,
-  include.complete.data = FALSE, digits = 1, save.to.results = TRUE,
-  table.name = "sample.characteristics.table",
+CreateSampleCharacteristicsTable(study.sample, group = NULL,
+  variables = NULL, exclude.variables = NULL, include.overall = TRUE,
+  include.missing = TRUE, include.complete.data = FALSE, digits = 1,
+  codebook = NULL, codebook.options = list(full.label.entry =
+  "full.label", abbreviated.label.entry = "abbreviated.label"),
+  return.pretty = FALSE, return.as.data.frame = TRUE,
+  save.to.results = TRUE, table.name = "sample.characteristics.table",
   table.caption = "Sample characteristics", save.to.disk = FALSE,
   file.format = "docx")
 }
 \arguments{
 \item{study.sample}{Data frame. The study sample. No default.}
 
-\item{data.dictionary}{Not currently used.}
-
 \item{group}{Character vector of length 1. The grouping variable. If NULL the
 table is not grouped. Defaults to NULL.}
 
 \item{variables}{Character vector. The names of variables to include in the
-table. If NULL all variables in data.dictionary is included. Defaults to
+table. If NULL all variables in study.sample are included. Defaults to
 NULL.}
 
 \item{exclude.variables}{Character vector. The names of variables to exclude
@@ -43,6 +43,27 @@ include.overall.}
 
 \item{digits}{Numeric vector of length 1 greater than or equal to 0. Number
 of digits to use when rounding table entries. Defaults to 1.}
+
+\item{codebook}{A list or NULL. If a list is provided this list will be
+assumed to be a codebook, in the sense that it is a collection of
+variable descriptions. In other words, each entry is a description of a
+variable. The names of the first level entries of the list are assumed to
+be variable names. Must include at least two entries that define the full
+and abbreviated label of each variable respectively. Defaults to NULL.}
+
+\item{codebook.options}{A list. The list can only include the entries
+full.label.entry and abbreviated.label.entry, which in turn should should
+be character vectors of length 1 specifying the names of the full and
+abbreviated label entries in the codebook. Defaults to
+list(full.label.entry = "full.label", abbreviated.label.entry =
+"abbreviated.label"). If codebook is NULL this option is ignored.}
+
+\item{return.pretty}{Logical vector of length 1. If TRUE the returned table
+object is made pretty by adding the caption and abbreviations. Defaults
+to FALSE.}
+
+\item{return.as.data.frame}{Logical vector of length 1. If TRUE the table is
+returned as a data.frame instad of a matrix. Defaults to TRUE.}
 
 \item{save.to.results}{Logical vector of length 1. If TRUE the table object
 is saved to a results file on disk using SaveToResults. Defaults to TRUE.}

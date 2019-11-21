@@ -5,7 +5,9 @@
 \title{Create bootstrap samples}
 \usage{
 CreateBootstrapSamples(study.sample, random.seed.already.set = FALSE,
-  random.seed = NULL, number.of.bootstrap.samples = 1000)
+  random.seed = NULL, number.of.bootstrap.samples = 1000,
+  strata = NULL, create.as.list = TRUE, return.samples = FALSE,
+  save.to.disk = TRUE)
 }
 \arguments{
 \item{study.sample}{Data frame. The study sample. No default.}
@@ -22,6 +24,21 @@ is FALSE. Defaults to NULL.}
 \item{number.of.bootstrap.samples}{Numeric vector of length 1. Has to be a
 positive integer. The number of bootstrap samples to create. Only used it
 bootstrap.confidence.interval is TRUE. Defaults to 1000.}
+
+\item{strata}{Character vector of length 1 or NULL. The name of the variable
+on which to stratify the bootstrap, i.e. do the bootstrap separately in
+each level of the strata variable and then combine the results. If NULL
+the bootstrap is not stratified. Defaults to NULL.}
+
+\item{create.as.list}{Logical vector of length 1. If TRUE the bootstrap
+samples are returned or saved as a list. If FALSE the samples are
+returned as a data.frame. Defaults to TRUE.}
+
+\item{return.samples}{Logical vector of length 1. If TRUE, the function
+returns bootstrap.samples to parent enviroment. Defaults to FALSE.}
+
+\item{save.to.disk}{Logical vector of length 1. If TRUE, bootstrap.samples
+are saved to disk in RDS format. Defaults to TRUE.}
 }
 \description{
 Creates bootstrap samples and save them to disk, to use in functions that

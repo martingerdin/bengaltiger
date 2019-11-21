@@ -2,11 +2,10 @@
 #'
 #' Creates the sample characteristics table. Wrapper of TableOne.
 #' @param study.sample Data frame. The study sample. No default.
-#' @param data.dictionary Not currently used.
 #' @param group Character vector of length 1. The grouping variable. If NULL the
 #'     table is not grouped. Defaults to NULL.
 #' @param variables Character vector. The names of variables to include in the
-#'     table. If NULL all variables in data.dictionary is included. Defaults to
+#'     table. If NULL all variables in study.sample are included. Defaults to
 #'     NULL.
 #' @param exclude.variables Character vector. The names of variables to exclude
 #'     from the table. If NULL no variables are excluded. Defaults to NULL.
@@ -23,6 +22,23 @@
 #'     include.overall.
 #' @param digits Numeric vector of length 1 greater than or equal to 0. Number
 #'     of digits to use when rounding table entries. Defaults to 1.
+#' @param codebook A list or NULL. If a list is provided this list will be
+#'     assumed to be a codebook, in the sense that it is a collection of
+#'     variable descriptions. In other words, each entry is a description of a
+#'     variable. The names of the first level entries of the list are assumed to
+#'     be variable names. Must include at least two entries that define the full
+#'     and abbreviated label of each variable respectively. Defaults to NULL.
+#' @param codebook.options A list. The list can only include the entries
+#'     full.label.entry and abbreviated.label.entry, which in turn should should
+#'     be character vectors of length 1 specifying the names of the full and
+#'     abbreviated label entries in the codebook. Defaults to
+#'     list(full.label.entry = "full.label", abbreviated.label.entry =
+#'     "abbreviated.label"). If codebook is NULL this option is ignored.
+#' @param return.pretty Logical vector of length 1. If TRUE the returned table
+#'     object is made pretty by adding the caption and abbreviations. Defaults
+#'     to FALSE.
+#' @param return.as.data.frame Logical vector of length 1. If TRUE the table is
+#'     returned as a data.frame instad of a matrix. Defaults to TRUE.
 #' @param save.to.results Logical vector of length 1. If TRUE the table object
 #'     is saved to a results file on disk using SaveToResults. Defaults to TRUE.
 #' @param table.name Character vector of length 1. The name of the table when
@@ -37,7 +53,6 @@
 #'     "docx".
 #' @export
 CreateSampleCharacteristicsTable <- function(study.sample,
-                                             data.dictionary = NULL,
                                              group = NULL,
                                              variables = NULL,
                                              exclude.variables = NULL,
@@ -45,6 +60,11 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                                              include.missing = TRUE,
                                              include.complete.data = FALSE,                                             
                                              digits = 1,
+                                             codebook = NULL,
+                                             codebook.options = list(full.label.entry = "full.label",
+                                                                     abbreviated.label.entry = "abbreviated.label"),
+                                             return.pretty = FALSE,
+                                             return.as.data.frame = TRUE,
                                              save.to.results = TRUE,
                                              table.name = "sample.characteristics.table",
                                              table.caption = "Sample characteristics",
@@ -56,8 +76,6 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     ## Error handling
     if (!is.data.frame(study.sample))
         stop ("study.sample has to be a data.frame")
-    if (!is.null(data.dictionary))
-        stop ("data.dictionary has to be NULL")
     if ((!is.character(group) | !IsLength1(group)) & !is.null(group))
         stop ("group has to be a character vector of length 1 or NULL")
     if (!is.character(variables) & !is.null(variables))
@@ -72,8 +90,16 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         stop ("include.complete.data has to be a character vector of length 1")    
     if (!is.numeric(digits) | !IsLength1(digits) | digits < 0)
         stop ("digits has to be a numeric vector of length 1")
+    if (!is.list(codebook) & !is.null(codebook))
+        stop ("codebook has to be a list or NULL")
+    if (!is.list(codebook.options) | !all(names(codebook.options) %in% c("full.label.entry", "abbreviated.label.entry"))) 
+        stop ("codebook.options has to be a list with the named entries full.label.entry and abbreviated.label.entry")
+    if (!is.logical(return.pretty) | !IsLength1(return.pretty))
+        stop ("return.pretty has to be a logical vector of length 1")
+    if (!is.logical(return.as.data.frame) | !IsLength1(return.as.data.frame))
+        stop ("return.as.data.frame has to be a logical vector of length 1")
     if (!is.logical(save.to.results) | !IsLength1(save.to.results))
-        stop ("save.to.results has to be a character vector of length 1")
+        stop ("save.to.results has to be a logical vector of length 1")
     if (!is.character(table.name) | !IsLength1(table.name))
         stop ("table.name has to be a character vector of length 1")
     if (!is.character(table.caption) | !IsLength1(table.caption))
@@ -116,6 +142,25 @@ CreateSampleCharacteristicsTable <- function(study.sample,
             stop ("group has to be one of the variables to be in the table")
     ## Define table data
     table.data <- study.sample[, variables]
+    ## Find out if all variables are in the codebook
+    if (!is.null(codebook)) {
+        in.codebook <- sapply(variables, function(variable) any(variable == names(codebook)))
+        if (!all(in.codebook)) {
+            missing.variables <- variables[!in.codebook]
+            for (missing.variable in missing.variables) {
+                warning (paste0(missing.variable, " is not in the codebook and is therefore assigned the variable name as label"))
+                codebook[[missing.variable]] <- list(full.label.entry = missing.variable,
+                                                     abbreviated.label.entry = "")
+            }
+        }
+    }
+    ## Check that the full and abbreviated label entries are present for each
+    ## variable in the codebook
+    if (!is.null(codebook)) {
+        label.entries.in.codebook <- sapply(codebook, function(variable) all(codebook.options$full.label.entry %in% names(variable)) & codebook.options$abbreviated.label.entry %in% names(variable))
+        if (!any(label.entries.in.codebook))
+            stop (with(codebook.options, paste0("Some codebook entries do not include ", full.label.entry, " or ", abbreviated.label.entry, ". \nMaybe you have called them something else?")))
+    }
     ## Make a list that will hold the individual tables
     table.list <- list()
     ## Create the grouped table if there should be one
@@ -177,7 +222,10 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     ni <- grep("^n$", rownames(raw.table)) # Get index of row with n
     if (!is.null(group) & !include.complete.data) {
         nnum <- as.numeric(raw.table[ni, ]) # Make numeric
-        ps <- round(nnum/nrow(table.data) * 100, digits = digits) # Estimate percentages
+        denominator <- nrow(table.data) # Get denominator
+        if (mi)
+            denominator <- nrow(table.data)/m # Modify denominator if data is multiple imputed
+        ps <- round(nnum/denominator * 100, digits = digits) # Estimate percentages
         nn <- paste0(nnum, " (", sprintf(fmt, ps), ")") # Format numbers with percentages
         raw.table[ni, ] <- nn # Put back in raw.table
         rownames(raw.table)[ni] <- "n (%)" # Modify name of n row
@@ -205,20 +253,25 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     ## Remove level column if empty
     if (all(raw.table[, "Level"] == ""))
         raw.table <- raw.table[, -grep("Level", colnames(raw.table))]
+    ## Replace variable names with labels
+    abbreviations <- ""
+    if (!is.null(codebook)) {
+        full.label.entry <- codebook.options$full.label.entry
+        abbreviated.label.entry <- codebook.options$abbreviated.label.entry
+        new.labels <- old.labels <- raw.table[, 1]
+        abbreviations <- list() # Generate list of abbreviations
+        for (variable in variables) {
+            variable.entry <- codebook[[variable]] # Get variable specific codebook
+            label <- variable.entry[[abbreviated.label.entry]] # Get abbreviated label as label
+            if (label == "") label <- variable.entry[[full.label.entry]] else abbreviations[[variable]] <- paste0(variable.entry[[abbreviated.label.entry]], ", ", variable.entry[[full.label.entry]]) # If there is no abbreviated label get full label, else store full label to use in explanatory note
+            index <- grep(paste0("^", variable, " "), old.labels) # Get position of old label
+            new.labels[index] <- sub(paste0("^", variable), label, old.labels[index]) # Put new label there
+        }
+        raw.table[, 1] <- new.labels
+        ## Make abbreviations and explanations text
+        abbreviations <- paste0("Abbreviations and explanations: ", paste0(sort(unlist(abbreviations)), collapse = "; "))
+    }
     ## The code below is currently not implemented
-    ##
-    ## ## Replace variable names with labels
-    ## nrns <- orns <- rownames(table) # Get current rownames
-    ## abbr <- list() # Genderate vector to hold abbreviations
-    ## for (x in variables) {
-    ##     vdd <- data_dictionary[[x]] # Get variable specific data dictionary
-    ##     l <- vdd$al # Get abbreviated as label
-    ##     if (l == "") l <- vdd$l else abbr[[x]] <- paste0(vdd$al, ", ", vdd$l) # If there is no abbreviated label get full label, else store full label to use in explanatory note
-    ##     i <- grep(paste0("^", x), rownames(table)) # Get position of old rowname
-    ##     nrns[i] <- sub(paste0("^", x), l, rownames(table)[i]) # Put new rowname there
-    ## }
-    ## table <- cbind(nrns, table) # Add rownames as column
-    ## colnames(table)[1] <- "Characteristic" # Name that column
     ## ## Add missing values column
     ## if (include_missing_column) {
     ##     missing_column <- rep("", nrow(table))
@@ -267,7 +320,7 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     ## tables$formatted <- formatted_table
     ## Save formatted table to results file
     if (save.to.results) {
-        formatted.table <- paste0(kable(raw.table, caption = table.caption, format = "markdown"), collapse = "\n")
+        formatted.table <- paste0(paste0(kable(raw.table, caption = table.caption, format = "markdown"), collapse = "\n"), "\n", abbreviations)
         SaveToResults(formatted.table, table.name)
     }
     ## Save formatted table to disk 
@@ -289,7 +342,20 @@ CreateSampleCharacteristicsTable <- function(study.sample,
             file.remove(file.name)
         }
     }
+    ## Create return table
+    return.table <- raw.table
+    if (table.caption != "") {
+        return.table <- rbind(colnames(return.table), return.table)
+        return.table <- rbind(c(table.caption, rep("", ncol(return.table) - 1)), return.table)
+        colnames(return.table) <- NULL
+    }
+    if (abbreviations != "")
+        return.table <- rbind(return.table, c(abbreviations, rep("", ncol(return.table) - 1)))
+    if (!return.pretty)
+        return.table <- raw.table
+    if (return.as.data.frame)
+        return.table <- as.data.frame(return.table)
     ## Return table
-    return(raw.table)
+    return(return.table)
 }
 

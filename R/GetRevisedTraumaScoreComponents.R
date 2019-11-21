@@ -8,12 +8,15 @@
 #'     pressure variable. Defaults to "sbp_1".
 #' @param rr.name Character vector of length 1. The name of the respiratory rate
 #'     variable. Defaults to "rr_1".
+#' @param return.labels Logical vector of length 1. If TRUE the labels rather
+#'     than the values are returned. Defaults to FALSE.
 #' @export
 GetRevisedTraumaScoreComponents <- function(
                                             study.sample,
                                             gcs.name = "gcs_t_1",
                                             sbp.name = "sbp_1",
-                                            rr.name = "rr_1"
+                                            rr.name = "rr_1",
+                                            return.labels = FALSE
                                             )
 {
     ## Error handling
@@ -44,6 +47,12 @@ GetRevisedTraumaScoreComponents <- function(
           ifelse(rr.raw > 9, 4,
           ifelse(rr.raw > 5, 2,
           ifelse(rr.raw > 0, 1, 0))))
+    ## Add value labels
+    if (return.labels) {
+        gcs <- factor(gcs, levels = c(0, 1, 2, 3, 4), labels = c("3", "4-5", "6-8", "9-12", "13-15"))
+        sbp <- factor(sbp, levels = c(0, 1, 2, 3, 4), labels = c("0", "1-49", "50-75", "76-89", ">89"))
+        rr <- factor(rr, levels = c(0, 1, 2, 3, 4), labels = c("0", "1-5", "6-9", ">29", "10-29"))
+    }
     ## Create return object
     return.object <- list(gcs = gcs,
                           sbp = sbp,

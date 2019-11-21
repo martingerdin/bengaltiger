@@ -5,21 +5,22 @@
 \title{Create study sample}
 \usage{
 CreateStudySample(study.data, inclusion.criteria, complete.cases = TRUE,
-  relevant.variables = c("hos", "sex", "tran", "doi", "toi", "doar",
-  "toar", "dodd", "todd", "moi", "age", "sbp_1", "hr_1", "rr_1", "gcs_t_1",
-  "iss", "died", "head_and_neck", "face", "chest", "extremities",
-  "external", "e_1_icd", "e_2_icd", "e_3_icd", "e_4_icd", "e_5_icd",
-  "e_6_icd", "e_7_icd", "e_8_icd", "e_9_icd", "e_10_icd", "e_11_icd",
-  "e_12_icd", "xray_1_icd", "xray_2_icd", "xray_3_icd", "xray_4_icd",
-  "xray_5_icd", "xray_6_icd", "xray_7_icd", "xray_8_icd", "xray_9_icd",
-  "xray_10_icd", "xray_11_icd", "fast_1_icd",      "fast_2_icd",
-  "fast_3_icd", "fast_4_icd", "fast_5_icd", "fast_6_icd", "fast_7_icd",
-  "fast_8_icd", "fast_9_icd", "fast_10_icd", "fast_11_icd", "ct_1_icd",
-  "ct_2_icd", "ct_3_icd", "ct_4_icd", "ct_5_icd", "ct_6_icd", "ct_7_icd",
-  "ct_8_icd", "ct_9_icd", "ct_10_icd", "ct_11_icd", "ct_12_icd",
-  "ct_13_icd", "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd",
-  "op_6_icd", "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd",
-  "op_11_icd"), add.to.relevant.variables = NULL,
+  return.incomplete.cases = FALSE, relevant.variables = c("hos", "sex",
+  "tran", "doi", "toi", "doar", "toar", "dodd", "todd", "moi", "age",
+  "sbp_1", "hr_1", "rr_1", "gcs_t_1", "iss", "died", "head_and_neck",
+  "face", "chest", "extremities", "external", "e_1_icd", "e_2_icd",
+  "e_3_icd", "e_4_icd", "e_5_icd", "e_6_icd", "e_7_icd", "e_8_icd",
+  "e_9_icd", "e_10_icd", "e_11_icd", "e_12_icd", "xray_1_icd",
+  "xray_2_icd", "xray_3_icd", "xray_4_icd", "xray_5_icd", "xray_6_icd",
+  "xray_7_icd", "xray_8_icd", "xray_9_icd", "xray_10_icd", "xray_11_icd",
+  "fast_1_icd",      "fast_2_icd", "fast_3_icd", "fast_4_icd",
+  "fast_5_icd", "fast_6_icd", "fast_7_icd", "fast_8_icd", "fast_9_icd",
+  "fast_10_icd", "fast_11_icd", "ct_1_icd", "ct_2_icd", "ct_3_icd",
+  "ct_4_icd", "ct_5_icd", "ct_6_icd", "ct_7_icd", "ct_8_icd", "ct_9_icd",
+  "ct_10_icd", "ct_11_icd", "ct_12_icd", "ct_13_icd", "op_1_icd",
+  "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd", "op_7_icd",
+  "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd"),
+  add.to.relevant.variables = NULL,
   remove.from.relevant.variables = NULL,
   ignore.variables = c("head_and_neck", "face", "chest", "extremities",
   "external", "e_1_icd", "e_2_icd", "e_3_icd", "e_4_icd", "e_5_icd",
@@ -33,8 +34,8 @@ CreateStudySample(study.data, inclusion.criteria, complete.cases = TRUE,
   "ct_9_icd", "ct_10_icd", "ct_11_icd", "ct_12_icd", "ct_13_icd",
   "op_1_icd", "op_2_icd", "op_3_icd", "op_4_icd", "op_5_icd", "op_6_icd",
   "op_7_icd", "op_8_icd", "op_9_icd", "op_10_icd", "op_11_icd"),
-  save.to.results = TRUE, save.to.disk = FALSE, file.format = "docx",
-  override = TRUE)
+  save.to.results = TRUE, results.name = "inclusions.and.exclusions",
+  save.to.disk = FALSE, file.format = "docx", override = TRUE)
 }
 \arguments{
 \item{study.data}{Data frame. The study data. No defaults.}
@@ -44,6 +45,13 @@ an inclusion criterion. No default.}
 
 \item{complete.cases}{Logical vector of length 1. If TRUE only complete cases
 will be returned. If FALSE all cases are returned. Defaults to TRUE.}
+
+\item{return.incomplete.cases}{Logical vector of length 1. Ignored if
+complete.cases is FALSE. If complete.cases is TRUE and this is TRUE a
+list is returned instead of a data.frame. The list has two entries. The
+first is a data.frame with only complete cases, called
+complete.sample. The second is a data.frame with only incomplete cases,
+called incomplete.sample. Defaults to FALSE.}
 
 \item{relevant.variables}{Character vector. The names of variables to keep in
 the study sample. Defaults to c("hos", "sex", "tran", "doi", "toi",
@@ -88,6 +96,10 @@ ignored. Defaults to c("head_and_neck", "face", "chest", "extremities",
 
 \item{save.to.results}{Logical vector of length 1. If TRUE the output is
 saved to a results file on disk. Defaults to TRUE.}
+
+\item{results.name}{Character vector of length 1. The name of the analysis of
+missingness and exclusions saved to results. Defaults to
+"inclusions.and.exclusions".}
 
 \item{save.to.disk}{Logical vector of length 1. If TRUE a file named
 "exclusions_and_missingness" is saved to disk where the exclusions and
