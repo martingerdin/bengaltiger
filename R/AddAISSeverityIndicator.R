@@ -13,7 +13,8 @@
 #'     level to be used to indicate that the patient had an injury of the
 #'     specified severity. Defaults to c("Yes", "No").
 #' @param variable.name Character vector of length 1. The name of the resulting
-#'     variable. Defaults to paste0(severity.variable.name, "≥", cutoff).
+#'     variable. Defaults to paste0(severity.variable.name, "geq", cutoff),
+#'     where geq refers to the Latex command greater than or equal to.
 #' @param add.as.factor Logical vector of length 1. If TRUE the indicator
 #'     variable is added to the study sample as a factor. If FALSE it is added
 #'     as character. Defaults to TRUE.
@@ -25,7 +26,7 @@ AddAISSeverityIndicator <- function(study.sample,
                                     severity.variable.name = "head_and_neck",
                                     cutoff = 2,
                                     levels = c("Yes", "No"),
-                                    variable.name = paste0(severity.variable.name, "≥", cutoff),
+                                    variable.name = paste0(severity.variable.name, "geq", cutoff),
                                     add.as.factor = TRUE,
                                     drop.used.variables = FALSE) {
     ## Error handling
