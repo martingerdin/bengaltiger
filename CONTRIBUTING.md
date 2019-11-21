@@ -78,12 +78,18 @@ hub pull-request -m "Fix #12"
 
 ## `iss*`
 Feature and less critical bug fixes branches, where * references a GitHub
-issue. Branched from develop. Merged into develop.
+issue. Branched from develop. Merged into develop. Use a version label in the
+format v1.0.0 to indicate which version the fix of the issue should be included
+in. This is a temporary solution, ideally we should use milestones for this but
+`ghi` does not support the creation of milestones yet and we don't want to leave
+the command line now do we... See
+[here](https://github.com/stephencelis/ghi/issues/321) for a discussion and
+updates on this.
 
 For example:
 ```shell
 git checkout develop
-ghi open -m "ApplyExclusionCriteria" -L function -u martingerdin
+ghi open -m "ApplyExclusionCriteria" -L function -L v1.0.0 -u martingerdin
 git checkout -b iss15 # Where 15 is a reference to the github issue
 # Work on feature
 git add --all
@@ -145,7 +151,7 @@ Merging should be done using the `--no-ff` flag to preserve branch topology.
 ## Complete workflow example
 ```
 git checkout develop
-ghi open -m "ApplyExclusionCriteria" -L function
+ghi open -m "ApplyExclusionCriteria" -L function -L v1.1.0
 git checkout -b iss15
 # Work on feature
 git add ApplyExclusionCriteria.R
