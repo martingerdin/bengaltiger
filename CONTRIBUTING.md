@@ -90,7 +90,7 @@ git add --all
 git commit -m "Close #15 - Add ApplyExclusionCriteria" # Where 15 is the issue 
                                                        # number
 git checkout develop
-git merge iss15 -m "Merge feature-add-ApplyExclusionCriteria into develop"
+git merge iss15 --no-ff -m "Merge feature-add-ApplyExclusionCriteria into develop"
 git branch -d iss15
 ```
 
@@ -140,7 +140,7 @@ This pre-release version is tagged 0.0.0.9000. Changes before 1.0.0 will be
 incremented as stated above in versioning.
 
 ## Merging
-Merging should be done without using the `--no-ff` flag.
+Merging should be done using the `--no-ff` flag to preserve branch topology.
 
 ## Complete workflow example
 ```shell
@@ -154,10 +154,10 @@ git commit -m "Write function template"
 git add ApplyExclusionCriteria.R
 git commit -m "Close #15 - Add ApplyExclusionCriteria"
 git checkout develop
-git merge iss15 -m "Add ApplyExclusionCriteria function"
+git merge iss15 --no-ff -m "Add ApplyExclusionCriteria function"
 # If new feature should be merged with master and result in new release
 git checkout release-v1.1.0
-git merge develop -m "Add ApplyExclusionCriteria function"
+git merge develop --no-ff -m "Add ApplyExclusionCriteria function"
 # Change version number in DESCRIPTION, increment MINOR as new feature was added
 git add DESCRIPTION
 git commit -m "Update version number"
