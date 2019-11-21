@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.2 (21/11/2019)
+
+#### Enhancements:
+
+- [#163](https://github.com/martingerdin/bengaltiger/issues/163) Update workflow to get gren to get it right 
+- [#162](https://github.com/martingerdin/bengaltiger/issues/162) Update complete workflow in CONTRIBUTING 
+
+---
+
 ## v1.0.1 (21/11/2019)
 
 #### Enhancements:
@@ -346,11 +355,3 @@
 #### Enhancements:
 
 - [#8](https://github.com/martingerdin/bengaltiger/issues/8) Modify gren template to remove issue label and move url 
-
----
-
-## v0.0.11.9000 (20/08/2018)
-
-#### Bug Fixes:
-
-- [#7](https://github.com/martingerdin/bengaltiger/issues/7) Fix JSON unexpected token { error in gren configuration file 
