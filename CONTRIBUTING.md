@@ -143,7 +143,7 @@ incremented as stated above in versioning.
 Merging should be done using the `--no-ff` flag to preserve branch topology.
 
 ## Complete workflow example
-```shell
+```
 git checkout develop
 ghi open -m "ApplyExclusionCriteria" -L function
 git checkout -b iss15
@@ -158,11 +158,12 @@ git merge iss15 --no-ff -m "Add ApplyExclusionCriteria function"
 # If new feature should be merged with master and result in new release
 git checkout release-v1.1.0
 git merge develop --no-ff -m "Add ApplyExclusionCriteria function"
+git checkout master
+git merge release-v1.1.0 --no-ff -m "Release version 1.0.0"
+git push
 # Change version number in DESCRIPTION, increment MINOR as new feature was added
 git add DESCRIPTION
 git commit -m "Update version number"
-git checkout master
-git merge release-v1.1.0 --no-ff -m "Release version 1.0.0"
 git push
 git tag -a v1.1.0 -m "Version 1.1.0" # See note below
 git push --tags
@@ -175,11 +176,10 @@ git checkout develop
 ```
 
 To make sure that `gren` includes closed issues in the correct release notes
-it's important that there is a separate "tag commit" that is later than the
-merge from
-develop. See
-[this issue](https://github.com/github-tools/github-release-notes/issues/181)
-for a discussion on this.
+it's important to push commits that closes issues before the "tag commit" is
+created and pushed. See [this
+issue](https://github.com/github-tools/github-release-notes/issues/181) for a
+discussion on this.
 
 # Code style guide
 We use [Google's R Style Guide](https://google.github.io/styleguide/Rguide.xml)
