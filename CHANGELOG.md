@@ -1,5 +1,45 @@
 # Changelog
 
+## v1.0.1 (21/11/2019)
+
+#### Enhancements:
+
+- [#161](https://github.com/martingerdin/bengaltiger/issues/161) Modify README 
+- [#160](https://github.com/martingerdin/bengaltiger/issues/160) Change from - to : as recommended pratice in commit messages 
+- [#159](https://github.com/martingerdin/bengaltiger/issues/159) Add use of --no-ff back into CONTRIBUTING 
+- [#158](https://github.com/martingerdin/bengaltiger/issues/158) Simplify workflow in CONTRIBUTING 
+- [#157](https://github.com/martingerdin/bengaltiger/issues/157) Split README into README and CONTRIBUTING 
+- [#149](https://github.com/martingerdin/bengaltiger/issues/149) Replace read.csv with fread in ImportStudyData 
+- [#148](https://github.com/martingerdin/bengaltiger/issues/148) Add argument to return labels rather than values from GetRevisedTraumaScoreComponents 
+- [#142](https://github.com/martingerdin/bengaltiger/issues/142) Add argument to allow users to return sample characteristics table as data.frame 
+- [#140](https://github.com/martingerdin/bengaltiger/issues/140) Add missing data count in each variable to last exclusion node if complete.cases in CreateFlowchart 
+- [#139](https://github.com/martingerdin/bengaltiger/issues/139) Return abbreviations with table from CreateSampleCharacteristicsTable 
+- [#131](https://github.com/martingerdin/bengaltiger/issues/131) Add argument to return incomplete data from CreateStudySample 
+- [#129](https://github.com/martingerdin/bengaltiger/issues/129) Use codebook to make sample characteristics tables pretty 
+- [#116](https://github.com/martingerdin/bengaltiger/issues/116) Change exclusion text in flowchart 
+- [#115](https://github.com/martingerdin/bengaltiger/issues/115) Add option to change font in CreateFlowchart 
+
+#### Bug Fixes:
+
+- [#155](https://github.com/martingerdin/bengaltiger/issues/155) Fix undefined columns selected error caused by OnlyHemothoraxPatients 
+- [#154](https://github.com/martingerdin/bengaltiger/issues/154) Correct comments in OnlyBluntTraumaPatients 
+- [#150](https://github.com/martingerdin/bengaltiger/issues/150) Fix error in CreateSampleCharacteristicsTable when calculating % of total sample when data is multiple imputed 
+- [#146](https://github.com/martingerdin/bengaltiger/issues/146) Fix error handling of flowchart.elements in CreateFlowchart 
+- [#137](https://github.com/martingerdin/bengaltiger/issues/137) Add missing to OnlyTransferredPatients text 
+- [#135](https://github.com/martingerdin/bengaltiger/issues/135) Throw warning if a variable is not in the codebook when creating sample characteristics table 
+- [#130](https://github.com/martingerdin/bengaltiger/issues/130) Fix error when producing the manual caused by ≥ 
+
+#### New Functions
+
+- [#153](https://github.com/martingerdin/bengaltiger/issues/153) OnlyHemothoraxPatients 
+- [#134](https://github.com/martingerdin/bengaltiger/issues/134) OnlyTransferredPatients 
+- [#133](https://github.com/martingerdin/bengaltiger/issues/133) OnlyPatientsPresentingAfter 
+- [#132](https://github.com/martingerdin/bengaltiger/issues/132) OnlyPatientsPresentingBefore 
+- [#126](https://github.com/martingerdin/bengaltiger/issues/126) OnlyAdults 
+- [#70](https://github.com/martingerdin/bengaltiger/issues/70) CreateFlowchart 
+
+---
+
 ## v1.0.0 (21/11/2019)
 
 #### Enhancements:
@@ -314,11 +354,3 @@
 #### Bug Fixes:
 
 - [#7](https://github.com/martingerdin/bengaltiger/issues/7) Fix JSON unexpected token { error in gren configuration file 
-
----
-
-## v0.0.10.9000 (20/08/2018)
-
-#### Enhancements:
-
-- [#5](https://github.com/martingerdin/bengaltiger/issues/5) Add template to gren configuration file 
