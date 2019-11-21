@@ -68,7 +68,7 @@ ghi open -m "Fix ImportStudyData throws uncaught error" -L bug -u martingerdin
 git checkout -b hotfix-iss12 # Where 12 is a reference to the github issue 
 # Write fix
 git add --all 
-git commit -m "Fix #12 - ImportStudyData throws uncaught error" 
+git commit -m "Fix #12: ImportStudyData throws uncaught error" 
 # In the line above 12 is, again, a reference to a github issue and 
 # ImportStudyData ... is the title of that issue
 git push origin hotfix-iss12
@@ -87,8 +87,8 @@ ghi open -m "ApplyExclusionCriteria" -L function -u martingerdin
 git checkout -b iss15 # Where 15 is a reference to the github issue
 # Work on feature
 git add --all
-git commit -m "Close #15 - Add ApplyExclusionCriteria" # Where 15 is the issue 
-                                                       # number
+git commit -m "Close #15: Add ApplyExclusionCriteria" # Where 15 is the issue 
+                                                      # number
 git checkout develop
 git merge iss15 --no-ff -m "Merge feature-add-ApplyExclusionCriteria into develop"
 git branch -d iss15
@@ -152,7 +152,7 @@ git add ApplyExclusionCriteria.R
 git commit -m "Write function template"
 # Continue work on featue
 git add ApplyExclusionCriteria.R
-git commit -m "Close #15 - Add ApplyExclusionCriteria"
+git commit -m "Close #15: Add ApplyExclusionCriteria"
 git checkout develop
 git merge iss15 --no-ff -m "Add ApplyExclusionCriteria function"
 # If new feature should be merged with master and result in new release
