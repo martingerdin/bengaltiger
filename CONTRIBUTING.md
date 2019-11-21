@@ -161,11 +161,17 @@ git merge develop --no-ff -m "Add ApplyExclusionCriteria function"
 # Change version number in DESCRIPTION, increment MINOR as new feature was added
 git add DESCRIPTION
 git commit -m "Update version number"
+git checkout master
+git merge release-v1.1.0 --no-ff -m "Release version 1.0.0"
+git push
 git tag -a v1.1.0 -m "Version 1.1.0" # See note below
-git push 
 git push --tags
 gren release 
 gren changelog --override
+git add CHANGELOG.md
+git commit -m "Update CHANGELOG"
+git push
+git checkout develop
 ```
 
 To make sure that `gren` includes closed issues in the correct release notes
