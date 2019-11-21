@@ -5,7 +5,9 @@
 
 # Tools
 ## [ghi](https://github.com/stephencelis/ghi)
-Wrapper for git that allows for commandline editing of github issues. 
+Wrapper for git that allows for command line editing of github issues. 
+## [hub](https://hub.github.com/)
+Used to create pull-requests from the command line.
 ## [gren](https://github-tools.github.io/github-release-notes/)
 Automatic release notes. 
 
@@ -38,26 +40,30 @@ version, which is versioned as 0.0.X.9000.
 > judgement.
 
 # Git workflow
-See
-[Vincent Driessen's Git branching model](https://nvie.com/posts/a-successful-git-branching-model/) for
-details. In short, we use the following branches (note that we don't use
-specific branches to finalise releases, not yet at least):
+Inspired by [Vincent Driessen's Git branching
+model](https://nvie.com/posts/a-successful-git-branching-model/). In short, we
+use the following branches:
 
 ## `master`
 Main release branch. Stable version. 
 
+## `release-*`
+Release branch for release *. The release branch corresponding to an upcoming
+version 1.0.5 would be called release-v1.0.5. Branched from develop. Merged into
+develop and master to bump version when stable.
+
 ## `develop`
-Branched from `master`. Merged into master to bump version and form a new
-release when stable.
+Branched from `master`. Bleeding edge version. 
 
 ## `hotfix-*`
 Branched from `master`. Merged into `master` and `develop`. Used only to fix
 critical bugs. A hotfix must fix a github issue and result in a patch release.
 
 For example:
+
 ```shell
 git checkout master
-# Create issue if one does not exist.
+# Create issue if one does not exist
 ghi open -m "Fix ImportStudyData throws uncaught error" -L bug -u martingerdin
 git checkout -b hotfix-iss12 # Where 12 is a reference to the github issue 
 # Write fix
@@ -67,30 +73,25 @@ git commit -m "Fix #12 - ImportStudyData throws uncaught error"
 # ImportStudyData ... is the title of that issue
 git push origin hotfix-iss12
 # Create pull request
-# Close issue and refer to commit, replace 12 with issue numer
-ghi close 12 -m "Fixed in <commit>"
+hub pull-request -m "Fix #12"
 ```
 
-## `fix-*`
-Branched from `develop`. Merged into `develop`. Used for less critical bugs. A
-fix must fix a github issue. See [`hotfix-*`](#hotfix-) for workflow.
-
-## `feature-*`
-Branched from `develop`. Merged into `develop`. Used to add new features, such
-as new functions. A feature should come from a github issue.
+## `iss*`
+Feature and less critical bug fixes branches, where * references a GitHub
+issue. Branched from develop. Merged into develop.
 
 For example:
 ```shell
 git checkout develop
 ghi open -m "ApplyExclusionCriteria" -L function -u martingerdin
-git checkout -b feature-iss15 # Where 15 is a reference to the github issue
+git checkout -b iss15 # Where 15 is a reference to the github issue
 # Work on feature
 git add --all
 git commit -m "Close #15 - Add ApplyExclusionCriteria" # Where 15 is the issue 
                                                        # number
 git checkout develop
-git merge --no-ff feature-add-ApplyExclusionCriteria -m "Merge feature-add-ApplyExclusionCriteria into develop"
-git branch -d feature-add-ApplyExclusionCriteria
+git merge iss15 -m "Merge feature-add-ApplyExclusionCriteria into develop"
+git branch -d iss15
 ```
 
 # Issues
@@ -105,17 +106,6 @@ us, follow these advice:
 
 Bugs should be labelled `bug`, enhancements should be labelled `enhancement`,
 and new functions should be labelled `function`. 
-
-EXCEPTION 
-
-When you create an issue to reflect that you're working on a new function the
-title should just be the function name:
-
-```shell
-ghi open -m "ApplyExclusionCriteria" -L function
-git checkout develop
-git checkout -b feature-feature-add-ApplyExclusionCriteria
-```
 
 ## Commit messages
 Should be written in sentence case, be informative, and make sense. Please
@@ -136,7 +126,7 @@ to
 ## Tagging
 Tags should only be used to mark new master releases. Master releases should be
 tagged with version number. Only annoted tags should be used. The annoted tag
-message should read "Version MAJOR.MINOR.PATCH released".
+message should read "Version MAJOR.MINOR.PATCH".
 
 For example:
 ```shell
@@ -150,21 +140,13 @@ This pre-release version is tagged 0.0.0.9000. Changes before 1.0.0 will be
 incremented as stated above in versioning.
 
 ## Merging
-Merging should be done using the `--no-ff` flag to make sure that commit
-history is not lost.
+Merging should be done without using the `--no-ff` flag.
 
-For example:
-```shell
-git checkout develop
-git merge --no-ff fix-iss18
-git push origin develop
-git branch -d fix-iss18
-```
 ## Complete workflow example
 ```shell
 git checkout develop
 ghi open -m "ApplyExclusionCriteria" -L function
-git checkout -b feature-iss15
+git checkout -b iss15
 # Work on feature
 git add ApplyExclusionCriteria.R
 git commit -m "Write function template"
@@ -172,10 +154,10 @@ git commit -m "Write function template"
 git add ApplyExclusionCriteria.R
 git commit -m "Close #15 - Add ApplyExclusionCriteria"
 git checkout develop
-git merge --no-ff -m "Add ApplyExclusionCriteria function"
+git merge iss15 -m "Add ApplyExclusionCriteria function"
 # If new feature should be merged with master and result in new release
-git checkout master
-git merge --no-ff -m "Add ApplyExclusionCriteria function"
+git checkout release-v1.1.0
+git merge develop -m "Add ApplyExclusionCriteria function"
 # Change version number in DESCRIPTION, increment MINOR as new feature was added
 git add DESCRIPTION
 git commit -m "Update version number"
