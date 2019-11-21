@@ -173,6 +173,7 @@ git add CHANGELOG.md
 git commit -m "Update CHANGELOG"
 git push
 git checkout develop
+git merge master --no-ff -m "Merge new release into develop"
 ```
 
 To make sure that `gren` includes closed issues in the correct release notes
