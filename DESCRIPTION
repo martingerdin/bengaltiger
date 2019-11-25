@@ -13,7 +13,8 @@ Imports: RMySQL,
 	 rmarkdown,
 	 DBI,
 	 tableone,
-	 knitr
+	 knitr,
+	 rowr
 License: LICENCE.md
 Encoding: UTF-8
 LazyData: true
