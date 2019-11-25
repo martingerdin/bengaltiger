@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.3 (25/11/2019)
+
+#### Enhancements:
+
+- [#166](https://github.com/martingerdin/bengaltiger/issues/166) Recommend use of version lables until milestones can be created with ghi 
+- [#165](https://github.com/martingerdin/bengaltiger/issues/165) Update complete workflow to include merge of master into develop after releasing a new version 
+
+---
+
 ## v1.0.2 (21/11/2019)
 
 #### Enhancements:
@@ -347,11 +356,3 @@
 #### Bug Fixes:
 
 - [#9](https://github.com/martingerdin/bengaltiger/issues/9) Remove groubBy:false from gren configuration file 
-
----
-
-## v0.0.12.9000 (20/08/2018)
-
-#### Enhancements:
-
-- [#8](https://github.com/martingerdin/bengaltiger/issues/8) Modify gren template to remove issue label and move url 
