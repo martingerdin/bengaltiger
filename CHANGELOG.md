@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.0 (25/11/2019)
+
+#### New Functions
+
+- [#167](https://github.com/martingerdin/bengaltiger/issues/167) SplitDataset 
+
+---
+
 ## v1.0.3 (25/11/2019)
 
 #### Enhancements:
@@ -348,11 +356,3 @@
 #### Bug Fixes:
 
 - [#6](https://github.com/martingerdin/bengaltiger/issues/6) Remove = from -l flags in README 
-
----
-
-## v0.0.13.9000 (22/08/2018)
-
-#### Bug Fixes:
-
-- [#9](https://github.com/martingerdin/bengaltiger/issues/9) Remove groubBy:false from gren configuration file 
