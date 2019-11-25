@@ -1,6 +1,7 @@
 #' SplitDataset
 #'
-#' Splits the dataset into development, updating, and validation samples.
+#' Splits the dataset into training, validation, and test samples, although they
+#' can be given different names. 
 #' @param study.sample A data.frame. The study sample. No default.
 #' @param events A numeric vector of the same length as the number of splits or
 #'     NULL. Each item should indicate the number of events to be included in
