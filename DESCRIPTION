@@ -1,6 +1,6 @@
 Package: bengaltiger
 Title: bengaltiger
-Version: 1.1.0
+Version: 1.1.1
 Authors@R: c(person("Martin", "Gerdin Wärnberg", email = "martingerdin@gmail.com", role = c("aut", "cre")),
 	     person("Johanna", "Berg", role = c("aut")),
 	     person("Martin", "Henriksson", role = c("ctb")),

@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.1.1 (28/11/2019)
+
+#### Enhancements:
+
+- [#170](https://github.com/martingerdin/bengaltiger/issues/170) Add only.codebook.variables to CreateSampleCharacteristicsTable 
+
+#### Bug Fixes:
+
+- [#171](https://github.com/martingerdin/bengaltiger/issues/171) Fix how variables missing from the codebook are assigned labels 
+- [#169](https://github.com/martingerdin/bengaltiger/issues/169) Remove object column from split dataset 
+- [#168](https://github.com/martingerdin/bengaltiger/issues/168) Abbreviations and explanations are not exported to file from CreateSampleCharacteristicsTable 
+
+---
+
 ## v1.1.0 (25/11/2019)
 
 #### New Functions
@@ -348,11 +362,3 @@
 
 ## v0.0.6.9000 (22/08/2018)
 *No changelog for this release.*
-
----
-
-## v0.0.9.9000 (22/08/2018)
-
-#### Bug Fixes:
-
-- [#6](https://github.com/martingerdin/bengaltiger/issues/6) Remove = from -l flags in README 
