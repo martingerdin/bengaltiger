@@ -82,6 +82,8 @@ SplitDataset <- function(study.sample, events = NULL,
     selector <- split.proportions
     if (!is.null(events))
         selector <- events
+    if (!is.null(sample.names))
+        names(selector) <- sample.names
     if (is.null(names(selector))) {
         if (length(selector) == 2)
             names(selector) <- c("training", "test")
