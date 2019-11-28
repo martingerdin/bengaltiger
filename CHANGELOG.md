@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.2 (28/11/2019)
+
+#### Bug Fixes:
+
+- [#174](https://github.com/martingerdin/bengaltiger/issues/174) Fix events argument checking in SplitDataset 
+
+---
+
 ## v1.1.1 (28/11/2019)
 
 #### Enhancements:
@@ -356,9 +364,4 @@
 ---
 
 ## v0.0.5.9000 (22/08/2018)
-*No changelog for this release.*
-
----
-
-## v0.0.6.9000 (22/08/2018)
 *No changelog for this release.*
