@@ -162,7 +162,6 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                 codebook[[missing.variable]] <- list()
                 codebook[[missing.variable]][[full.label.entry]] <- missing.variable
                 codebook[[missing.variable]][[abbreviated.label.entry]] <- ""
-                
             }
         }
     }
@@ -330,17 +329,16 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     ## formatted_table <- add.star.caption(formatted_table, star_caption) # add caption*
     ## Put formatted table in tables
     ## tables$formatted <- formatted_table
-    ## Save formatted table to results file
+    ## Format table
+    formatted.table <- paste0(paste0(kable(raw.table, caption = table.caption, format = "pandoc"), collapse = "\n"), "\n\n", abbreviations)    
+    ## Save formatted table to results file    
     if (save.to.results) {
-        formatted.table <- paste0(paste0(kable(raw.table, caption = table.caption, format = "markdown"), collapse = "\n"), "\n", abbreviations)
         SaveToResults(formatted.table, table.name)
     }
     ## Save formatted table to disk 
     if (save.to.disk) {
         ## Create R markdown code
-        table.file <- paste0("```{r echo = FALSE, results = 'asis'} \n",
-                             "kable(raw.table, caption = \"", table.caption, "\") \n",
-                             "```")
+        table.file <- formatted.table
         ## Write to disk
         file.name <- paste0(table.name, ".Rmd")
         write(table.file, file.name)
