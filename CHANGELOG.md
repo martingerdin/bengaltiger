@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.3 (28/11/2019)
+
+#### Bug Fixes:
+
+- [#175](https://github.com/martingerdin/bengaltiger/issues/175) Implement sample.names in SplitDataset 
+
+---
+
 ## v1.1.2 (28/11/2019)
 
 #### Bug Fixes:
@@ -359,9 +367,4 @@
 ---
 
 ## v0.0.4.9000 (22/08/2018)
-*No changelog for this release.*
-
----
-
-## v0.0.5.9000 (22/08/2018)
 *No changelog for this release.*
