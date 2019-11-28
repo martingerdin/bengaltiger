@@ -149,8 +149,10 @@ CreateSampleCharacteristicsTable <- function(study.sample,
             missing.variables <- variables[!in.codebook]
             for (missing.variable in missing.variables) {
                 warning (paste0(missing.variable, " is not in the codebook and is therefore assigned the variable name as label"))
-                codebook[[missing.variable]] <- list(full.label.entry = missing.variable,
-                                                     abbreviated.label.entry = "")
+                codebook[[missing.variable]] <- list()
+                codebook[[missing.variable]][[full.label.entry]] <- missing.variable
+                codebook[[missing.variable]][[abbreviated.label.entry]] <- ""
+                
             }
         }
     }
