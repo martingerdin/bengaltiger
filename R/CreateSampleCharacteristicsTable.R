@@ -28,6 +28,10 @@
 #'     variable. The names of the first level entries of the list are assumed to
 #'     be variable names. Must include at least two entries that define the full
 #'     and abbreviated label of each variable respectively. Defaults to NULL.
+#' @param only.codebook.variables A logical vector of length 1. If TRUE only the
+#'     variables defined in codebook are included in the table. The rows of the
+#'     table are also in the same order as in the codebook. Only used if
+#'     codebook is not NULL. Defaults to TRUE.
 #' @param codebook.options A list. The list can only include the entries
 #'     full.label.entry and abbreviated.label.entry, which in turn should should
 #'     be character vectors of length 1 specifying the names of the full and
@@ -61,6 +65,7 @@ CreateSampleCharacteristicsTable <- function(study.sample,
                                              include.complete.data = FALSE,                                             
                                              digits = 1,
                                              codebook = NULL,
+                                             only.codebook.variables = TRUE,
                                              codebook.options = list(full.label.entry = "full.label",
                                                                      abbreviated.label.entry = "abbreviated.label"),
                                              return.pretty = FALSE,
@@ -92,6 +97,8 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         stop ("digits has to be a numeric vector of length 1")
     if (!is.list(codebook) & !is.null(codebook))
         stop ("codebook has to be a list or NULL")
+    if (!is.logical(only.codebook.variables) | !IsLength1(only.codebook.variables))
+        stop ("only.codebook.variables has to be a character vector of length 1")        
     if (!is.list(codebook.options) | !all(names(codebook.options) %in% c("full.label.entry", "abbreviated.label.entry"))) 
         stop ("codebook.options has to be a list with the named entries full.label.entry and abbreviated.label.entry")
     if (!is.logical(return.pretty) | !IsLength1(return.pretty))
@@ -108,6 +115,9 @@ CreateSampleCharacteristicsTable <- function(study.sample,
         stop ("save.to.disk has to be a character vector of length 1")
     if (!(file.format %in% c("docx", "rmd", "pdf")) | !IsLength1(file.format))
         stop ("file.format has to be one of docx, rmd, or pdf")
+    ## Use only variables in codebook
+    if (!is.null(codebook) & only.codebook.variables)
+        variables <- names(codebook)
     ## Find out if data.frame is multiple imputed data
     mi <- FALSE
     if (all(c(".imp", ".id") %in% colnames(study.sample))) {
@@ -149,8 +159,9 @@ CreateSampleCharacteristicsTable <- function(study.sample,
             missing.variables <- variables[!in.codebook]
             for (missing.variable in missing.variables) {
                 warning (paste0(missing.variable, " is not in the codebook and is therefore assigned the variable name as label"))
-                codebook[[missing.variable]] <- list(full.label.entry = missing.variable,
-                                                     abbreviated.label.entry = "")
+                codebook[[missing.variable]] <- list()
+                codebook[[missing.variable]][[full.label.entry]] <- missing.variable
+                codebook[[missing.variable]][[abbreviated.label.entry]] <- ""
             }
         }
     }
@@ -318,17 +329,16 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     ## formatted_table <- add.star.caption(formatted_table, star_caption) # add caption*
     ## Put formatted table in tables
     ## tables$formatted <- formatted_table
-    ## Save formatted table to results file
+    ## Format table
+    formatted.table <- paste0(paste0(kable(raw.table, caption = table.caption, format = "pandoc"), collapse = "\n"), "\n\n", abbreviations)    
+    ## Save formatted table to results file    
     if (save.to.results) {
-        formatted.table <- paste0(paste0(kable(raw.table, caption = table.caption, format = "markdown"), collapse = "\n"), "\n", abbreviations)
         SaveToResults(formatted.table, table.name)
     }
     ## Save formatted table to disk 
     if (save.to.disk) {
         ## Create R markdown code
-        table.file <- paste0("```{r echo = FALSE, results = 'asis'} \n",
-                             "kable(raw.table, caption = \"", table.caption, "\") \n",
-                             "```")
+        table.file <- formatted.table
         ## Write to disk
         file.name <- paste0(table.name, ".Rmd")
         write(table.file, file.name)

@@ -160,6 +160,9 @@ SplitDataset <- function(study.sample, events = NULL,
     ## Put back the original contents of object to the column called object
     if (!is.null(object.column))
         samples$object <- object.column
+    ## Remove object column if it was not there originally
+    if (is.null(object.column))
+        samples$object <- NULL
     ## Create the return object
     return.object <- split(samples, samples[, ".sample"])
     if (return.data.frame)
