@@ -7,10 +7,11 @@
 CreateSampleCharacteristicsTable(study.sample, group = NULL,
   variables = NULL, exclude.variables = NULL, include.overall = TRUE,
   include.missing = TRUE, include.complete.data = FALSE, digits = 1,
-  codebook = NULL, codebook.options = list(full.label.entry =
-  "full.label", abbreviated.label.entry = "abbreviated.label"),
-  return.pretty = FALSE, return.as.data.frame = TRUE,
-  save.to.results = TRUE, table.name = "sample.characteristics.table",
+  codebook = NULL, only.codebook.variables = TRUE,
+  codebook.options = list(full.label.entry = "full.label",
+  abbreviated.label.entry = "abbreviated.label"), return.pretty = FALSE,
+  return.as.data.frame = TRUE, save.to.results = TRUE,
+  table.name = "sample.characteristics.table",
   table.caption = "Sample characteristics", save.to.disk = FALSE,
   file.format = "docx")
 }
@@ -50,6 +51,11 @@ variable descriptions. In other words, each entry is a description of a
 variable. The names of the first level entries of the list are assumed to
 be variable names. Must include at least two entries that define the full
 and abbreviated label of each variable respectively. Defaults to NULL.}
+
+\item{only.codebook.variables}{A logical vector of length 1. If TRUE only the
+variables defined in codebook are included in the table. The rows of the
+table are also in the same order as in the codebook. Only used if
+codebook is not NULL. Defaults to TRUE.}
 
 \item{codebook.options}{A list. The list can only include the entries
 full.label.entry and abbreviated.label.entry, which in turn should should
