@@ -1,7 +1,7 @@
 #' Create flowchart
 #'
-#' Generates flowchart using TikZ. Requires the xstring and tikz packages. Compiled with knitr or pdflatex depending on file extension in flowchart.file.path. However, if non-default font is used, flowchart is compiled using xelatex and the mathspec package is required.
-#' @param flowchart.elements Character vector. Content for nodes. Length must be > 1. Defaults to NULL.
+#' Generates flowchart using TikZ. Requires the xstring and tikz packages. Compiled with knitr (which in turn uses xelatex) or xelatex depending on file extension in flowchart.file.path. 
+#' @param flowchart.elements Character vector. Content for nodes. Length must be > 1. Remember to escape e.g. underscores in the text. Defaults to NULL.
 #' @param flowchart.font Character vector of length 1. The font for flowchart nodes, e.g. LiberationSerif. Uses the mathspec package. Flowchart is compiled with XeLaTex or knitr depending on file extension in flowchart.file.path. Defaults to NULL.
 #' @param flowchart.file.path Character vector of length 1. The flowchart file path. Defaults to "./flowchart.tex".
 #' @param print.tikz Logical. If TRUE TikZ code is printed to console. Defaults to TRUE.
@@ -32,14 +32,10 @@ CreateFlowchart <- function(flowchart.elements = NULL, flowchart.font = NULL,
         stop("Parameter save.tikz is set to FALSE and compile.flowchart is set to TRUE. Path flowchart.file.path must exist for this combination of settings.")
     if (!is.null(flowchart.elements) & read.from.results)
         warning("Parameter read.from.results is set to TRUE and flowchart.elements is non-NULL, thus flowchart.elements will be \nignored. If you want custom flowchart.elements in the flowchart, set read.from.results to FALSE and re-run function.")
-    if (read.from.results) 
-        ## Read flowchart elements, remove newline and format
-        flowchart.elements <- lapply(readRDS("results.Rds")$flowchart.list, function (node.text) {
-            node.text <- gsub("-", "\\,", gsub("\\n", "", node.text))
-            node.text.formatted <- sub("\\,", "", gsub(" \\, ", "\\, ", node.text))
-            node.text.as.math <- gsub("([0-9<>]+)", "$\\1$", node.text.formatted)
-            return (node.text.as.math)
-        })
+    if (read.from.results)
+        flowchart.elements <- readRDS("results.Rds")$flowchart.list
+    flowchart.elements <- lapply(flowchart.elements, FormatText,
+                                 read.from.results = read.from.results)
     flowchart.node <- "
     \\node[on chain,
          nodeStyle]
@@ -171,18 +167,32 @@ paste("\\def\\flowchartElements", paste(flowchart.elements, collapse = ""), "\n"
     ## Write flowchart to disk
     if (save.tikz)
         write(tikz.print, file = flowchart.file.path)
-    ## Compile with either knitr, pdflatex, or xelatex depending on file extension and font param
+    ## Compile with either knitr or xelatex depending on file extension and font param
     if (print.tikz)
         cat(tikz.print)
     if (compile.flowchart) {
         if (flowchart.file.format == ".rtex") {
-            knitr::knit2pdf(flowchart.file.path)
+            knitr::knit2pdf(input = flowchart.file.path, compiler = "xelatex")
         } else {
-            compiler <- "pdflatex"
-            if (!is.null(flowchart.font)) compiler <- "xelatex"
+            compiler <- "xelatex"
             system(paste(compiler, flowchart.file.path, collapse = ""), ...)
         }
     }    
     return (tikz.print)
 }
 
+#' FormatText
+#'
+#' Read flowchart elements, insert math inline, and escape underscores. If read.from.results special formatting is conducted where newlines are removed and commas are corrected.
+#' @param node.text Character vector of length 1. The text for a node in the flowchart. No default.
+#' @param read.from.results Logical vector of length 1. If TRUE the node.text is an element in flowchart.list in the results object. Defaults to TRUE.
+FormatText <- function(node.text, read.from.results = TRUE) {
+    text.escaped <- gsub("\\_", "\\\\_", node.text)
+    numbers.as.math <- gsub("([0-9<>]+)", "$\\1$", text.escaped)   
+    final.text <- numbers.as.math
+    if (read.from.results) {
+        node.text <- gsub("-", "\\,", gsub("\\n", "", final.text))
+        final.text <- sub("\\,", "", gsub(" \\, ", "\\, ", node.text))
+    }
+    return (final.text)
+}
