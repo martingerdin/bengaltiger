@@ -14,7 +14,7 @@
 #' @export
 CreateFlowchart <- function(flowchart.elements = NULL, flowchart.font = NULL,
                             flowchart.file.path = "./flowchart.tex", print.tikz = TRUE,
-                            save.tikz = TRUE, compile.flowchart = TRUE, train.test.split = FALSE,
+                            save.tikz = TRUE, compile.flowchart = FALSE, train.test.split = FALSE,
                             prettify = FALSE, read.from.results = TRUE, ...)
 {
     # Get file format of flowchart.file.path
