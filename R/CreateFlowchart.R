@@ -180,7 +180,6 @@ paste("\\def\\flowchartElements", paste(flowchart.elements, collapse = ""), "\n"
     }    
     return (tikz.print)
 }
-
 #' FormatText
 #'
 #' Read flowchart elements, insert math inline, and escape underscores. If read.from.results special formatting is conducted where newlines are removed and commas are corrected.
