@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.4 (05/12/2019)
+
+#### Bug Fixes:
+
+- [#179](https://github.com/martingerdin/bengaltiger/issues/179) Make sure event proportion is maintained when splitting dataset using events 
+- [#178](https://github.com/martingerdin/bengaltiger/issues/178) Prevent SplitDataset from changing column types when splitting using events 
+- [#156](https://github.com/martingerdin/bengaltiger/issues/156) CreateFlowchart fails 
+
+---
+
 ## v1.1.3 (28/11/2019)
 
 #### Bug Fixes:
@@ -362,9 +372,4 @@
 ---
 
 ## v0.0.3.9000 (22/08/2018)
-*No changelog for this release.*
-
----
-
-## v0.0.4.9000 (22/08/2018)
 *No changelog for this release.*
