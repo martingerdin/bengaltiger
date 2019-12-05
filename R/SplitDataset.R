@@ -125,17 +125,41 @@ SplitDataset <- function(study.sample, events = NULL,
         ## of observations in the study sample
         if (sum(selector, non.events) > nrow(study.sample))
             stop ("There is not enough observations in the study sample to allow this split.")
+        ## Store variable classes before splitting to avoid conversions
+        variable.classes <- lapply(study.sample, function(column) {
+            variable.class <- class(column)
+            return.list <- list(class = variable.class)
+            if (is.factor(column)) 
+                return.list$levels <- levels(column)
+            return(return.list)
+        })
         ## Split data into events and non-events
         split.data.list <- split(study.sample, event.variable)
         ## Select observations to be included in each split
-        sample.index.list <- lapply(list(selector, non.events), GetSampleIndex)
+        sample.index.list <- lapply(list(non.events, selector), GetSampleIndex)
         split.data.list <- lapply(seq_along(split.data.list), function(i) {
             split.data <- split.data.list[[i]]
             index <- sample.index.list[[i]]
             new.split.data <- rowr::cbind.fill(split.data, index, fill = NA)
             return(new.split.data)
         })
-        samples <- do.call(rbind, split.data.list)
+        samples <- do.call(rbind.data.frame, split.data.list)
+        ## Revert variable classes to original
+        samples[] <- lapply(names(samples), function(column.name) {
+            variable.class <- variable.classes[[column.name]]$class
+            column <- new.column <- samples[, column.name]
+            if (column.name == "object")
+                variable.class <- ""
+            if (variable.class == "factor") {
+                new.column <- factor(column, levels = variable.classes[[column.name]]$levels)
+            } else if (any(variable.class == c("character", "integer", "numeric"))) {
+                new.column <- match.fun(paste0("as.", variable.class))(column)
+            } else if (variable.class != "") {
+                message (paste0(variable.class, " is currently not well supported and as.", variable.class, " may produce strange results. Please double check."))
+                new.column <- match.fun(paste0("as.", variable.class))(column)
+            } 
+            return(new.column)
+        })
     }
     ## Split using split.proportions
     if (!is.null(split.proportions)) {
