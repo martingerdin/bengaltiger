@@ -136,7 +136,7 @@ SplitDataset <- function(study.sample, events = NULL,
         ## Split data into events and non-events
         split.data.list <- split(study.sample, event.variable)
         ## Select observations to be included in each split
-        sample.index.list <- lapply(list(selector, non.events), GetSampleIndex)
+        sample.index.list <- lapply(list(non.events, selector), GetSampleIndex)
         split.data.list <- lapply(seq_along(split.data.list), function(i) {
             split.data <- split.data.list[[i]]
             index <- sample.index.list[[i]]
