@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.5 (25/02/2020)
+
+#### Bug Fixes:
+
+- [#183](https://github.com/martingerdin/bengaltiger/issues/183) Replace rowr dependency 
+
+---
+
 ## v1.1.4 (05/12/2019)
 
 #### Bug Fixes:
@@ -368,8 +376,3 @@
 #### Bug Fixes:
 
 - [#1](https://github.com/martingerdin/bengaltiger/issues/1) Fix formatting of branch name headings and links in README 
-
----
-
-## v0.0.3.9000 (22/08/2018)
-*No changelog for this release.*
