@@ -6,12 +6,12 @@
 \usage{
 CreateFlowchart(flowchart.elements = NULL, flowchart.font = NULL,
   flowchart.file.path = "./flowchart.tex", print.tikz = TRUE,
-  save.tikz = TRUE, compile.flowchart = TRUE,
+  save.tikz = TRUE, compile.flowchart = FALSE,
   train.test.split = FALSE, prettify = FALSE,
   read.from.results = TRUE, ...)
 }
 \arguments{
-\item{flowchart.elements}{Character vector. Content for nodes. Length must be > 1. Defaults to NULL.}
+\item{flowchart.elements}{Character vector. Content for nodes. Length must be > 1. Remember to escape e.g. underscores in the text. Defaults to NULL.}
 
 \item{flowchart.font}{Character vector of length 1. The font for flowchart nodes, e.g. LiberationSerif. Uses the mathspec package. Flowchart is compiled with XeLaTex or knitr depending on file extension in flowchart.file.path. Defaults to NULL.}
 
@@ -32,5 +32,5 @@ CreateFlowchart(flowchart.elements = NULL, flowchart.font = NULL,
 \item{...}{Additional arguments for system function.}
 }
 \description{
-Generates flowchart using TikZ. Requires the xstring and tikz packages. Compiled with knitr or pdflatex depending on file extension in flowchart.file.path. However, if non-default font is used, flowchart is compiled using xelatex and the mathspec package is required.
+Generates flowchart using TikZ. Requires the xstring and tikz packages. Compiled with knitr (which in turn uses xelatex) or xelatex depending on file extension in flowchart.file.path.
 }

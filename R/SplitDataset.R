@@ -90,12 +90,21 @@ SplitDataset <- function(study.sample, events = NULL,
         if (length(selector) == 3)
             names(selector) <- c("training", "validation", "test")
     }
+    ## Store original order
+    unique.names <- make.unique(c(names(study.sample), "original.order"))
+    original.order.name <- unique.names[length(unique.names)]
+    study.sample[, original.order.name] <- 1:nrow(study.sample)
     ## Order observations randomly
     if (is.null(temporal.split))
         sort.variable <- sample(1:nrow(study.sample), nrow(study.sample))
     study.sample <- study.sample[order(sort.variable), ]
-    ## For some reason cbind.fill calls the new column object. Make a new object
-    ## that contains the values of that column, if it exists
+    ## Originally cbind.fill from rowr was used to bind together a vector
+    ## indicating what sample (training, validation or test) an observation
+    ## should belong to. rowr then became outdated and the cbind.fill function
+    ## had to be replaced. For some reason cbind.fill called the new column
+    ## "object". To avoid too much refactoring this name was kept for the new
+    ## column. Therefore a new object is created that contains the values of
+    ## a column called "object", if it already exists.
     object.column <- study.sample$object
     ## Split using events
     if (!is.null(events)) {
@@ -140,7 +149,11 @@ SplitDataset <- function(study.sample, events = NULL,
         split.data.list <- lapply(seq_along(split.data.list), function(i) {
             split.data <- split.data.list[[i]]
             index <- sample.index.list[[i]]
-            new.split.data <- rowr::cbind.fill(split.data, index, fill = NA)
+            ## Object was kept as the name of this variable because that was the
+            ## name used by the rowr::cbind.fill function that was originally
+            ## used to fix this problem
+            object <- c(index, rep(NA, nrow(split.data) - length(index))) 
+            new.split.data <- cbind(split.data, object)
             return(new.split.data)
         })
         samples <- do.call(rbind.data.frame, split.data.list)
@@ -189,6 +202,8 @@ SplitDataset <- function(study.sample, events = NULL,
     ## Remove object column if it was not there originally
     if (is.null(object.column))
         samples$object <- NULL
+    ## Restore the original order of observations
+    samples <- samples[order(samples[, original.order.name]), ]
     ## Create the return object
     return.object <- split(samples, samples[, ".sample"])
     if (return.data.frame)
