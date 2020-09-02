@@ -154,6 +154,8 @@ CreateSampleCharacteristicsTable <- function(study.sample,
     table.data <- study.sample[, variables]
     ## Find out if all variables are in the codebook
     if (!is.null(codebook)) {
+        full.label.entry <- codebook.options$full.label.entry
+        abbreviated.label.entry <- codebook.options$abbreviated.label.entry
         in.codebook <- sapply(variables, function(variable) any(variable == names(codebook)))
         if (!all(in.codebook)) {
             missing.variables <- variables[!in.codebook]
