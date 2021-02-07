@@ -60,7 +60,8 @@ CreateStudyTemplate <- function(study.name = "My bengaltiger study",
                      "## \n",
                      "## This file was created using bengaltiger version ", sub("`|´", "", packageVersion("bengaltiger")), "\n")
     ## Add function index
-    function.index <- list(ImportStudyData = "study.data <- ImportStudyData()")
+    function.index <- setNames(sapply(functions.to.include, function(nm) paste0("study.data <- ", nm,  "()")),
+                               nm = functions.to.include)
     ## Create file body
     body <- paste0(unlist(lapply(functions.to.include, function(x) {
         return(function.index[[x]])
